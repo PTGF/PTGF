@@ -1,4 +1,4 @@
-# This file is part of the Open|SpeedShop Graphical User Interface
+# This file is part of the Parallel Tools GUI Framework (PTGF)
 # Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 #
 # This library is free software; you can redistribute it and/or
@@ -20,31 +20,10 @@ TEMPLATE = subdirs
 SUBDIRS  = Example \
            Welcome \
            Help \
-           OpenSpeedShop \
-           DirectConnection \
-           TreeView \
-           ServerAdapter \
-           LineGraphView
 
 Help.subdir                  = Help
 
 Welcome.subdir               = Welcome
 Welcome.depends              = Help
 
-OpenSpeedShop.subdir         = OpenSpeedShop
-OpenSpeedShop.depends        = Help Welcome
-
-DirectConnection.subdir      = DirectConnection
-DirectConnection.depends     = OpenSpeedShop
-
 Example.subdir               = Example
-Example.depends              = OpenSpeedShop
-
-TreeView.subdir              = TreeView
-TreeView.depends             = OpenSpeedShop
-
-ServerAdapter.subdir         = ServerAdapter
-ServerAdapter.depends        = OpenSpeedShop
-
-LineGraphView.subdir         = LineGraphView
-LineGraphView.depends        = OpenSpeedShop

@@ -4,7 +4,7 @@
    \version
 
    \section LICENSE
-   This file is part of the Open|SpeedShop Graphical User Interface
+   This file is part of the Parallel Tools GUI Framework (PTGF)
    Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
@@ -49,6 +49,6 @@ public slots:
 } // namespace SettingManager
 } // namespace Core
 
-Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPage, "org.openspeedshop.gui.ISettingPage/0.1")
+Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPage, "org.krellinst.ptgf.ISettingPage/0.1")
 
 #endif // ISETTINGPAGE_H

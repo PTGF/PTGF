@@ -1,4 +1,4 @@
-# This file is part of the Open|SpeedShop Graphical User Interface
+# This file is part of the Parallel Tools GUI Framework (PTGF)
 # Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 #
 # This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 !isEmpty(LIB_PRI_INCLUDED):error("lib.pri already included")
 LIB_PRI_INCLUDED = 1
 
-include(../../OpenSpeedShop.pri)
+include(../../PTGF.pri)
 
 TEMPLATE = lib
 DESTDIR  = $$LIBRARY_PATH

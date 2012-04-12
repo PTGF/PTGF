@@ -4,7 +4,7 @@
    \version
 
    \section LICENSE
-   This file is part of the Open|SpeedShop Graphical User Interface
+   This file is part of the Parallel Tools GUI Framework (PTGF)
    Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
@@ -179,9 +179,9 @@ void MainWindow::readSettings()
 
     //FIXME: This should not be hard coded here
 #ifdef WIN32
-    QString filePath = QString("%1/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
+    QString filePath = QString("%1/ptgf/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
 #else
-    QString filePath = QString("%1/../share/openspeedshop/gui/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
+    QString filePath = QString("%1/../share/ptgf/gui/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
 #endif
     m_StylesheetFilePath = settingManager.value("styleSheet", m_StylesheetFilePath).toString();
     if(m_StylesheetFilePath.isEmpty()) {
@@ -357,6 +357,9 @@ void MainWindow::setCurrentCentralWidget(QWidget *current)
                     action->setChecked(true);
                 }
             }
+
+            updateWindowTitle();
+
             break;
         }
     }
@@ -374,6 +377,23 @@ void MainWindow::setCurrentCentralWidget()
         int index = action->data().toInt();
         ui->stackedWidget->setCurrentIndex(index);
         action->setChecked(true);
+
+        updateWindowTitle();
+    }
+}
+
+void MainWindow::updateWindowTitle()
+{
+    // Set window title appropriately
+    if(ui->stackedWidget->currentWidget()->windowTitle() == "Welcome" ||
+       ui->stackedWidget->currentWidget()->windowTitle() == "Help") {
+        setWindowTitle("Parallel Tools GUI Framework");
+        setWindowIcon(QIcon(":/MainWindow/app.png"));
+    } else {
+        setWindowTitle(ui->stackedWidget->currentWidget()->windowTitle());
+        setWindowIcon(ui->stackedWidget->currentWidget()->windowIcon());
+
+        //TODO: Register for future changes to the currentWidget's title
     }
 }
 

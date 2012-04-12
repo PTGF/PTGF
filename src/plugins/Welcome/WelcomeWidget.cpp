@@ -4,7 +4,7 @@
    \version
 
    \section LICENSE
-   This file is part of the Open|SpeedShop Graphical User Interface
+   This file is part of the Parallel Tools GUI Framework (PTGF)
    Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
@@ -226,8 +226,10 @@ void WelcomeWidget::setCurrentTip(int index) {
 
 void WelcomeWidget::randomTip()
 {
-    qsrand((uint)QDateTime::currentDateTime().time().second());
-    setCurrentTip(qrand() % m_TipsAndTricks.count());
+    if(m_TipsAndTricks.count() > 0) {
+        qsrand((uint)QDateTime::currentDateTime().time().second());
+        setCurrentTip(qrand() % m_TipsAndTricks.count());
+    }
 }
 
 void WelcomeWidget::on_btnTipNext_clicked()

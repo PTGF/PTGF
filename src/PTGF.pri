@@ -1,4 +1,4 @@
-# This file is part of the Open|SpeedShop Graphical User Interface
+# This file is part of the Parallel Tools GUI Framework (PTGF)
 # Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 #
 # This library is free software; you can redistribute it and/or
@@ -15,8 +15,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-!isEmpty(OPENSPEEDSHOP_PRI_INCLUDED): error("OpenSpeedShop.pri already included")
-OPENSPEEDSHOP_PRI_INCLUDED = 1
+!isEmpty(PTGF_PRI_INCLUDED): error("PTGF.pri already included")
+PTGF_PRI_INCLUDED = 1
 
 ##################
 # QT INFORMATION #
@@ -39,7 +39,7 @@ defineTest(qtVer) {
 CONFIG -= debug_and_release
 QT += core gui
 
-APPLICATION_TARGET = OpenSpeedShop
+APPLICATION_TARGET = PTGF
 
 #######################
 # VERSION INFORMATION #

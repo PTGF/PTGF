@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Settings</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../Resources/Core.qrc">
+    <normaloff>:/SettingManager/settings.svg</normaloff>:/SettingManager/settings.svg</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" rowspan="2">
     <widget class="QListWidget" name="listWidget">
@@ -50,6 +54,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Resources/Core.qrc"/>
+ </resources>
  <connections/>
 </ui>

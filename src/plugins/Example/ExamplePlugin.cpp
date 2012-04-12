@@ -4,7 +4,7 @@
    \version
 
    \section LICENSE
-   This file is part of the Open|SpeedShop Graphical User Interface
+   This file is part of the Parallel Tools GUI Framework (PTGF)
    Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
@@ -40,9 +40,6 @@ namespace Example {
     \version 0.1.dev
     \brief This is an example of the methods for producing a GUI plugin.
 
-    \par Depends on Plugins:
-         OpenSpeedShop
-
     \todo Document this more explicitly as a developer example.
  */
 
@@ -50,7 +47,6 @@ ExamplePlugin::ExamplePlugin()
 {
     m_Name = "Example";
     m_Version = "0.1.dev";
-    m_Dependencies.append( Core::PluginManager::Dependency("OpenSpeedShop", "^0\\.1.*$") );
 }
 
 ExamplePlugin::~ExamplePlugin()

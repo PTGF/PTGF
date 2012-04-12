@@ -13,4 +13,7 @@
         <file alias="question.svg">dialog-question.svg</file>
         <file alias="loading.gif">loading64.gif</file>
     </qresource>
+    <qresource prefix="/SettingManager">
+        <file alias="settings.svg">preferences-system-4.svg</file>
+    </qresource>
 </RCC>

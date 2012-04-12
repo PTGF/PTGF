@@ -14,8 +14,8 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../plugins/OpenSpeedShop/Resources/OpenSpeedShop.qrc">
-    <normaloff>:/OpenSpeedShop/app.png</normaloff>:/OpenSpeedShop/app.png</iconset>
+   <iconset resource="../Resources/Core.qrc">
+    <normaloff>:/MainWindow/app.png</normaloff>:/MainWindow/app.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="centralLayout">
@@ -111,7 +111,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../../../plugins/OpenSpeedShop/Resources/OpenSpeedShop.qrc"/>
+  <include location="../Resources/Core.qrc"/>
  </resources>
  <connections/>
 </ui>

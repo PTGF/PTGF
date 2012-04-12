@@ -4,7 +4,7 @@
    \version
 
    \section LICENSE
-   This file is part of the Open|SpeedShop Graphical User Interface
+   This file is part of the Parallel Tools GUI Framework (PTGF)
    Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
@@ -90,6 +90,6 @@ public:
 } // namespace Welcome
 } // namespace Plugins
 
-Q_DECLARE_INTERFACE(Plugins::Welcome::IWelcomeData, "org.openspeedshop.gui.IWelcomeData/0.1")
+Q_DECLARE_INTERFACE(Plugins::Welcome::IWelcomeData, "org.krellinst.ptgf.IWelcomeData/0.1")
 
 #endif // IWELCOMEDATA_H

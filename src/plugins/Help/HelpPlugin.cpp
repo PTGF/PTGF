@@ -1,6 +1,7 @@
 #include "HelpPlugin.h"
 
 #include <QToolBar>
+#include <QApplication>
 #include <PluginManager/PluginManager.h>
 #include <MainWindow/MainWindow.h>
 #include "Settings/SettingPage.h"
@@ -9,18 +10,26 @@ namespace Plugins {
 namespace Help {
 
 HelpPlugin::HelpPlugin(QObject *parent) :
-    QObject(parent),
-    m_HelpEngine(new QHelpEngine("OpenSpeedShop.qhc"))
+    QObject(parent)
 {
     m_Name = "Help";
     m_Version = "0.1.dev";
 
+# ifdef WIN32
+    m_HelpEngine = new QHelpEngine(QString("%1/ptgf/PTGF.qhc").arg(QApplication::instance()->applicationDirPath()));
+# else
+    m_HelpEngine = new QHelpEngine(QString("%1/../share/ptgf/PTGF.qhc").arg(QApplication::instance()->applicationDirPath()));
+# endif
     m_HelpEngine->setupData();
     m_HelpEngine->setAutoSaveFilter(false);
 
 #ifdef QT_DEBUG
-    QString helpFile = "openspeedshop-gui.qch";
-    QString helpNamespace = "org.openspeedshop.gui";
+# ifdef WIN32
+    QString helpFile = QString("%1/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());
+# else
+    QString helpFile = QString("%1/../share/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());
+# endif
+    QString helpNamespace = "org.krellinst.ptgf";
     if(!m_HelpEngine->registeredDocumentations().contains(helpNamespace) &&
             !m_HelpEngine->registerDocumentation(helpFile)) {
         qWarning(QString("Registration of help file, \"%1\", failed: %2").arg(helpFile).arg(m_HelpEngine->error()).toLatin1());

@@ -1,4 +1,4 @@
-# This file is part of the Open|SpeedShop Graphical User Interface
+# This file is part of the Parallel Tools GUI Framework (PTGF)
 # Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 #
 # This library is free software; you can redistribute it and/or
@@ -15,25 +15,10 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-include(../plugins.pri)
-CONFIG(debug, debug|release) {
-  TARGET           = TreeViewD
-} else {
-  TARGET           = TreeView
-}
+include(PTGF.pri)
 
-SOURCES           += TreeViewPlugin.cpp \
-                     TreeView.cpp \
-                     Delegate.cpp
+TEMPLATE = subdirs
+CONFIG  += ordered
+SUBDIRS  = core plugins
 
-HEADERS           += TreeViewPlugin.h \
-                     TreeView.h \
-                     Delegate.h
-
-FORMS             +=
-RESOURCES         +=
-QT                +=
-
-LIBS        += -L$$quote($${BUILD_PATH}/plugins/OpenSpeedShop/$${DIR_POSTFIX}) -lOpenSpeedShop$${LIB_POSTFIX}
-
-#debug: DEFINES += TREEVIEW_DEBUG
+OTHER_FILES += Doxyfile fileheader.txt

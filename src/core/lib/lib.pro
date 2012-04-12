@@ -1,4 +1,4 @@
-# This file is part of the Open|SpeedShop Graphical User Interface
+# This file is part of the Parallel Tools GUI Framework (PTGF)
 # Copyright (C) 2010-2011 Argo Navis Technologies, LLC
 #
 # This library is free software; you can redistribute it and/or
@@ -79,7 +79,9 @@ DEFINES          += MAINWINDOW_LIBRARY \
 #debug:DEFINES    += SETTINGMANAGER_DEBUG
 
 OTHER_FILES += MainWindow/StyleSheet.css
-win32:styleSheet.path = /
-else:styleSheet.path = /share/openspeedshop/gui/
+win32: styleSheet.path = /ptgf/
+else: styleSheet.path = /share/ptgf/
 styleSheet.files = MainWindow/StyleSheet.css
 INSTALLS += styleSheet
+
+
