@@ -181,7 +181,7 @@ void MainWindow::readSettings()
 #ifdef WIN32
     QString filePath = QString("%1/ptgf/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
 #else
-    QString filePath = QString("%1/../share/ptgf/gui/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
+    QString filePath = QString("%1/../share/ptgf/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
 #endif
     m_StylesheetFilePath = settingManager.value("styleSheet", m_StylesheetFilePath).toString();
     if(m_StylesheetFilePath.isEmpty()) {
