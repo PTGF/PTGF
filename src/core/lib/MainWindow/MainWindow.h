@@ -29,16 +29,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QMenuBar>
-#include <QProgressBar>
+#include <QtCore>
+#include <QtGui>
 
-#include <SettingManager/SettingManager.h>
 #include <SettingManager/ISettingPageFactory.h>
-#include <PluginManager/PluginManager.h>
-
-#include "MainWindowLibrary.h"
 #include "NotificationWidget.h"
+#include "MainWindowLibrary.h"
 
 namespace Core {
 namespace MainWindow {

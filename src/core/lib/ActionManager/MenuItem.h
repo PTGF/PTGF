@@ -28,9 +28,8 @@
 #ifndef MENUITEM_H
 #define MENUITEM_H
 
-#include <QObject>
-#include <QMenu>
-#include <QAction>
+#include <QtCore>
+#include <QtGui>
 
 namespace Core {
 namespace ActionManager {

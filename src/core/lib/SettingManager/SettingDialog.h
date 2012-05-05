@@ -28,9 +28,9 @@
 #ifndef SETTINGDIALOG_H
 #define SETTINGDIALOG_H
 
-#include <QDialog>
-#include <QAbstractButton>
-#include "SettingManager.h"
+#include <QtCore>
+#include <QtGui>
+
 #include "ISettingPageFactory.h"
 
 namespace Core {

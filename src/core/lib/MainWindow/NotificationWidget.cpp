@@ -1,16 +1,5 @@
 #include "NotificationWidget.h"
 
-#include <QPixmap>
-#include <QMovie>
-#include <QPalette>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QToolButton>
-#include <QKeyEvent>
-#include <QLabel>
-#include <QDialogButtonBox>
-
-
 namespace Core {
 namespace MainWindow {
 

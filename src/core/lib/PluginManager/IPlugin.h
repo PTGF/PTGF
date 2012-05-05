@@ -28,9 +28,9 @@
 #ifndef IPLUGIN_H
 #define IPLUGIN_H
 
+#include <QtCore>
 #include <QtPlugin>
-#include <QString>
-#include <QStringList>
+
 #include "PluginManagerLibrary.h"
 
 namespace Core {

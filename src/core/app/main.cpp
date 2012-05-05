@@ -65,7 +65,6 @@
 
 
 #include <QtGui/QApplication>
-#include <QtCore/QDir>
 
 #include <SettingManager/SettingManager.h>
 #include <PluginManager/PluginManager.h>

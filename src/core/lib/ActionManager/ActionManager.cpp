@@ -26,7 +26,10 @@
  */
 
 #include "ActionManager.h"
-#include "MainWindow/MainWindow.h"
+
+#include <MainWindow/MainWindow.h>
+
+#include "MenuItem.h"
 
 #ifdef ACTIONMANAGER_DEBUG
 #  include <QDebug>

@@ -25,13 +25,12 @@
 
  */
 
-
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include <QFile>
-#include <QFileInfo>
-#include <SettingManager/ISettingPage.h>
+#include <SettingManager/SettingManager.h>
+#include <PluginManager/PluginManager.h>
+
 #include "MainSettingPage.h"
 
 #ifdef MAINWINDOW_DEBUG

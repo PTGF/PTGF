@@ -28,6 +28,7 @@
 #ifndef WELCOMEPLUGIN_H
 #define WELCOMEPLUGIN_H
 
+#include <QtCore>
 #include <PluginManager/IPlugin.h>
 #include <SettingManager/ISettingPageFactory.h>
 

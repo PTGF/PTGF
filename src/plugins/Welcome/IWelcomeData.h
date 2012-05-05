@@ -28,11 +28,8 @@
 #ifndef IWELCOMEDATA_H
 #define IWELCOMEDATA_H
 
-#include <QList>
-#include <QAction>
-#include <QString>
-#include <QStringList>
-#include <QUrl>
+#include <QtCore>
+#include <QtGui>
 
 #include "WelcomeLibrary.h"
 

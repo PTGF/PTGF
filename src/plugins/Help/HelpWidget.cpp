@@ -1,8 +1,7 @@
 #include "HelpWidget.h"
 
-#include <QVBoxLayout>
-#include <QDesktopServices>
 #include <MainWindow/MainWindow.h>
+
 #include "HelpBrowser.h"
 
 namespace Plugins {

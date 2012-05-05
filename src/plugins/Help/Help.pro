@@ -26,18 +26,16 @@ CONFIG(debug, debug|release) {
 SOURCES          += HelpPlugin.cpp \
                     HelpWidget.cpp \
                     HelpBrowser.cpp \
-    Settings/SettingPage.cpp
+                    Settings/SettingPage.cpp
 
 HEADERS          += HelpPlugin.h \
                     HelpWidget.h \
                     HelpBrowser.h \
-    Settings/SettingPage.h
+                    Settings/SettingPage.h
 
-FORMS            += \
-    Settings/SettingPage.ui
+FORMS            += Settings/SettingPage.ui
 
-RESOURCES        += \
-    Resources/HelpResources.qrc
+RESOURCES        += Resources/HelpResources.qrc
 
 QT               +=
 

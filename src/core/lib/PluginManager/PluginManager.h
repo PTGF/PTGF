@@ -28,14 +28,16 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include <QObject>
-#include <QList>
+#include <QtCore>
+
 #include <SettingManager/ISettingPageFactory.h>
-#include <SettingManager/SettingManager.h>
-#include "PluginWrapper.h"
+#include "PluginManagerLibrary.h"
 
 namespace Core {
 namespace PluginManager {
+
+class PluginWrapper;
+class IPlugin;
 
 class PLUGINMANAGER_EXPORT PluginManager :
         public QObject,

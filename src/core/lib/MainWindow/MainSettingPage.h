@@ -28,12 +28,10 @@
 #ifndef MAINSETTINGPAGE_H
 #define MAINSETTINGPAGE_H
 
-#include <QWidget>
-#include <QCoreApplication>
-#include <QStyle>
-#include <SettingManager/SettingManager.h>
+#include <QtCore>
+#include <QtGui>
+
 #include <SettingManager/ISettingPage.h>
-#include <QStyleFactory>
 
 namespace Core {
 namespace MainWindow {

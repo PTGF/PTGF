@@ -28,15 +28,15 @@
 #ifndef WELCOMEWIDGET_H
 #define WELCOMEWIDGET_H
 
-#include <QWidget>
-#include <QList>
-#include <QSignalMapper>
-#include <QCommandLinkButton>
-#include "IWelcomeData.h"
-#include "RssReaderWidget.h"
+#include <QtCore>
+#include <QtGui>
 
 namespace Plugins {
 namespace Welcome {
+
+struct Link;
+class IWelcomeData;
+class RssReaderWidget;
 
 namespace Ui {
     class WelcomeWidget;

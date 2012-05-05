@@ -28,8 +28,10 @@
 #ifndef ISETTINGPAGE_H
 #define ISETTINGPAGE_H
 
+#include <QtCore>
+#include <QtGui>
 #include <QtPlugin>
-#include <QWidget>
+
 #include "SettingManagerLibrary.h"
 
 namespace Core {

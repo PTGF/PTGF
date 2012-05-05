@@ -28,13 +28,13 @@ HEADERS          += WelcomePlugin.h \
                     IWelcomeData.h \
                     WelcomeLibrary.h \
                     RssReaderWidget.h \
-    SettingPage.h
+                    SettingPage.h
 
 SOURCES          += WelcomePlugin.cpp \
                     WelcomeWidget.cpp \
                     IWelcomeData.cpp \
                     RssReaderWidget.cpp \
-    SettingPage.cpp
+                    SettingPage.cpp
 
 QT               += xml network
 
@@ -46,3 +46,7 @@ FORMS += WelcomeWidget.ui \
 RESOURCES += Resources/Resources.qrc
 
 DEFINES      += WELCOME_LIBRARY
+
+welcomePluginHeaders.path = /include/plugins/Welcome
+welcomePluginHeaders.files = WelcomeLibrary.h IWelcomeData.h
+INSTALLS += welcomePluginHeaders

@@ -25,17 +25,17 @@
 
  */
 
+#include "PluginManager.h"
+
+#include <SettingManager/SettingManager.h>
+#include <MainWindow/MainWindow.h>
+
+#include "PluginSettingPage.h"
+#include "PluginWrapper.h"
+
 #ifdef PLUGINMANAGER_DEBUG
   #include <QtDebug>
 #endif
-
-#include <QDir>
-#include <QPluginLoader>
-#include <QGridLayout>
-#include "PluginManager.h"
-#include "PluginSettingPage.h"
-
-#include <QApplication>
 
 namespace Core {
 namespace PluginManager {

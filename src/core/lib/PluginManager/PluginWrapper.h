@@ -28,9 +28,7 @@
 #ifndef PLUGINWRAPPER_H
 #define PLUGINWRAPPER_H
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
+#include <QtCore>
 
 #include "IPlugin.h"
 

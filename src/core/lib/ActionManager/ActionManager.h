@@ -28,14 +28,14 @@
 #ifndef ACTIONMANAGER_H
 #define ACTIONMANAGER_H
 
-#include <QObject>
-#include <QString>
-#include <QList>
-#include "MenuItem.h"
+#include <QtCore>
+
 #include "ActionManagerLibrary.h"
 
 namespace Core {
 namespace ActionManager {
+
+class MenuItem;
 
 class ACTIONMANAGER_EXPORT ActionManager : public QObject
 {

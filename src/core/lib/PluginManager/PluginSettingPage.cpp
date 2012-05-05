@@ -28,6 +28,11 @@
 #include "PluginSettingPage.h"
 #include "ui_PluginSettingPage.h"
 
+#include <SettingManager/SettingManager.h>
+#include <PluginManager/PluginManager.h>
+
+#include "PluginWrapper.h"
+
 namespace Core {
 namespace PluginManager {
 

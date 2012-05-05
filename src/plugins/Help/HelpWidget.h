@@ -1,7 +1,8 @@
 #ifndef HELPWIDGET_H
 #define HELPWIDGET_H
 
-#include <QSplitter>
+#include <QtCore>
+#include <QtGui>
 #include <QtHelp>
 
 namespace Plugins {

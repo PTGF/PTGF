@@ -26,13 +26,6 @@
  */
 
 #include "RssReaderWidget.h"
-#include <QXmlStreamReader>
-#include <QCommandLinkButton>
-#include <QDateTime>
-#include <QLayoutItem>
-#include <QBoxLayout>
-#include <QDesktopServices>
-#include <QTextDocument>
 
 #ifdef QT_DEBUG
 #  include <QDebug>

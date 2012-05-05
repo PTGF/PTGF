@@ -28,7 +28,7 @@
 #include "MainSettingPage.h"
 #include "ui_MainSettingPage.h"
 
-#include <QFileDialog>
+#include <SettingManager/SettingManager.h>
 
 namespace Core {
 namespace MainWindow {

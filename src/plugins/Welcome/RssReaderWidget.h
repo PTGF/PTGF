@@ -28,17 +28,13 @@
 #ifndef RSSREADERWIDGET_H
 #define RSSREADERWIDGET_H
 
-#include <QWidget>
-#include <QUrl>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QSignalMapper>
-#include <QSslError>
-#include <QSslSocket>
+#include <QtCore>
+#include <QtGui>
+#include <QtNetwork>
+
 
 namespace Plugins {
 namespace Welcome {
-
 
 class RssReaderWidget : public QWidget
 {

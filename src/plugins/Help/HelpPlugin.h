@@ -1,11 +1,11 @@
 #ifndef HELPPLUGIN_H
 #define HELPPLUGIN_H
 
+#include <QtCore>
+#include <QtGui>
 #include <QtHelp>
-#include <QAction>
 #include <PluginManager/IPlugin.h>
 #include <SettingManager/ISettingPageFactory.h>
-#include "HelpWidget.h"
 
 namespace Plugins {
 namespace Help {

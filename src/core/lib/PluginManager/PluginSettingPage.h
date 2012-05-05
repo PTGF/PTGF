@@ -28,14 +28,15 @@
 #ifndef PLUGINSETTINGPAGE_H
 #define PLUGINSETTINGPAGE_H
 
-#include <QDialog>
-#include <QTreeWidget>
+#include <QtCore>
+#include <QtGui>
+
 #include <SettingManager/ISettingPage.h>
-#include <SettingManager/SettingManager.h>
-#include "PluginWrapper.h"
 
 namespace Core {
 namespace PluginManager {
+
+class PluginWrapper;
 
 namespace Ui {
     class PluginSettingPage;

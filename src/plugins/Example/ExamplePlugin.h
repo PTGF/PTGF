@@ -29,6 +29,7 @@
 #define EXAMPLEPLUGIN_H
 
 #include <QtCore>
+#include <QtGui>
 #include <PluginManager/IPlugin.h>
 
 namespace Plugins {

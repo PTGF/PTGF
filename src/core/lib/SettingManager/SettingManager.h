@@ -28,19 +28,14 @@
 #ifndef SETTINGMANAGER_H
 #define SETTINGMANAGER_H
 
-#include <QObject>
-#include <QString>
-#include <QSettings>
-
-#include "MainWindow/MainWindow.h"
+#include <QtCore>
 
 #include "SettingManagerLibrary.h"
-#include "ISettingPageFactory.h"
-#include "SettingDialog.h"
-
 
 namespace Core {
 namespace SettingManager {
+
+class ISettingPageFactory;
 
 class SETTINGMANAGER_EXPORT SettingManager : public QObject
 {

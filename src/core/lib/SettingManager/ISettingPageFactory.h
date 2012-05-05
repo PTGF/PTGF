@@ -28,14 +28,16 @@
 #ifndef ISETTINGPAGEFACTORY_H
 #define ISETTINGPAGEFACTORY_H
 
+#include <QtCore>
+#include <QtGui>
 #include <QtPlugin>
-#include <QString>
-#include <QIcon>
-#include "ISettingPage.h"
+
 #include "SettingManagerLibrary.h"
 
 namespace Core {
 namespace SettingManager {
+
+class ISettingPage;
 
 class SETTINGMANAGER_EXPORT ISettingPageFactory
 {

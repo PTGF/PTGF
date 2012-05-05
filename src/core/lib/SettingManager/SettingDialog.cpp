@@ -25,9 +25,11 @@
 
  */
 
-#include <QPushButton>
 #include "SettingDialog.h"
 #include "ui_SettingDialog.h"
+
+#include "ISettingPage.h"
+#include "SettingManager.h"
 
 namespace Core {
 namespace SettingManager {

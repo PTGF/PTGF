@@ -1,9 +1,8 @@
 #include "HelpBrowser.h"
 
-#include <QToolBar>
-#include <QAction>
-
-#include <QDebug>
+#ifdef QT_DEBUG
+    #include <QtDebug>
+#endif
 
 namespace Plugins {
 namespace Help {

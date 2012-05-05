@@ -1,10 +1,10 @@
 #include "HelpPlugin.h"
 
-#include <QToolBar>
-#include <QApplication>
 #include <PluginManager/PluginManager.h>
 #include <MainWindow/MainWindow.h>
+
 #include "Settings/SettingPage.h"
+#include "HelpWidget.h"
 
 namespace Plugins {
 namespace Help {

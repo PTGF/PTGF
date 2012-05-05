@@ -84,4 +84,18 @@ else: styleSheet.path = /share/ptgf/
 styleSheet.files = MainWindow/StyleSheet.css
 INSTALLS += styleSheet
 
+mainWindowHeaders.path = /include/core/lib/MainWindow
+mainWindowHeaders.files = MainWindow/MainWindowLibrary.h MainWindow/MainWindow.h MainWindow/NotificationWidget.h
+INSTALLS += mainWindowHeaders
 
+pluginManagerHeaders.path = /include/core/lib/PluginManager
+pluginManagerHeaders.files = PluginManager/PluginManagerLibrary.h PluginManager/PluginManager.h PluginManager/IPlugin.h
+INSTALLS += pluginManagerHeaders
+
+settingManagerHeaders.path = /include/core/lib/SettingManager
+settingManagerHeaders.files = SettingManager/SettingManagerLibrary.h SettingManager/SettingManager.h SettingManager/ISettingPage.h SettingManager/ISettingPageFactory.h
+INSTALLS += settingManagerHeaders
+
+actionManagerHeaders.path = /include/core/lib/ActionManager
+actionManagerHeaders.files = ActionManager/ActionManagerLibrary.h ActionManager/ActionManager.h
+INSTALLS += actionManagerHeaders

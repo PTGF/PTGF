@@ -28,14 +28,15 @@
 #include "WelcomeWidget.h"
 #include "ui_WelcomeWidget.h"
 
-#include <QMetaClassInfo>
-#include <QDesktopServices>
-#include <QDateTime>
-#include <QScrollArea>
 #include <PluginManager/PluginManager.h>
 #include <SettingManager/SettingManager.h>
 
-#include <QDebug>
+#include "IWelcomeData.h"
+#include "RssReaderWidget.h"
+
+#ifdef QT_DEBUG
+    #include <QtDebug>
+#endif
 
 namespace Plugins {
 namespace Welcome {

@@ -1,7 +1,8 @@
 #ifndef HELPBROWSER_H
 #define HELPBROWSER_H
 
-#include <QTextBrowser>
+#include <QtCore>
+#include <QtGui>
 #include <QtHelp>
 
 namespace Plugins {

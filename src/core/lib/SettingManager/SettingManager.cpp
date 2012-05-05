@@ -27,8 +27,14 @@
 
 #include "SettingManager.h"
 
+#include <MainWindow/MainWindow.h>
+#include <PluginManager/PluginManager.h>
+
+#include "SettingDialog.h"
+#include "ISettingPageFactory.h"
+
 #ifdef QT_DEBUG
-    #include <QDebug>
+    #include <QtDebug>
 #endif
 
 namespace Core {
@@ -91,7 +97,7 @@ bool SettingManager::initialize()
         }
 
         /* Check the object pool for anything we should manage */
-        Core::PluginManager::PluginManager &pluginManager = Core::PluginManager::PluginManager::instance();
+        PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
         foreach(QObject *object, pluginManager.allObjects()) { pluginObjectRegistered(object); }
         connect(&pluginManager, SIGNAL(objectAdded(QObject*)), this, SLOT(pluginObjectRegistered(QObject*)));
         connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), this, SLOT(pluginObjectDeregistered(QObject*)));
