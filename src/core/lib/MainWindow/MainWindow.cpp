@@ -422,6 +422,24 @@ NotificationWidget *MainWindow::notify(const QString &text,
     return notificationWidget;
 }
 
+QList<QAction*> MainWindow::allActions()
+{
+    return allActions(menuBar()->actions());
+}
+
+QList<QAction*> MainWindow::allActions(QList<QAction *> actions)
+{
+    QList<QAction *> retVal;
+    foreach(QAction *action, actions) {
+        retVal.append(action);
+        if(action->menu()) {
+            retVal.append(allActions(action->menu()->actions()));
+        }
+    }
+    return retVal;
+}
+
+
 /*!
    \fn MainWindow::settingPageIcon()
    \brief Reimplemented from ISettingPageFactory.

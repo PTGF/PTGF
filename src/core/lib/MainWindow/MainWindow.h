@@ -66,6 +66,8 @@ public:
                 NotificationWidget::StandardButtons buttons = NotificationWidget::NoButton,
                 const QObject *reciever = NULL, const char *member = NULL);
 
+    QList<QAction*> allActions();
+
     /* BEGIN ISettingPageFactory */
     QIcon settingPageIcon();
     QString settingPageName();
@@ -85,6 +87,9 @@ protected:
     void initActions();
 
     void updateWindowTitle();
+
+    QList<QAction*> allActions(QList<QAction *> actions);
+
 
 protected slots:
     void setCurrentCentralWidget();
