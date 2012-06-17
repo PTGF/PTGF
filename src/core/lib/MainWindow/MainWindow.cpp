@@ -37,6 +37,10 @@
 #  include <QDebug>
 #endif
 
+
+#include <typeinfo>
+#include <QtDebug>
+
 namespace Core {
 namespace MainWindow {
 
@@ -308,9 +312,27 @@ void MainWindow::addCentralWidget(QWidget *widget, int priority, QString title, 
             break;
         }
     }
+
     if(!wasInserted) {
         ui->toolbar->addAction(selectWidget);
     }
+
+
+    //HACK: Only way to set width expand available space, without re-writing parts of Qt4 internals
+    static int maxWidth = 0;
+    QToolButton *button = qobject_cast<QToolButton*>(ui->toolbar->widgetForAction(selectWidget));
+    if(button->sizeHint().width() > maxWidth) {
+        // If the newly added button is biggest, iterate over the others and resize them
+        maxWidth = button->sizeHint().width();
+        foreach(QAction *action, ui->toolbar->actions()) {
+            QToolButton *button = qobject_cast<QToolButton*>(ui->toolbar->widgetForAction(action));
+            button->setMinimumWidth(maxWidth);
+        }
+    } else {
+        // Force the width to the largest button size
+        button->setMinimumWidth(maxWidth);
+    }
+
 
     if(ui->toolbar->actions().count() > 0) {
         ui->toolbar->actions().first()->trigger();
