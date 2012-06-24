@@ -29,8 +29,6 @@
 #define IPLUGIN_H
 
 #include <QtCore>
-#include <QtPlugin>
-
 #include "PluginManagerLibrary.h"
 
 namespace Core {

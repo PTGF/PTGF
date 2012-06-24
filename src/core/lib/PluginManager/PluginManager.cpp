@@ -236,22 +236,33 @@ void PluginManager::loadPlugins()
         QPluginLoader pluginLoader(filePath);
         QObject *object = pluginLoader.instance();
 
-        if (object) {
+        if(!object) {
 #ifdef PLUGINMANAGER_DEBUG
-                qDebug() << __FILE__ << __LINE__ << "Plugin was object:" << fileName;
+            qDebug() << __FILE__ << __LINE__ << "Not an object (check your $LD_LIBRARY_PATH, it may be failing to load linked libraries):" << fileName;
 #endif
-            IPlugin *plugin = qobject_cast<IPlugin *>(object);
-            if (plugin) {
-                PluginWrapper *wrapper = new PluginWrapper(plugin, filePath, this);
-                m_Plugins.append(wrapper);
-
-#ifdef PLUGINMANAGER_DEBUG
-                qDebug() << __FILE__ << __LINE__ << "Loaded plugin:" << fileName;
-#endif
-
-                emit pluginLoaded(plugin);
-            }
+            continue;
         }
+
+#ifdef PLUGINMANAGER_DEBUG
+        qDebug() << __FILE__ << __LINE__ << "Plugin was object:" << fileName;
+#endif
+
+        IPlugin *plugin = qobject_cast<IPlugin *>(object);
+        if(!plugin) {
+#ifdef PLUGINMANAGER_DEBUG
+            qDebug() << __FILE__ << __LINE__ << "Not an IPlugin object (is everything defined?):" << fileName;
+#endif
+            continue;
+        }
+
+        PluginWrapper *wrapper = new PluginWrapper(plugin, filePath, this);
+        m_Plugins.append(wrapper);
+
+#ifdef PLUGINMANAGER_DEBUG
+        qDebug() << __FILE__ << __LINE__ << "Loaded plugin:" << fileName;
+#endif
+
+        emit pluginLoaded(plugin);
     }
 
     initializePlugins();
