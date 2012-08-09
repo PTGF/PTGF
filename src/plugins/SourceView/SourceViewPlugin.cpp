@@ -126,7 +126,9 @@ QList<Core::PluginManager::Dependency> SourceViewPlugin::dependencies()
 QPlainTextEdit *SourceViewPlugin::sourceViewWidget(const QString &text)
 {
     Q_UNUSED(text)
-    return (QPlainTextEdit*)(new SourceView());
+    SourceView *view = new SourceView();
+    view->setPlainText(text);
+    return (QPlainTextEdit *)view;
 }
 
 } // namespace SourceView

@@ -49,7 +49,6 @@ SourceView::SourceView(QWidget *parent) :
 
 SourceView::~SourceView()
 {
-
 }
 
 void SourceView::setCurrentLineNumber(const int &lineNumber)
@@ -60,6 +59,20 @@ void SourceView::setCurrentLineNumber(const int &lineNumber)
     setTextCursor(cursor);
     centerCursor();
     setFocus();
+}
+
+void SourceView::addAnnotation(int lineNumber, QString toolTip, QColor color)
+{
+    Annotation annotation;
+    annotation.toolTip = toolTip;
+    annotation.color = color;
+
+    m_Annotations[lineNumber] = annotation;
+}
+
+void SourceView::removeAnnotation(int lineNumber)
+{
+    m_Annotations.remove(lineNumber);
 }
 
 int SourceView::sideBarAreaWidth()
@@ -131,11 +144,16 @@ void SourceView::sideBarAreaPaintEvent(QPaintEvent *event)
 
             painter.drawText(0, top, m_SideBarArea->width(), fontMetrics().height(), Qt::AlignRight, number);
 
-            if(m_Statements.contains(blockNumber + 1)) {
+            if(m_Annotations.contains(blockNumber + 1)) {
+                Annotation annotation = m_Annotations.value(blockNumber+1);
+                QBrush brush = painter.brush();
+                if(brush.color() != annotation.color) {
+                    brush.setColor(annotation.color);
+                    painter.setBrush(brush);
+                }
+
                 int diameter = fontMetrics().height();
-                QIcon icon(":/OpenSpeedShop/sourceMarker.svg");
-                QPixmap pixmap = icon.pixmap(QSize(diameter, diameter));
-                painter.drawPixmap(0,top, pixmap.height(), pixmap.width(), pixmap);
+                painter.drawEllipse(diameter/2, top-(diameter/2), diameter, diameter);
             }
         }
 
@@ -144,64 +162,6 @@ void SourceView::sideBarAreaPaintEvent(QPaintEvent *event)
         bottom = top + (int) blockBoundingRect(block).height();
         ++blockNumber;
     }
-}
-
-void SourceView::setModel(QAbstractItemModel *model)
-{
-    m_Model = model;
-    refreshStatements();
-}
-
-void SourceView::refreshStatements()
-{
-    m_Statements.clear();
-    if(m_FilePath.isEmpty() || !m_Model) {
-        return;
-    }
-
-    int statementColumn = -1;
-    QString statementType;
-    for(int i=0; i < m_Model->columnCount(); ++i) {
-        QString columnType = m_Model->headerData(i, Qt::Horizontal, Qt::ToolTipRole).toString();
-        if(columnType == "Statement" || columnType == "Function") {
-            statementType = columnType;
-            statementColumn = i;
-            break;
-        }
-    }
-
-    if(statementColumn >= 0) {
-        QRegExp statementPattern;
-        if(statementType == "Function") {
-            statementPattern.setPattern("^.*\\((.*):([0-9]+)\\)$");
-        } else if(statementType == "Statement") {
-            statementPattern.setPattern("^(.*):([0-9]+)$");
-        }
-
-        for(int i=0; i < m_Model->rowCount(); ++i) {
-            QModelIndex index = m_Model->index(i, statementColumn);
-            QString statementText = index.data(Qt::DisplayRole).toString();
-
-            if(statementPattern.exactMatch(statementText)) {
-                QString filePath = statementPattern.cap(1);
-
-                bool okay;
-                int lineNumber = statementPattern.cap(2).toInt(&okay);
-                if(!okay) { lineNumber = 0; }
-
-                if(filePath == m_FilePath) {
-                    m_Statements.insert(lineNumber, index);
-                }
-            }
-
-        }
-    }
-}
-
-void SourceView::setFilePath(const QString &filePath)
-{
-    m_FilePath = filePath;
-    refreshStatements();
 }
 
 bool SourceView::event(QEvent *event)
@@ -218,24 +178,14 @@ bool SourceView::event(QEvent *event)
 
         QTextCursor cursor = cursorForPosition(position);
         int lineNumber = cursor.blockNumber() + 1;
-        if(!m_Statements.contains(lineNumber)) {
+        if(!m_Annotations.contains(lineNumber)) {
             QToolTip::hideText();
             event->ignore();
             return true;
         }
 
-        QModelIndex rowIndex = m_Statements.value(lineNumber);
-        const QAbstractItemModel *model = rowIndex.model();
-
-        QStringList toolTip;
-        for(int i=0; i < model->columnCount(); ++i) {
-            QModelIndex index = model->index(rowIndex.row(), i, rowIndex.parent());
-            QString header = model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString();
-            QString value = index.data(Qt::DisplayRole).toString();
-            toolTip.append(header + QLatin1String(":  ") + value);
-        }
-
-        QToolTip::showText(helpEvent->globalPos(), toolTip.join(QLatin1String("\n")));
+        Annotation annotation = m_Annotations.value(lineNumber);
+        QToolTip::showText(helpEvent->globalPos(), annotation.toolTip);
         return true;
     }
 

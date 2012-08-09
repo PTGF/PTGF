@@ -49,8 +49,8 @@ public:
 
     void setCurrentLineNumber(const int &lineNumber);
 
-    void setModel(QAbstractItemModel *model);
-    void setFilePath(const QString &filePath);
+    void addAnnotation(int lineNumber, QString toolTip = QString(), QColor color = QColor("orange"));
+    void removeAnnotation(int lineNumber);
 
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -69,9 +69,8 @@ private:
     QWidget *m_SideBarArea;
     SyntaxHighlighter m_SyntaxHighlighter;
 
-    QMap<int, QModelIndex> m_Statements;
-    QAbstractItemModel *m_Model;
-    QString m_FilePath;
+    struct Annotation { QColor color; QString toolTip; };
+    QMap<int, Annotation> m_Annotations;
 
     friend class SideBarArea;
 };

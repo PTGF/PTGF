@@ -42,8 +42,8 @@ void SyntaxHighlighter::init()
     keywords << "asm" << "break" << "case" << "catch" << "class" << "const_cast" << "continue" << "default" << "delete"
              << "do" << "dynamic_cast" << "else" << "enum" << "explicit" << "export" << "extern" << "false" << "friend"
              << "for" << "goto" << "if" << "inline" << "namespace" << "new" << "operator" << "private" << "protected"
-             << "public" << "qobject_cast" << "reinterpret_cast" << "return" << "sizeof" << "static_cast" << "struct"
-             << "switch" << "template" << "this" << "throw" << "true" << "try" << "typedef" << "typeid" << "type_info"
+             << "public" << "reinterpret_cast" << "return" << "sizeof" << "static_cast" << "struct" << "switch"
+             << "template" << "this" << "throw" << "true" << "try" << "typedef" << "typeid" << "type_info"
              << "typename" << "union" << "using" << "virtual" << "while" << "and" << "and_eq" << "bad_cast"
              << "bad_typeid" << "bitand" << "bitor" << "compl" << "not" << "not_eq" << "or" << "or_eq" << "xor"
              << "xor_eq";
