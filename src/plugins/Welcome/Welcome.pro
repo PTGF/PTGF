@@ -23,6 +23,8 @@ CONFIG(debug, debug|release) {
   TARGET           = Welcome
 }
 
+QT               += xml network
+
 HEADERS          += WelcomePlugin.h \
                     WelcomeWidget.h \
                     IWelcomeData.h \
@@ -36,14 +38,12 @@ SOURCES          += WelcomePlugin.cpp \
                     RssReaderWidget.cpp \
                     SettingPage.cpp
 
-QT               += xml network
+FORMS            += WelcomeWidget.ui \
+                    SettingPage.ui
+
+RESOURCES        += Resources/Resources.qrc
 
 #debug: DEFINES   += WELCOME_DEBUG
-
-FORMS += WelcomeWidget.ui \
-    SettingPage.ui
-
-RESOURCES += Resources/Resources.qrc
 
 DEFINES      += WELCOME_LIBRARY
 
