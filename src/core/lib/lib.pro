@@ -43,7 +43,8 @@ HEADERS +=  ActionManager/ActionManager.h \
             PluginManager/PluginManagerLibrary.h \
             SettingManager/SettingManagerLibrary.h \
             MainWindow/MainWindowLibrary.h \
-            ActionManager/ActionManagerLibrary.h
+            ActionManager/ActionManagerLibrary.h \
+    PrettyWidgets/TabWidget.h
 
 SOURCES +=  ActionManager/ActionManager.cpp \
             PluginManager/PluginManager.cpp \
@@ -57,7 +58,8 @@ SOURCES +=  ActionManager/ActionManager.cpp \
             MainWindow/MainWindow.cpp \
             PluginManager/PluginSettingPage.cpp \
             MainWindow/MainSettingPage.cpp \
-            MainWindow/NotificationWidget.cpp
+            MainWindow/NotificationWidget.cpp \
+    PrettyWidgets/TabWidget.cpp
 
 FORMS   +=  SettingManager/SettingDialog.ui \
             MainWindow/MainWindow.ui \
@@ -99,3 +101,7 @@ INSTALLS += settingManagerHeaders
 actionManagerHeaders.path = /include/core/lib/ActionManager
 actionManagerHeaders.files = ActionManager/ActionManagerLibrary.h ActionManager/ActionManager.h
 INSTALLS += actionManagerHeaders
+
+prettyWidgetsHeaders.path = /include/core/lib/PrettyWidgets
+prettyWidgetsHeaders.files = PrettyWidgets/TabWidget.h
+INSTALLS += prettyWidgetsHeaders
