@@ -27,13 +27,20 @@
 
 #include "SourceView.h"
 
+#ifdef QT_DEBUG
+#include <QtDebug>
+#endif
+
+#include "SyntaxHighlighter.h"
+
+
 namespace Plugins {
 namespace SourceView {
 
 SourceView::SourceView(QWidget *parent) :
     QPlainTextEdit(parent),
     m_SideBarArea(new SideBarArea(this)),
-    m_SyntaxHighlighter(this->document())
+    m_SyntaxHighlighter(new SyntaxHighlighter(this->document()))
 {
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSideBarAreaWidth(int)));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateSideBarArea(QRect,int)));

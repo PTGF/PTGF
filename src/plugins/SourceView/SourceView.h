@@ -31,16 +31,14 @@
 #include <QtCore>
 #include <QtGui>
 
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
-
-#include "SyntaxHighlighter.h"
+#include "SourceViewLibrary.h"
 
 namespace Plugins {
 namespace SourceView {
 
-class SourceView : public QPlainTextEdit
+class SyntaxHighlighter;
+
+class SOURCEVIEW_EXPORT SourceView : public QPlainTextEdit
 {
     Q_OBJECT
 public:
@@ -67,7 +65,7 @@ private slots:
 
 private:
     QWidget *m_SideBarArea;
-    SyntaxHighlighter m_SyntaxHighlighter;
+    SyntaxHighlighter *m_SyntaxHighlighter;
 
     struct Annotation { QColor color; QString toolTip; };
     QMap<int, Annotation> m_Annotations;
@@ -75,7 +73,7 @@ private:
     friend class SideBarArea;
 };
 
-class SideBarArea : public QWidget
+class SOURCEVIEW_EXPORT SideBarArea : public QWidget
 {
 public:
     SideBarArea(SourceView *sourceView) : QWidget(sourceView) { m_SourceView = sourceView; }

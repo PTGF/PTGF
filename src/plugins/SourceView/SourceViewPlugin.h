@@ -59,7 +59,7 @@ public:
     QList<Core::PluginManager::Dependency> dependencies();
 
     /* ISourceViewFactory Interface */
-    QPlainTextEdit *sourceViewWidget(const QString &text);
+    SourceView *sourceViewWidget(const QString &text);
 
 protected:
     QString m_Name;

@@ -41,5 +41,5 @@ SOURCES            += SourceViewPlugin.cpp \
 DEFINES      += SOURCEVIEW_LIBRARY
 
 sourceViewPluginHeaders.path = /include/plugins/SourceView
-sourceViewPluginHeaders.files = SourceViewLibrary.h ISourceViewFactory.h
+sourceViewPluginHeaders.files = SourceViewLibrary.h ISourceViewFactory.h SourceView.h
 INSTALLS += sourceViewPluginHeaders

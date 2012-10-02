@@ -36,10 +36,12 @@
 namespace Plugins {
 namespace SourceView {
 
+class SourceView;
+
 class SOURCEVIEW_EXPORT ISourceViewFactory
 {
 public:
-    virtual QPlainTextEdit *sourceViewWidget(const QString &text) = 0;
+    virtual SourceView *sourceViewWidget(const QString &text) = 0;
 };
 
 } // namespace SourceView

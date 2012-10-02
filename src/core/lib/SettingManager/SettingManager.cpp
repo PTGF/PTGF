@@ -91,6 +91,7 @@ bool SettingManager::initialize()
             if(action->text() == tr("Tools")) {
                 QAction *settingDialog = new QAction(tr("Settings"), this);
                 settingDialog->setToolTip(tr("Change application and plugin settings"));
+                settingDialog->setShortcut(QKeySequence::Preferences);
                 connect(settingDialog, SIGNAL(triggered()), this, SLOT(settingDialog()));
                 action->menu()->addAction(settingDialog);
             }

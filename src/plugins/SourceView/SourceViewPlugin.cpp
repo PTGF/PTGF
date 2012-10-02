@@ -123,12 +123,11 @@ QList<Core::PluginManager::Dependency> SourceViewPlugin::dependencies()
     return m_Dependencies;
 }
 
-QPlainTextEdit *SourceViewPlugin::sourceViewWidget(const QString &text)
+SourceView *SourceViewPlugin::sourceViewWidget(const QString &text)
 {
-    Q_UNUSED(text)
     SourceView *view = new SourceView();
     view->setPlainText(text);
-    return (QPlainTextEdit *)view;
+    return view;
 }
 
 } // namespace SourceView
