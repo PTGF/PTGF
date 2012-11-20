@@ -51,6 +51,11 @@ public:
 } // namespace SettingManager
 } // namespace Core
 
-Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPageFactory, "org.krellinst.ptgf.ISettingPageFactory/0.1")
+#ifndef STRINGIFY
+#define STRINGIFY(X) # X
+#endif
+
+#define ISETTINGPAGEFACTORY_VERSION "org.krellinst.ptgf.ISettingPageFactory/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
+Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPageFactory, ISETTINGPAGEFACTORY_VERSION)
 
 #endif // ISETTINGPAGEFACTORY_H

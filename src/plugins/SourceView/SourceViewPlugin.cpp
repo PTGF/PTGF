@@ -38,7 +38,7 @@ namespace SourceView {
  */
 
 /*! \class SourceViewPlugin
-    \version 0.1.dev
+    \version 0.3.dev
     \brief
 
     \todo Document this more explicitly.
@@ -52,7 +52,7 @@ SourceViewPlugin::SourceViewPlugin(QObject *parent) :
     QObject(parent)
 {
     m_Name = "SourceView";
-    m_Version = "0.1.dev";
+    m_Version = QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT);
 }
 
 /*!

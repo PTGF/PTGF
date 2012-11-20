@@ -62,6 +62,11 @@ public:
 } // namespace PluginManager
 } // namespace Core
 
-Q_DECLARE_INTERFACE(Core::PluginManager::IPlugin, "org.krellinst.ptgf.IPlugin/0.1")
+#ifndef STRINGIFY
+#define STRINGIFY(X) # X
+#endif
+
+#define IPLUGIN_VERSION "org.krellinst.ptgf.IPlugin/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
+Q_DECLARE_INTERFACE(Core::PluginManager::IPlugin, IPLUGIN_VERSION)
 
 #endif // IPLUGIN_H

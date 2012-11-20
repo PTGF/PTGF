@@ -1,7 +1,7 @@
 /*!
    \file main.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version 0.1.dev
+   \version 0.3.dev
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
@@ -27,7 +27,7 @@
 
 /*! \mainpage Parallel Tool GUI Framework (PTGF)
     \author Dane Gardner <dane.gardner@gmail.com>
-    \version 0.1.dev
+    \version 0.3.dev
 
     \section intro Introduction
     \par
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Krell Institute");
     QCoreApplication::setOrganizationDomain("krellinst.org");
     QCoreApplication::setApplicationName("Parallel Tools GUI Framework");
-    QCoreApplication::setApplicationVersion("0.1");
+    QCoreApplication::setApplicationVersion(QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT));
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tInstantiating the singleton classes";

@@ -13,7 +13,7 @@ HelpPlugin::HelpPlugin(QObject *parent) :
     QObject(parent)
 {
     m_Name = "Help";
-    m_Version = "0.1.dev";
+    m_Version = QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT);
 
 # ifdef WIN32
     m_HelpEngine = new QHelpEngine(QString("%1/ptgf/PTGF.qhc").arg(QApplication::instance()->applicationDirPath()));

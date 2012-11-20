@@ -40,7 +40,7 @@ WelcomePlugin::WelcomePlugin(QObject *parent) :
     QObject(parent)
 {
     m_Name = "Welcome";
-    m_Version = "0.1.dev";
+    m_Version = QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT);
 }
 
 /* BEGIN IPlugin */

@@ -51,6 +51,11 @@ public slots:
 } // namespace SettingManager
 } // namespace Core
 
-Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPage, "org.krellinst.ptgf.ISettingPage/0.1")
+#ifndef STRINGIFY
+#define STRINGIFY(X) # X
+#endif
+
+#define ISETTINGPAGE_VERSION "org.krellinst.ptgf.ISettingPage/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
+Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPage, ISETTINGPAGE_VERSION)
 
 #endif // ISETTINGPAGE_H

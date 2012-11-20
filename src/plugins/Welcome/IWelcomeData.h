@@ -87,6 +87,11 @@ public:
 } // namespace Welcome
 } // namespace Plugins
 
-Q_DECLARE_INTERFACE(Plugins::Welcome::IWelcomeData, "org.krellinst.ptgf.IWelcomeData/0.1")
+#ifndef STRINGIFY
+#define STRINGIFY(X) # X
+#endif
+
+#define IWELCOMEDATA_VERSION "org.krellinst.ptgf.IWelcomeData/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
+Q_DECLARE_INTERFACE(Plugins::Welcome::IWelcomeData, IWELCOMEDATA_VERSION)
 
 #endif // IWELCOMEDATA_H
