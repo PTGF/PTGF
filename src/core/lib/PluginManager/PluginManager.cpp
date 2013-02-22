@@ -5,7 +5,7 @@
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -28,7 +28,7 @@
 #include "PluginManager.h"
 
 #include <SettingManager/SettingManager.h>
-#include <MainWindow/MainWindow.h>
+#include <CoreWindow/CoreWindow.h>
 
 #include "PluginSettingPage.h"
 #include "PluginWrapper.h"
@@ -126,8 +126,8 @@ bool PluginManager::initialize()
         Core::PluginManager::PluginManager &pluginManager = Core::PluginManager::PluginManager::instance();
         pluginManager.addObject(this);                         /* Register ourselves as an ISettingPageFactory */
 
-        MainWindow::MainWindow &mainWindow = MainWindow::MainWindow::instance();
-        foreach(QAction *action, mainWindow.menuBar()->actions()) {
+        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+        foreach(QAction *action, coreWindow.menuBar()->actions()) {
             if(action->text() == tr("Help")) {
                 QAction *pluginDialog = new QAction("Plugins", this);
                 pluginDialog->setToolTip(tr("View loaded plugins"));
@@ -412,7 +412,7 @@ void PluginManager::pluginDialog()
 {
     // Wrapped in a QDialog because this is also registered as a setting page
 
-    QDialog *dialog = new QDialog(&MainWindow::MainWindow::instance());
+    QDialog *dialog = new QDialog(&CoreWindow::CoreWindow::instance());
     QGridLayout *layout = new QGridLayout(dialog);
     layout->addWidget(new PluginSettingPage(m_Plugins, dialog));
     dialog->setLayout(layout);
@@ -447,7 +447,7 @@ bool PluginManager::descending(PluginWrapper *left, PluginWrapper *right)
 
 /* BEGIN ISettingPageFactory */
 /*!
-   \fn MainWPluginManagerindow::settingPageIcon()
+   \fn PluginManager::settingPageIcon()
    \brief Reimplemented from ISettingPageFactory.
    \sa Core::SettingManager::ISettingPageFactory::settingPageIcon()
  */

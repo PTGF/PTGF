@@ -1,11 +1,11 @@
 /*!
-   \file MainSettingPage.cpp
+   \file CoreSettingPage.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
    \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -25,28 +25,28 @@
 
  */
 
-#include "MainSettingPage.h"
-#include "ui_MainSettingPage.h"
+#include "CoreSettingPage.h"
+#include "ui_CoreSettingPage.h"
 
 #include <SettingManager/SettingManager.h>
 
 namespace Core {
-namespace MainWindow {
+namespace CoreWindow {
 
 /*!
-   \fn Core::MainWindow::MainSettingPage
-   \brief This is the main page for the GUI framework.
+   \fn Core::CoreWindow::CoreSettingPage
+   \brief This is the core page for the GUI framework.
    Any general user-settable settings for the framework should be handled here.
  */
 
 
 /*!
-   \fn MainSettingPage::MainSettingPage()
+   \fn CoreSettingPage::CoreSettingPage()
    \brief Constructor
  */
-MainSettingPage::MainSettingPage(QWidget *parent) :
+CoreSettingPage::CoreSettingPage(QWidget *parent) :
     SettingManager::ISettingPage(parent),
-    ui(new Ui::MainSettingPage)
+    ui(new Ui::CoreSettingPage)
 {
     ui->setupUi(this);
 
@@ -64,7 +64,7 @@ MainSettingPage::MainSettingPage(QWidget *parent) :
 }
 
 /*! \reimp */
-MainSettingPage::~MainSettingPage()
+CoreSettingPage::~CoreSettingPage()
 {
     // Reset the style if necessary
     if(QApplication::style()->objectName().compare(m_OriginalStyle, Qt::CaseInsensitive))
@@ -74,10 +74,10 @@ MainSettingPage::~MainSettingPage()
 }
 
 /*! \reimp */
-void MainSettingPage::apply()
+void CoreSettingPage::apply()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("MainWindow");
+    settingManager.beginGroup("CoreWindow");
 
     m_OriginalStyle = QApplication::style()->objectName();
     settingManager.setValue("style", m_OriginalStyle);
@@ -88,11 +88,11 @@ void MainSettingPage::apply()
 }
 
 /*! \reimp */
-void MainSettingPage::reset()
+void CoreSettingPage::reset()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
 
-    settingManager.beginGroup("MainWindow");
+    settingManager.beginGroup("CoreWindow");
 
     QString style = settingManager.value("style", m_OriginalStyle).toString();
     int index = ui->cmbStyle->findText(style, Qt::MatchFixedString);
@@ -104,10 +104,10 @@ void MainSettingPage::reset()
 }
 
 /*!
-   \fn MainSettingPage::on_cmbStyle_currentIndexChanged()
+   \fn CoreSettingPage::on_cmbStyle_currentIndexChanged()
    \brief Slot that handles changes in the style combo box.
  */
-void MainSettingPage::on_cmbStyle_currentIndexChanged(QString style)
+void CoreSettingPage::on_cmbStyle_currentIndexChanged(QString style)
 {
     // Ensure we're actually changing the style
     if(!QApplication::style()->objectName().compare(ui->cmbStyle->currentText(), Qt::CaseInsensitive))
@@ -117,7 +117,7 @@ void MainSettingPage::on_cmbStyle_currentIndexChanged(QString style)
     QApplication::setStyle(QStyleFactory::create(style));
 }
 
-void MainSettingPage::on_btnStylesheet_clicked()
+void CoreSettingPage::on_btnStylesheet_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     "Open Stylesheet",
@@ -130,5 +130,5 @@ void MainSettingPage::on_btnStylesheet_clicked()
 
 
 
-} // namespace MainWindow
+} // namespace CoreWindow
 } // namespace Core

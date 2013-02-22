@@ -1,11 +1,11 @@
 /*!
-   \file MainWindow.h
+   \file CoreWindow.h
    \author Dane Gardner <dane.gardner@gmail.com>
    \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -26,30 +26,30 @@
  */
 
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef COREWINDOW_H
+#define COREWINDOW_H
 
 #include <QtCore>
 #include <QtGui>
 
 #include <SettingManager/ISettingPageFactory.h>
 #include "NotificationWidget.h"
-#include "MainWindowLibrary.h"
+#include "CoreWindowLibrary.h"
 
 namespace Core {
-namespace MainWindow {
+namespace CoreWindow {
 
 namespace Ui {
-    class MainWindow;
+    class CoreWindow;
 }
 
-class MAINWINDOW_EXPORT MainWindow : public QMainWindow, public SettingManager::ISettingPageFactory
+class COREWINDOW_EXPORT CoreWindow : public QMainWindow, public SettingManager::ISettingPageFactory
 {
     Q_OBJECT
     Q_INTERFACES(Core::SettingManager::ISettingPageFactory)
 
 public:
-    static MainWindow &instance();
+    static CoreWindow &instance();
 
     bool initialize();
     bool initialized();
@@ -79,8 +79,8 @@ public slots:
     void setCurrentCentralWidget(QWidget *current);
 
 protected:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit CoreWindow(QWidget *parent = 0);
+    ~CoreWindow();
 
     void readSettings();
     void writeSettings();
@@ -97,14 +97,14 @@ protected slots:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::CoreWindow *ui;
     bool m_Initialized;
     QString m_StylesheetFilePath;
 
-    friend class MainSettingPage;
+    friend class CoreSettingPage;
 };
 
 
-} // namespace MainWindow
+} // namespace CoreWindow
 } // namespace Core
-#endif // MAINWINDOW_H
+#endif // COREWINDOW_H

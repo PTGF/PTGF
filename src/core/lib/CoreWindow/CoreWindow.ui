@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Core::MainWindow::MainWindow</class>
- <widget class="QMainWindow" name="Core::MainWindow::MainWindow">
+ <class>Core::CoreWindow::CoreWindow</class>
+ <widget class="QMainWindow" name="Core::CoreWindow::CoreWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>CoreWindow</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../Resources/Core.qrc">
-    <normaloff>:/MainWindow/app.png</normaloff>:/MainWindow/app.png</iconset>
+    <normaloff>:/CoreWindow/app.png</normaloff>:/CoreWindow/app.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="centralLayout">

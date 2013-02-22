@@ -5,7 +5,7 @@
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -27,7 +27,7 @@
 
 #include "SettingManager.h"
 
-#include <MainWindow/MainWindow.h>
+#include <CoreWindow/CoreWindow.h>
 #include <PluginManager/PluginManager.h>
 
 #include "SettingDialog.h"
@@ -86,8 +86,8 @@ bool SettingManager::initialize()
 {
     try {
 
-        MainWindow::MainWindow &mainWindow = MainWindow::MainWindow::instance();
-        foreach(QAction *action, mainWindow.menuBar()->actions()) {
+        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+        foreach(QAction *action, coreWindow.menuBar()->actions()) {
             if(action->text() == tr("Tools")) {
                 QAction *settingDialog = new QAction(tr("Settings"), this);
                 settingDialog->setToolTip(tr("Change application and plugin settings"));
@@ -117,6 +117,7 @@ bool SettingManager::initialized()
 
 void SettingManager::shutdown()
 {
+    Q_ASSERT(m_Initialized);
 }
 
 /*!
@@ -214,13 +215,13 @@ void SettingManager::registerPageFactory(ISettingPageFactory *page)
 void SettingManager::deregisterPageFactory(ISettingPageFactory *page)
 {
     if(m_Pages.contains(page)) {
-        m_Pages.append(page);
+        m_Pages.removeAll(page);
     }
 }
 
 void SettingManager::settingDialog()
 {
-    SettingDialog dialog(m_Pages, &MainWindow::MainWindow::instance());
+    SettingDialog dialog(m_Pages, &CoreWindow::CoreWindow::instance());
     dialog.exec();
 }
 

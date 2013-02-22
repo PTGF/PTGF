@@ -1,5 +1,5 @@
 # This file is part of the Parallel Tools GUI Framework (PTGF)
-# Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+# Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -36,15 +36,20 @@ HEADERS +=  ActionManager/ActionManager.h \
             SettingManager/ISettingPageFactory.h \
             SettingManager/ISettingPage.h \
             ActionManager/MenuItem.h \
-            MainWindow/MainWindow.h \
             PluginManager/PluginSettingPage.h \
-            MainWindow/MainSettingPage.h \
-            MainWindow/NotificationWidget.h \
+            CoreWindow/NotificationWidget.h \
             PluginManager/PluginManagerLibrary.h \
             SettingManager/SettingManagerLibrary.h \
-            MainWindow/MainWindowLibrary.h \
             ActionManager/ActionManagerLibrary.h \
-    PrettyWidgets/TabWidget.h
+            PrettyWidgets/TabWidget.h \
+            CoreWindow/CoreSettingPage.h \
+            CoreWindow/CoreWindow.h \
+            CoreWindow/CoreWindowLibrary.h \
+            WindowManager/WindowManager.h \
+            WindowManager/IMainWindow.h \
+            WindowManager/AboutDialog.h \
+            WindowManager/AboutWidget.h \
+    WindowManager/WindowManagerLibrary.h
 
 SOURCES +=  ActionManager/ActionManager.cpp \
             PluginManager/PluginManager.cpp \
@@ -55,40 +60,52 @@ SOURCES +=  ActionManager/ActionManager.cpp \
             SettingManager/ISettingPageFactory.cpp \
             SettingManager/ISettingPage.cpp \
             ActionManager/MenuItem.cpp \
-            MainWindow/MainWindow.cpp \
             PluginManager/PluginSettingPage.cpp \
-            MainWindow/MainSettingPage.cpp \
-            MainWindow/NotificationWidget.cpp \
-    PrettyWidgets/TabWidget.cpp
+            PrettyWidgets/TabWidget.cpp \
+            CoreWindow/CoreWindow.cpp \
+            CoreWindow/NotificationWidget.cpp \
+            CoreWindow/CoreSettingPage.cpp \
+            WindowManager/WindowManager.cpp \
+            WindowManager/IMainWindow.cpp \
+            WindowManager/AboutDialog.cpp \
+            WindowManager/AboutWidget.cpp
 
 FORMS   +=  SettingManager/SettingDialog.ui \
-            MainWindow/MainWindow.ui \
             PluginManager/PluginSettingPage.ui \
-            MainWindow/MainSettingPage.ui
+            CoreWindow/CoreSettingPage.ui \
+            CoreWindow/CoreWindow.ui \
+            WindowManager/AboutDialog.ui \
+            WindowManager/AboutWidget.ui
 
 LIBS    +=
 
 RESOURCES += Resources/Core.qrc
 
-DEFINES          += MAINWINDOW_LIBRARY \
+DEFINES          += COREWINDOW_LIBRARY \
                     PLUGINMANAGER_LIBRARY \
                     SETTINGMANAGER_LIBRARY \
-                    ACTIONMANAGER_LIBRARY
+                    ACTIONMANAGER_LIBRARY \
+                    WINDOWMANAGER_LIBRARY
 
-#debug:DEFINES    += MAINWINDOW_DEBUG
+#debug:DEFINES    += COREWINDOW_DEBUG
+#debug:DEFINES    += WINDOWMANAGER_DEBUG
 #debug:DEFINES    += ACTIONMANAGER_DEBUG
 #debug:DEFINES    += PLUGINMANAGER_DEBUG
 #debug:DEFINES    += SETTINGMANAGER_DEBUG
 
-OTHER_FILES += MainWindow/StyleSheet.css
+OTHER_FILES += CoreWindow/StyleSheet.css
 win32: styleSheet.path = /ptgf/
 else: styleSheet.path = /share/ptgf/
-styleSheet.files = MainWindow/StyleSheet.css
+styleSheet.files = CoreWindow/StyleSheet.css
 INSTALLS += styleSheet
 
-mainWindowHeaders.path = /include/core/lib/MainWindow
-mainWindowHeaders.files = MainWindow/MainWindowLibrary.h MainWindow/MainWindow.h MainWindow/NotificationWidget.h
-INSTALLS += mainWindowHeaders
+coreWindowHeaders.path = /include/core/lib/CoreWindow
+coreWindowHeaders.files = CoreWindow/CoreWindowLibrary.h CoreWindow/CoreWindow.h CoreWindow/NotificationWidget.h
+INSTALLS += coreWindowHeaders
+
+windowManagerHeaders.path = /include/core/lib/WindowManager
+windowManagerHeaders.files = WindowManager/WindowManagerLibrary.h WindowManager/WindowManager.h WindowManager/IMainWindow.h
+INSTALLS += windowManagerHeaders
 
 pluginManagerHeaders.path = /include/core/lib/PluginManager
 pluginManagerHeaders.files = PluginManager/PluginManagerLibrary.h PluginManager/PluginManager.h PluginManager/IPlugin.h

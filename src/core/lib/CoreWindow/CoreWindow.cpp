@@ -1,11 +1,11 @@
 /*!
-   \file MainWindow.cpp
+   \file CoreWindow.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
    \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -25,15 +25,15 @@
 
  */
 
-#include "MainWindow.h"
-#include "ui_MainWindow.h"
+#include "CoreWindow.h"
+#include "ui_CoreWindow.h"
 
 #include <SettingManager/SettingManager.h>
 #include <PluginManager/PluginManager.h>
 
-#include "MainSettingPage.h"
+#include "CoreSettingPage.h"
 
-#ifdef MAINWINDOW_DEBUG
+#ifdef COREWINDOW_DEBUG
 #  include <QDebug>
 #endif
 
@@ -42,11 +42,11 @@
 #include <QtDebug>
 
 namespace Core {
-namespace MainWindow {
+namespace CoreWindow {
 
 /*!
-   \class Core::MainWindow::MainWindow
-   \brief The MainWindow class is part of the core framework libraries.
+   \class Core::CoreWindow::CoreWindow
+   \brief The CoreWindow class is part of the core framework libraries.
    It is the actual viewport that the user sees. All plugins manipulate this view to expose data to the user.
 
    Singleton class.
@@ -57,30 +57,30 @@ namespace MainWindow {
 
 
 /*!
-   \fn MainWindow::instance()
+   \fn CoreWindow::instance()
    \brief Access to the singleton instance of this class
    \returns A reference to the singleton instance of this class
  */
-MainWindow &MainWindow::instance()
+CoreWindow &CoreWindow::instance()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::instance";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::instance";
 #endif
-    static MainWindow *m_Instance = new MainWindow();
+    static CoreWindow *m_Instance = new CoreWindow();
     return *m_Instance;
 }
 
 /*!
-   \fn MainWindow::MainWindow()
+   \fn CoreWindow::CoreWindow()
    \brief Constructor.
  */
-MainWindow::MainWindow(QWidget *parent) :
+CoreWindow::CoreWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
+    ui(new Ui::CoreWindow),
     m_Initialized(false)
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::MainWindow";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::CoreWindow";
 #endif
 
     ui->setupUi(this);
@@ -89,30 +89,30 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 /*!
-   \fn MainWindow::~MainWindow()
+   \fn CoreWindow::~CoreWindow()
    \brief Destructor.
  */
-MainWindow::~MainWindow()
+CoreWindow::~CoreWindow()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::~MainWindow";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::~CoreWindow";
 #endif
 
     delete ui;
 }
 
 /*!
-   \fn MainWindow::initialize()
+   \fn CoreWindow::initialize()
    \brief Initializes this class after it has been constructed.
    This design pattern allows the class to perform any operations after a class (that this object is dependent upon) has been
    constructed.
    \returns true if successful
    \sa initialized(), shutdown()
  */
-bool MainWindow::initialize()
+bool CoreWindow::initialize()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::initialize";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::initialize";
 #endif
 
     try {
@@ -132,29 +132,29 @@ bool MainWindow::initialize()
 }
 
 /*!
-   \fn MainWindow::initialized()
+   \fn CoreWindow::initialized()
    \brief Returns a boolean value indicating whether this instance has been initialized or not.
    \sa initialize()
  */
-bool MainWindow::initialized()
+bool CoreWindow::initialized()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::initialized";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::initialized";
 #endif
 
     return m_Initialized;
 }
 
 /*!
-   \fn MainWindow::shutdown()
+   \fn CoreWindow::shutdown()
    \brief Notifies the instance that it should perform any clean-up operations before destruction.
    This class is called manually, before the application is closed.  It will occur before destruction of the instance.
    \sa initialize()
  */
-void MainWindow::shutdown()
+void CoreWindow::shutdown()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::shutdown";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::shutdown";
 #endif
 
     writeSettings();
@@ -163,17 +163,17 @@ void MainWindow::shutdown()
 }
 
 /*!
-   \fn MainWindow::readSettings()
+   \fn CoreWindow::readSettings()
    \brief Load settings from the SettingManager.
  */
-void MainWindow::readSettings()
+void CoreWindow::readSettings()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::readSettings";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::readSettings";
 #endif
 
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("MainWindow");
+    settingManager.beginGroup("CoreWindow");
 
     QString styleName = settingManager.value("style", QApplication::style()->objectName()).toString();
     QStyle *style = QStyleFactory::create(styleName);
@@ -210,18 +210,18 @@ void MainWindow::readSettings()
 }
 
 /*!
-   \fn MainWindow::writeSettings()
+   \fn CoreWindow::writeSettings()
    \brief Stores settings in the SettingManager for later retrieval.
  */
-void MainWindow::writeSettings()
+void CoreWindow::writeSettings()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::writeSettings";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::writeSettings";
 #endif
 
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
 
-    settingManager.beginGroup("MainWindow");
+    settingManager.beginGroup("CoreWindow");
 
     settingManager.setValue("StylesheetFilePath", m_StylesheetFilePath);
     settingManager.setValue("Style", QApplication::style()->objectName());
@@ -233,24 +233,24 @@ void MainWindow::writeSettings()
 }
 
 /*!
-   \fn MainWindow::initActions()
+   \fn CoreWindow::initActions()
    \returns
  */
-void MainWindow::initActions()
+void CoreWindow::initActions()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::initActions";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::initActions";
 #endif
 }
 
 /*!
-   \fn MainWindow::addProgressBar()
+   \fn CoreWindow::addProgressBar()
    \returns
  */
-QProgressBar *MainWindow::addProgressBar()
+QProgressBar *CoreWindow::addProgressBar()
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::addProgressBar";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::addProgressBar";
 #endif
 
     QProgressBar *retval = new QProgressBar(this);
@@ -263,13 +263,13 @@ QProgressBar *MainWindow::addProgressBar()
 }
 
 /*!
-   \fn MainWindow::removeProgressBar()
+   \fn CoreWindow::removeProgressBar()
    \returns
  */
-void MainWindow::removeProgressBar(QProgressBar *progressBar)
+void CoreWindow::removeProgressBar(QProgressBar *progressBar)
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::removeProgressBar";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::removeProgressBar";
 #endif
 
     progressBar->setParent(NULL);
@@ -277,14 +277,14 @@ void MainWindow::removeProgressBar(QProgressBar *progressBar)
 }
 
 /*!
-   \fn MainWindow::addCentralWidget()
+   \fn CoreWindow::addCentralWidget()
    This function takes ownership of the supplied widget.
    \returns
  */
-void MainWindow::addCentralWidget(QWidget *widget, int priority, QString title, QIcon icon)
+void CoreWindow::addCentralWidget(QWidget *widget, int priority, QString title, QIcon icon)
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::addCentralWidget";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::addCentralWidget";
 #endif
 
     int index = ui->stackedWidget->addWidget(widget);
@@ -340,13 +340,13 @@ void MainWindow::addCentralWidget(QWidget *widget, int priority, QString title, 
 }
 
 /*!
-   \fn MainWindow::removeCentralWidget()
+   \fn CoreWindow::removeCentralWidget()
    \returns
  */
-void MainWindow::removeCentralWidget(QWidget *widget)
+void CoreWindow::removeCentralWidget(QWidget *widget)
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::removeCentralWidget";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::removeCentralWidget";
 #endif
 
     /* Ensure we own the widget, remove it, and remove the button associated with it */
@@ -365,7 +365,7 @@ void MainWindow::removeCentralWidget(QWidget *widget)
     }
 }
 
-void MainWindow::setCurrentCentralWidget(QWidget *current)
+void CoreWindow::setCurrentCentralWidget(QWidget *current)
 {
     /* Ensure that the widget actually exists in our collection, set it as current, and set its associated button to checked */
     for(int index=0; index < ui->stackedWidget->count(); ++index) {
@@ -386,7 +386,7 @@ void MainWindow::setCurrentCentralWidget(QWidget *current)
     }
 }
 
-void MainWindow::setCurrentCentralWidget()
+void CoreWindow::setCurrentCentralWidget()
 {
     QObject *object = QObject::sender();
     QAction *action = qobject_cast<QAction *>(object);
@@ -403,13 +403,13 @@ void MainWindow::setCurrentCentralWidget()
     }
 }
 
-void MainWindow::updateWindowTitle()
+void CoreWindow::updateWindowTitle()
 {
     // Set window title appropriately
     if(ui->stackedWidget->currentWidget()->windowTitle() == "Welcome" ||
        ui->stackedWidget->currentWidget()->windowTitle() == "Help") {
         setWindowTitle("Parallel Tools GUI Framework");
-        setWindowIcon(QIcon(":/MainWindow/app.png"));
+        setWindowIcon(QIcon(":/CoreWindow/app.png"));
     } else {
         setWindowTitle(ui->stackedWidget->currentWidget()->windowTitle());
         setWindowIcon(ui->stackedWidget->currentWidget()->windowIcon());
@@ -418,23 +418,23 @@ void MainWindow::updateWindowTitle()
     }
 }
 
-void MainWindow::on_actionExit_triggered()
+void CoreWindow::on_actionExit_triggered()
 {
     close();
 }
 
 
 /*!
-   \fn MainWindow::notify()
+   \fn CoreWindow::notify()
    \returns
  */
-NotificationWidget *MainWindow::notify(const QString &text,
+NotificationWidget *CoreWindow::notify(const QString &text,
                                        NotificationWidget::Icon icon,
                                        NotificationWidget::StandardButtons buttons,
                                        const QObject *reciever, const char *member)
 {
-#ifdef MAINWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tMainWindow::notify";
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::notify";
 #endif
 
     NotificationWidget *notificationWidget = new NotificationWidget(text, icon, buttons, reciever, member, this);
@@ -444,12 +444,12 @@ NotificationWidget *MainWindow::notify(const QString &text,
     return notificationWidget;
 }
 
-QList<QAction*> MainWindow::allActions()
+QList<QAction*> CoreWindow::allActions()
 {
     return allActions(menuBar()->actions());
 }
 
-QList<QAction*> MainWindow::allActions(QList<QAction *> actions)
+QList<QAction*> CoreWindow::allActions(QList<QAction *> actions)
 {
     QList<QAction *> retVal;
     foreach(QAction *action, actions) {
@@ -463,45 +463,45 @@ QList<QAction*> MainWindow::allActions(QList<QAction *> actions)
 
 
 /*!
-   \fn MainWindow::settingPageIcon()
+   \fn CoreWindow::settingPageIcon()
    \brief Reimplemented from ISettingPageFactory.
    \sa Core::SettingManager::ISettingPageFactory::settingPageIcon()
  */
-QIcon MainWindow::settingPageIcon()
+QIcon CoreWindow::settingPageIcon()
 {
-    return QIcon(":/MainWindow/app.png");
+    return QIcon(":/CoreWindow/app.png");
 }
 
 /*!
-   \fn MainWindow::settingPageName()
+   \fn CoreWindow::settingPageName()
    \brief Reimplemented from ISettingPageFactory.
    \reimp Core::SettingManager::ISettingPageFactory::settingPageName()
  */
-QString MainWindow::settingPageName()
+QString CoreWindow::settingPageName()
 {
     return tr("Core");
 }
 
 /*!
-   \fn MainWindow::settingPagePriority()
+   \fn CoreWindow::settingPagePriority()
    \brief Reimplemented from ISettingPageFactory.
    \reimp Core::SettingManager::ISettingPageFactory::settingPagePriority()
  */
-int MainWindow::settingPagePriority()
+int CoreWindow::settingPagePriority()
 {
     return 10;
 }
 
 /*!
-   \fn MainWindow::createSettingPage()
+   \fn CoreWindow::createSettingPage()
    \brief Reimplemented from ISettingPageFactory.
    \reimp Core::SettingManager::ISettingPageFactory::createSettingPage()
  */
-SettingManager::ISettingPage *MainWindow::createSettingPage()
+SettingManager::ISettingPage *CoreWindow::createSettingPage()
 {
-    return new MainSettingPage();
+    return new CoreSettingPage();
 }
 
 
-} // namespace MainWindow
+} // namespace CoreWindow
 } // namespace Core

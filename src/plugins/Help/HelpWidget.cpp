@@ -1,6 +1,6 @@
 #include "HelpWidget.h"
 
-#include <MainWindow/MainWindow.h>
+#include <CoreWindow/CoreWindow.h>
 
 #include "HelpBrowser.h"
 
@@ -76,8 +76,8 @@ void HelpWidget::linkActivated(QUrl url, QString string)
 {
     Q_UNUSED(string)
 
-    Core::MainWindow::MainWindow &mainWindow = Core::MainWindow::MainWindow::instance();
-    mainWindow.setCurrentCentralWidget(this);
+    Core::CoreWindow::CoreWindow &coreWindow = Core::CoreWindow::CoreWindow::instance();
+    coreWindow.setCurrentCentralWidget(this);
 
     HelpBrowser *browser = new HelpBrowser(m_HelpEngine, &m_Documents);
     browser->setSource(url);

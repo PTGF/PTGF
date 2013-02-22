@@ -5,7 +5,7 @@
 #include <QtGui>
 
 namespace Core {
-namespace MainWindow {
+namespace CoreWindow {
 
 class NotificationWidget : public QFrame
 {
@@ -105,7 +105,7 @@ protected:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(NotificationWidget::StandardButtons)
 
-} // namespace MainWindow
+} // namespace CoreWindow
 } // namespace Core
 
 #endif // NOTIFICATIONWIDGET_H

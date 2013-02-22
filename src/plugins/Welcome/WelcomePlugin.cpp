@@ -5,7 +5,7 @@
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -27,7 +27,7 @@
 
 #include "WelcomePlugin.h"
 
-#include <MainWindow/MainWindow.h>
+#include <CoreWindow/CoreWindow.h>
 #include <PluginManager/PluginManager.h>
 #include "WelcomeWidget.h"
 #include "IWelcomeData.h"
@@ -54,8 +54,8 @@ bool WelcomePlugin::initialize(QStringList &args, QString *err)
 
         WelcomeWidget *welcomeWidget = new WelcomeWidget();
 
-        MainWindow::MainWindow &mainWindow = MainWindow::MainWindow::instance();
-        mainWindow.addCentralWidget(welcomeWidget, 0, tr("Welcome"), QIcon(":/Welcome/welcome.svg"));
+        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+        coreWindow.addCentralWidget(welcomeWidget, 0, tr("Welcome"), QIcon(":/Welcome/welcome.svg"));
 
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
         pluginManager.addObject(this);

@@ -1,7 +1,7 @@
 #include "NotificationWidget.h"
 
 namespace Core {
-namespace MainWindow {
+namespace CoreWindow {
 
 NotificationWidget::NotificationWidget(QWidget *parent) :
     QFrame(parent)
@@ -72,7 +72,7 @@ void NotificationWidget::setupUi()
     _closeButton->setMaximumHeight(16);
     _closeButton->setMaximumWidth(16);
     _closeButton->setAutoRaise(true);
-    _closeButton->setIcon(QIcon(":/MainWindow/notificationClose.svg"));
+    _closeButton->setIcon(QIcon(":/CoreWindow/notificationClose.svg"));
     connect(_closeButton, SIGNAL(clicked()), this, SLOT(on_closeButton_clicked()));
     layout->addWidget(_closeButton);
 
@@ -98,20 +98,20 @@ void NotificationWidget::setIcon(const Icon &icon)
 {
     switch(_icon = icon) {
     case Information:
-        _iconLabel->setPixmap(QPixmap(":/MainWindow/information.svg"));
+        _iconLabel->setPixmap(QPixmap(":/CoreWindow/information.svg"));
         break;
     case Warning:
-        _iconLabel->setPixmap(QPixmap(":/MainWindow/warning.svg"));
+        _iconLabel->setPixmap(QPixmap(":/CoreWindow/warning.svg"));
         break;
     case Critical:
-        _iconLabel->setPixmap(QPixmap(":/MainWindow/critical.svg"));
+        _iconLabel->setPixmap(QPixmap(":/CoreWindow/critical.svg"));
         break;
     case Question:
-        _iconLabel->setPixmap(QPixmap(":/MainWindow/question.svg"));
+        _iconLabel->setPixmap(QPixmap(":/CoreWindow/question.svg"));
         break;
     case Loading:
     {
-        QMovie *movie = new QMovie(":/MainWindow/loading.gif", QByteArray(), this);
+        QMovie *movie = new QMovie(":/CoreWindow/loading.gif", QByteArray(), this);
         _iconLabel->setMovie(movie);
         movie->start();
     }
@@ -194,5 +194,5 @@ void NotificationWidget::keyReleaseEvent(QKeyEvent *event)
 
 
 
-} // namespace MainWindow
+} // namespace CoreWindow
 } // namespace Core

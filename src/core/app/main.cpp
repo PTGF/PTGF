@@ -5,7 +5,7 @@
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -36,7 +36,7 @@
     currently under development by Argo Navis Technologies LLC.
     \par
     For those who are using this documentation to learn the project's development
-    process, you might want to start with the MainWindow object.
+    process, you might want to start with the CoreWindow object.
 
     \section releases Releases
     \par
@@ -45,7 +45,7 @@
     \section copyright Copyright
     \par
     This file is part of the Parallel Tools GUI Framework (PTGF)
-    Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+    Copyright (C) 2010-2013 Argo Navis Technologies, LLC
     \par
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published by the
@@ -68,7 +68,8 @@
 
 #include <SettingManager/SettingManager.h>
 #include <PluginManager/PluginManager.h>
-#include <MainWindow/MainWindow.h>
+#include <CoreWindow/CoreWindow.h>
+#include <WindowManager/WindowManager.h>
 
 #ifdef MAIN_DEBUG
 #  include <QDebug>
@@ -97,8 +98,9 @@ int main(int argc, char *argv[])
 
     using namespace Core;
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    MainWindow::MainWindow &mainWindow = MainWindow::MainWindow::instance();
+    CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
     PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
+    WindowManager::WindowManager &windowManager = WindowManager::WindowManager::instance();
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tInitializing the singleton classes";
@@ -106,10 +108,12 @@ int main(int argc, char *argv[])
 
     if(!settingManager.initialized())
         settingManager.initialize();
-    if(!mainWindow.initialized())
-        mainWindow.initialize();
+    if(!coreWindow.initialized())
+        coreWindow.initialize();
     if(!pluginManager.initialized())
         pluginManager.initialize();
+    if(!windowManager.initialized())
+        windowManager.initialize();
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tLoading plugins";
@@ -118,20 +122,22 @@ int main(int argc, char *argv[])
     pluginManager.loadPlugins();
 
 #ifdef MAIN_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tShowing the MainWindow";
+    qDebug() << __FILE__ << __LINE__ << "\tShowing the CoreWindow";
 #endif
 
-    mainWindow.show();
+    coreWindow.show();
     retval = a.exec();
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tShutting down singleton classes";
 #endif
 
+    if(windowManager.initialized())
+        windowManager.shutdown();
     if(pluginManager.initialized())
         pluginManager.shutdown();
-    if(mainWindow.initialized())
-        mainWindow.shutdown();
+    if(coreWindow.initialized())
+        coreWindow.shutdown();
     if(settingManager.initialized())
         settingManager.shutdown();
 

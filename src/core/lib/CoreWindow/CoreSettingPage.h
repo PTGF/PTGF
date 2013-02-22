@@ -1,11 +1,11 @@
 /*!
-   \file MainSettingPage.h
+   \file CoreSettingPage.h
    \author Dane Gardner <dane.gardner@gmail.com>
    \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -25,8 +25,8 @@
 
  */
 
-#ifndef MAINSETTINGPAGE_H
-#define MAINSETTINGPAGE_H
+#ifndef CORESETTINGPAGE_H
+#define CORESETTINGPAGE_H
 
 #include <QtCore>
 #include <QtGui>
@@ -34,18 +34,18 @@
 #include <SettingManager/ISettingPage.h>
 
 namespace Core {
-namespace MainWindow {
+namespace CoreWindow {
 
-namespace Ui { class MainSettingPage; }
+namespace Ui { class CoreSettingPage; }
 
-class MainSettingPage : public SettingManager::ISettingPage
+class CoreSettingPage : public SettingManager::ISettingPage
 {
     Q_OBJECT
     Q_INTERFACES(Core::SettingManager::ISettingPage)
 
 public:
-    explicit MainSettingPage(QWidget *parent = 0);
-    ~MainSettingPage();
+    explicit CoreSettingPage(QWidget *parent = 0);
+    ~CoreSettingPage();
 
 public slots:
     void apply();
@@ -59,10 +59,10 @@ protected:
     QString m_OriginalStyle;
 
 private:
-    Ui::MainSettingPage *ui;
+    Ui::CoreSettingPage *ui;
 };
 
 
-} // namespace MainWindow
+} // namespace CoreWindow
 } // namespace Core
-#endif // MAINSETTINGPAGE_H
+#endif // CORESETTINGPAGE_H

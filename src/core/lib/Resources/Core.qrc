@@ -4,7 +4,7 @@
         <file alias="plugin.svg">preferences-plugin.svg</file>
         <file alias="fail.svg">dialog-error-4.svg</file>
     </qresource>
-    <qresource prefix="/MainWindow">
+    <qresource prefix="/CoreWindow">
         <file alias="app.png">icon_cluster.png</file>
         <file alias="notificationClose.svg">window-close.svg</file>
         <file alias="critical.svg">dialog-error-4.svg</file>

@@ -5,7 +5,7 @@
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -27,7 +27,7 @@
 
 #include "ActionManager.h"
 
-#include <MainWindow/MainWindow.h>
+#include <CoreWindow/CoreWindow.h>
 
 #include "MenuItem.h"
 
@@ -42,7 +42,7 @@ namespace ActionManager {
 /*!
    \class ActionManager
    \brief The ActionManager class is part of the core framework libraries, and
-          manages the menus and toolbars in the MainWindow.
+          manages the menus and toolbars in the CoreWindow.
 
           singleton class
  */
@@ -111,7 +111,7 @@ void ActionManager::shutdown()
  */
 void ActionManager::refreshMenuItems()
 {
-    QMenuBar *menuBar = MainWindow::MainWindow::instance().menuBar();
+    QMenuBar *menuBar = CoreWindow::CoreWindow::instance().menuBar();
 
     QList<MenuItem *> menuItems(m_MenuItems);
     QList<MenuItem *> base;
@@ -146,7 +146,7 @@ void ActionManager::refreshMenuItems()
         delete action;
     }
 
-    // Add them by priority into the MainWindow's MenuBar
+    // Add them by priority into the CoreWindow's MenuBar
     qSort(base.begin(), base.end(), MenuItem::ascending);
     MenuItem *menuItem = NULL;
     while(!base.isEmpty()) {

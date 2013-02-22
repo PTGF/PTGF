@@ -1,7 +1,7 @@
 #include "HelpPlugin.h"
 
 #include <PluginManager/PluginManager.h>
-#include <MainWindow/MainWindow.h>
+#include <CoreWindow/CoreWindow.h>
 
 #include "Settings/SettingPage.h"
 #include "HelpWidget.h"
@@ -58,8 +58,8 @@ bool HelpPlugin::initialize(QStringList &args, QString *err)
 
         HelpWidget *helpWidget = new HelpWidget(m_HelpEngine);
 
-        MainWindow::MainWindow &mainWindow = MainWindow::MainWindow::instance();
-        mainWindow.addCentralWidget(helpWidget, 256);
+        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+        coreWindow.addCentralWidget(helpWidget, 256);
 
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
         pluginManager.addObject(this);

@@ -5,7 +5,7 @@
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2011 Argo Navis Technologies, LLC
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
@@ -38,6 +38,8 @@ namespace PluginManager {
 class PluginWrapper : public QObject, public IPlugin {
     Q_OBJECT
     Q_INTERFACES(Core::PluginManager::IPlugin)
+
+    Q_PROPERTY(int priority READ priority WRITE setPriority STORED true)
 
 public:
 
