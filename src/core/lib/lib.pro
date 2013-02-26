@@ -49,7 +49,10 @@ HEADERS +=  ActionManager/ActionManager.h \
             WindowManager/IMainWindow.h \
             WindowManager/AboutDialog.h \
             WindowManager/AboutWidget.h \
-    WindowManager/WindowManagerLibrary.h
+            WindowManager/WindowManagerLibrary.h \
+            NotificationManager/NotificationManager.h \
+            NotificationManager/NotificationManagerLibrary.h \
+            PrettyWidgets/ConsoleWidget.h
 
 SOURCES +=  ActionManager/ActionManager.cpp \
             PluginManager/PluginManager.cpp \
@@ -68,7 +71,9 @@ SOURCES +=  ActionManager/ActionManager.cpp \
             WindowManager/WindowManager.cpp \
             WindowManager/IMainWindow.cpp \
             WindowManager/AboutDialog.cpp \
-            WindowManager/AboutWidget.cpp
+            WindowManager/AboutWidget.cpp \
+            NotificationManager/NotificationManager.cpp \
+            PrettyWidgets/ConsoleWidget.cpp
 
 FORMS   +=  SettingManager/SettingDialog.ui \
             PluginManager/PluginSettingPage.ui \
@@ -85,13 +90,14 @@ DEFINES          += COREWINDOW_LIBRARY \
                     PLUGINMANAGER_LIBRARY \
                     SETTINGMANAGER_LIBRARY \
                     ACTIONMANAGER_LIBRARY \
-                    WINDOWMANAGER_LIBRARY
+                    WINDOWMANAGER_LIBRARY \
+                    NOTIFICATIONMANAGER_LIBRARY
 
-#debug:DEFINES    += COREWINDOW_DEBUG
-#debug:DEFINES    += WINDOWMANAGER_DEBUG
-#debug:DEFINES    += ACTIONMANAGER_DEBUG
-#debug:DEFINES    += PLUGINMANAGER_DEBUG
-#debug:DEFINES    += SETTINGMANAGER_DEBUG
+debug:DEFINES    += COREWINDOW_DEBUG
+debug:DEFINES    += WINDOWMANAGER_DEBUG
+debug:DEFINES    += ACTIONMANAGER_DEBUG
+debug:DEFINES    += PLUGINMANAGER_DEBUG
+debug:DEFINES    += SETTINGMANAGER_DEBUG
 
 OTHER_FILES += CoreWindow/StyleSheet.css
 win32: styleSheet.path = /ptgf/

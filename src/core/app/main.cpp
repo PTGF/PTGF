@@ -66,6 +66,7 @@
 
 #include <QtGui/QApplication>
 
+#include <NotificationManager/NotificationManager.h>
 #include <SettingManager/SettingManager.h>
 #include <PluginManager/PluginManager.h>
 #include <CoreWindow/CoreWindow.h>
@@ -75,7 +76,7 @@
 #  include <QDebug>
 #endif
 
-
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -97,6 +98,7 @@ int main(int argc, char *argv[])
 #endif
 
     using namespace Core;
+    NotificationManager::NotificationManager &notificationManager = NotificationManager::NotificationManager::instance();
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
     CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
     PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
@@ -106,6 +108,8 @@ int main(int argc, char *argv[])
     qDebug() << __FILE__ << __LINE__ << "\tInitializing the singleton classes";
 #endif
 
+    if(!notificationManager.initialized())
+        notificationManager.initialize();
     if(!settingManager.initialized())
         settingManager.initialize();
     if(!coreWindow.initialized())
@@ -140,6 +144,8 @@ int main(int argc, char *argv[])
         coreWindow.shutdown();
     if(settingManager.initialized())
         settingManager.shutdown();
+    if(notificationManager.initialized())
+        notificationManager.shutdown();
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tDone";
