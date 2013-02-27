@@ -28,57 +28,57 @@ else:target.path  = /lib
 INSTALLS         += target
 
 HEADERS +=  ActionManager/ActionManager.h \
-            PluginManager/PluginManager.h \
-            PluginManager/IPlugin.h \
-            PluginManager/PluginWrapper.h \
-            SettingManager/SettingManager.h \
-            SettingManager/SettingDialog.h \
-            SettingManager/ISettingPageFactory.h \
-            SettingManager/ISettingPage.h \
-            ActionManager/MenuItem.h \
-            PluginManager/PluginSettingPage.h \
-            CoreWindow/NotificationWidget.h \
-            PluginManager/PluginManagerLibrary.h \
-            SettingManager/SettingManagerLibrary.h \
             ActionManager/ActionManagerLibrary.h \
-            PrettyWidgets/TabWidget.h \
+            ActionManager/MenuItem.h \
             CoreWindow/CoreSettingPage.h \
             CoreWindow/CoreWindow.h \
             CoreWindow/CoreWindowLibrary.h \
-            WindowManager/WindowManager.h \
-            WindowManager/IMainWindow.h \
-            WindowManager/AboutDialog.h \
-            WindowManager/AboutWidget.h \
-            WindowManager/WindowManagerLibrary.h \
             NotificationManager/NotificationManager.h \
             NotificationManager/NotificationManagerLibrary.h \
-            PrettyWidgets/ConsoleWidget.h
+            NotificationManager/NotificationWidget.h \
+            PluginManager/IPlugin.h \
+            PluginManager/PluginManager.h \
+            PluginManager/PluginManagerLibrary.h \
+            PluginManager/PluginSettingPage.h \
+            PluginManager/PluginWrapper.h \
+            PrettyWidgets/ConsoleWidget.h \
+            PrettyWidgets/TabWidget.h \
+            SettingManager/ISettingPage.h \
+            SettingManager/ISettingPageFactory.h \
+            SettingManager/SettingDialog.h \
+            SettingManager/SettingManager.h \
+            SettingManager/SettingManagerLibrary.h \
+            WindowManager/AboutDialog.h \
+            WindowManager/AboutWidget.h \
+            WindowManager/IMainWindow.h \
+            WindowManager/WindowManager.h \
+            WindowManager/WindowManagerLibrary.h
 
 SOURCES +=  ActionManager/ActionManager.cpp \
-            PluginManager/PluginManager.cpp \
-            PluginManager/IPlugin.cpp \
-            PluginManager/PluginWrapper.cpp \
-            SettingManager/SettingManager.cpp \
-            SettingManager/SettingDialog.cpp \
-            SettingManager/ISettingPageFactory.cpp \
-            SettingManager/ISettingPage.cpp \
             ActionManager/MenuItem.cpp \
-            PluginManager/PluginSettingPage.cpp \
-            PrettyWidgets/TabWidget.cpp \
-            CoreWindow/CoreWindow.cpp \
-            CoreWindow/NotificationWidget.cpp \
             CoreWindow/CoreSettingPage.cpp \
-            WindowManager/WindowManager.cpp \
-            WindowManager/IMainWindow.cpp \
+            CoreWindow/CoreWindow.cpp \
+            NotificationManager/NotificationManager.cpp \
+            NotificationManager/NotificationWidget.cpp \
+            PluginManager/IPlugin.cpp \
+            PluginManager/PluginManager.cpp \
+            PluginManager/PluginSettingPage.cpp \
+            PluginManager/PluginWrapper.cpp \
+            PrettyWidgets/ConsoleWidget.cpp \
+            PrettyWidgets/TabWidget.cpp \
+            SettingManager/ISettingPage.cpp \
+            SettingManager/ISettingPageFactory.cpp \
+            SettingManager/SettingDialog.cpp \
+            SettingManager/SettingManager.cpp \
             WindowManager/AboutDialog.cpp \
             WindowManager/AboutWidget.cpp \
-            NotificationManager/NotificationManager.cpp \
-            PrettyWidgets/ConsoleWidget.cpp
+            WindowManager/IMainWindow.cpp \
+            WindowManager/WindowManager.cpp
 
-FORMS   +=  SettingManager/SettingDialog.ui \
-            PluginManager/PluginSettingPage.ui \
-            CoreWindow/CoreSettingPage.ui \
+FORMS   +=  CoreWindow/CoreSettingPage.ui \
             CoreWindow/CoreWindow.ui \
+            PluginManager/PluginSettingPage.ui \
+            SettingManager/SettingDialog.ui \
             WindowManager/AboutDialog.ui \
             WindowManager/AboutWidget.ui
 

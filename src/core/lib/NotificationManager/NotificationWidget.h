@@ -5,7 +5,7 @@
 #include <QtGui>
 
 namespace Core {
-namespace CoreWindow {
+namespace NotificationManager {
 
 class NotificationWidget : public QFrame
 {
@@ -96,11 +96,11 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 
 
-    QLabel *_label;
-    QLabel *_iconLabel;
-    Icon _icon;
-    QDialogButtonBox *_buttonBox;
-    QToolButton *_closeButton;
+    QLabel *m_Label;
+    QLabel *m_IconLabel;
+    Icon m_Icon;
+    QDialogButtonBox *m_ButtonBox;
+    QToolButton *m_CloseButton;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(NotificationWidget::StandardButtons)

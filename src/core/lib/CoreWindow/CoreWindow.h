@@ -32,8 +32,9 @@
 #include <QtCore>
 #include <QtGui>
 
+#include <NotificationManager/NotificationWidget.h>
 #include <SettingManager/ISettingPageFactory.h>
-#include "NotificationWidget.h"
+
 #include "CoreWindowLibrary.h"
 
 namespace Core {
@@ -61,9 +62,9 @@ public:
     void addCentralWidget(QWidget *widget, int priority = 128, QString title = QString(), QIcon icon = QIcon());
     void removeCentralWidget(QWidget *widget);
 
-    NotificationWidget *notify(const QString &text,
-                NotificationWidget::Icon icon = NotificationWidget::NoIcon,
-                NotificationWidget::StandardButtons buttons = NotificationWidget::NoButton,
+    NotificationManager::NotificationWidget *notify(const QString &text,
+                NotificationManager::NotificationWidget::Icon icon = NotificationManager::NotificationWidget::NoIcon,
+                NotificationManager::NotificationWidget::StandardButtons buttons = NotificationManager::NotificationWidget::NoButton,
                 const QObject *reciever = NULL, const char *member = NULL);
 
     QList<QAction*> allActions();

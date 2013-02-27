@@ -194,7 +194,7 @@ void CoreWindow::readSettings()
     if(!QFile::exists(m_StylesheetFilePath)) {
         QFileInfo fileInfo(m_StylesheetFilePath);
         notify(tr("Failed to open style sheet: %1<br/>This file path can be changed in the settings").
-               arg(fileInfo.absoluteFilePath()), NotificationWidget::Critical);
+               arg(fileInfo.absoluteFilePath()), NotificationManager::NotificationWidget::Critical);
     }
 
     QFile styleSheet(m_StylesheetFilePath);
@@ -428,16 +428,18 @@ void CoreWindow::on_actionExit_triggered()
    \fn CoreWindow::notify()
    \returns
  */
-NotificationWidget *CoreWindow::notify(const QString &text,
-                                       NotificationWidget::Icon icon,
-                                       NotificationWidget::StandardButtons buttons,
+NotificationManager::NotificationWidget *CoreWindow::notify(const QString &text,
+                                       NotificationManager::NotificationWidget::Icon icon,
+                                       NotificationManager::NotificationWidget::StandardButtons buttons,
                                        const QObject *reciever, const char *member)
 {
 #ifdef COREWINDOW_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::notify";
 #endif
 
-    NotificationWidget *notificationWidget = new NotificationWidget(text, icon, buttons, reciever, member, this);
+    NotificationManager::NotificationWidget *notificationWidget =
+            new NotificationManager::NotificationWidget(text, icon, buttons, reciever, member, this);
+
     ui->centralLayout->insertWidget(0, notificationWidget);
     notificationWidget->setFocus();
 

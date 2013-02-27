@@ -1,7 +1,7 @@
 #include "NotificationWidget.h"
 
 namespace Core {
-namespace CoreWindow {
+namespace NotificationManager {
 
 NotificationWidget::NotificationWidget(QWidget *parent) :
     QFrame(parent)
@@ -52,29 +52,29 @@ void NotificationWidget::setupUi()
     layout->setMargin(0);
     this->setLayout(layout);
 
-    _iconLabel = new QLabel(this);
-    _iconLabel->setMaximumHeight(16);
-    _iconLabel->setMaximumWidth(16);
-    _iconLabel->setScaledContents(true);
-    layout->addWidget(_iconLabel);
+    m_IconLabel = new QLabel(this);
+    m_IconLabel->setMaximumHeight(16);
+    m_IconLabel->setMaximumWidth(16);
+    m_IconLabel->setScaledContents(true);
+    layout->addWidget(m_IconLabel);
 
-    _label = new QLabel(this);
-    _label->setWordWrap(true);
-    layout->addWidget(_label);
+    m_Label = new QLabel(this);
+    m_Label->setWordWrap(true);
+    layout->addWidget(m_Label);
 
-    _buttonBox = new QDialogButtonBox(this);
-    _buttonBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    _buttonBox->setMaximumHeight(16);
-    connect(_buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(on_buttonBox_clicked(QAbstractButton*)));
-    layout->addWidget(_buttonBox);
+    m_ButtonBox = new QDialogButtonBox(this);
+    m_ButtonBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_ButtonBox->setMaximumHeight(16);
+    connect(m_ButtonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(on_buttonBox_clicked(QAbstractButton*)));
+    layout->addWidget(m_ButtonBox);
 
-    _closeButton = new QToolButton(this);
-    _closeButton->setMaximumHeight(16);
-    _closeButton->setMaximumWidth(16);
-    _closeButton->setAutoRaise(true);
-    _closeButton->setIcon(QIcon(":/CoreWindow/notificationClose.svg"));
-    connect(_closeButton, SIGNAL(clicked()), this, SLOT(on_closeButton_clicked()));
-    layout->addWidget(_closeButton);
+    m_CloseButton = new QToolButton(this);
+    m_CloseButton->setMaximumHeight(16);
+    m_CloseButton->setMaximumWidth(16);
+    m_CloseButton->setAutoRaise(true);
+    m_CloseButton->setIcon(QIcon(":/CoreWindow/notificationClose.svg"));
+    connect(m_CloseButton, SIGNAL(clicked()), this, SLOT(on_closeButton_clicked()));
+    layout->addWidget(m_CloseButton);
 
     setFocusPolicy(Qt::StrongFocus);
     setFocus();
@@ -82,68 +82,68 @@ void NotificationWidget::setupUi()
 
 QString NotificationWidget::text() const
 {
-    return _label->text();
+    return m_Label->text();
 }
 void NotificationWidget::setText(const QString &text)
 {
-    _label->setText(text);
+    m_Label->setText(text);
 }
 
 NotificationWidget::Icon NotificationWidget::icon() const
 {
-    return _icon;
+    return m_Icon;
 }
 
 void NotificationWidget::setIcon(const Icon &icon)
 {
-    switch(_icon = icon) {
+    switch(m_Icon = icon) {
     case Information:
-        _iconLabel->setPixmap(QPixmap(":/CoreWindow/information.svg"));
+        m_IconLabel->setPixmap(QPixmap(":/CoreWindow/information.svg"));
         break;
     case Warning:
-        _iconLabel->setPixmap(QPixmap(":/CoreWindow/warning.svg"));
+        m_IconLabel->setPixmap(QPixmap(":/CoreWindow/warning.svg"));
         break;
     case Critical:
-        _iconLabel->setPixmap(QPixmap(":/CoreWindow/critical.svg"));
+        m_IconLabel->setPixmap(QPixmap(":/CoreWindow/critical.svg"));
         break;
     case Question:
-        _iconLabel->setPixmap(QPixmap(":/CoreWindow/question.svg"));
+        m_IconLabel->setPixmap(QPixmap(":/CoreWindow/question.svg"));
         break;
     case Loading:
     {
         QMovie *movie = new QMovie(":/CoreWindow/loading.gif", QByteArray(), this);
-        _iconLabel->setMovie(movie);
+        m_IconLabel->setMovie(movie);
         movie->start();
     }
         break;
     default:
-        _iconLabel->setPixmap(QPixmap());
+        m_IconLabel->setPixmap(QPixmap());
     }
 }
 
 QPixmap NotificationWidget::pixmap() const
 {
-    return *_iconLabel->pixmap();
+    return *m_IconLabel->pixmap();
 }
 void NotificationWidget::setPixmap(const QPixmap &pixmap)
 {
-    _icon = NoIcon;
-    _iconLabel->setPixmap(pixmap);
+    m_Icon = NoIcon;
+    m_IconLabel->setPixmap(pixmap);
 }
 
 NotificationWidget::StandardButtons NotificationWidget::standardButtons() const
 {
-    return StandardButtons(int(_buttonBox->standardButtons()));
+    return StandardButtons(int(m_ButtonBox->standardButtons()));
 }
 void NotificationWidget::setStandardButtons(StandardButtons standardButtons)
 {
-    _buttonBox->setStandardButtons(QDialogButtonBox::StandardButtons(int(standardButtons)));
+    m_ButtonBox->setStandardButtons(QDialogButtonBox::StandardButtons(int(standardButtons)));
 }
 
 void NotificationWidget::on_buttonBox_clicked(QAbstractButton *button)
 {
     this->hide();
-    emit buttonClicked((StandardButton)_buttonBox->standardButton(button));
+    emit buttonClicked((StandardButton)m_ButtonBox->standardButton(button));
     emit closing();
     this->close();
 }
@@ -159,18 +159,18 @@ void NotificationWidget::on_closeButton_clicked()
 
 QList<QAbstractButton *> NotificationWidget::buttons() const
 {
-    return _buttonBox->buttons();
+    return m_ButtonBox->buttons();
 }
 
 
 void NotificationWidget::addButton(StandardButton button)
 {
-    _buttonBox->addButton((QDialogButtonBox::StandardButton)button);
+    m_ButtonBox->addButton((QDialogButtonBox::StandardButton)button);
 }
 
 QPushButton *NotificationWidget::button(StandardButton button) const
 {
-    return _buttonBox->button((QDialogButtonBox::StandardButton)button);
+    return m_ButtonBox->button((QDialogButtonBox::StandardButton)button);
 }
 
 
@@ -178,11 +178,11 @@ void NotificationWidget::keyReleaseEvent(QKeyEvent *event)
 {
     if(event->count() == 1) {
         if(event->key() == Qt::Key_Escape) {
-            _closeButton->animateClick();
+            m_CloseButton->animateClick();
             return;
         } else if(event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
             if(buttons().count() == 0) {
-                _closeButton->animateClick();
+                m_CloseButton->animateClick();
                 return;
             }
         }
