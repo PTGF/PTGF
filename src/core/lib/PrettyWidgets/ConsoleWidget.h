@@ -21,8 +21,10 @@ public slots:
 
     void scrollToBottom();
 
-
 signals:
+
+protected:
+    virtual void resizeEvent(QResizeEvent *event);
 
 private:
     QMap<int, QTextCharFormat> m_EventLevelCharFormats;

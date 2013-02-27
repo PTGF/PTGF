@@ -53,3 +53,15 @@ void ConsoleWidget::scrollToBottom()
     QScrollBar *vert = verticalScrollBar();
     vert->setValue(vert->maximum());
 }
+
+void ConsoleWidget::resizeEvent(QResizeEvent *event)
+{
+    bool wasScrolledToBottom = isScrolledToBottom();
+
+    QPlainTextEdit::resizeEvent(event);
+
+    // Remain scrolled to the bottom after the resize event!
+    if(wasScrolledToBottom) {
+        scrollToBottom();
+    }
+}

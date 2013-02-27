@@ -4,6 +4,7 @@
 #include <PrettyWidgets/ConsoleWidget.h>
 
 #include <CoreWindow/CoreWindow.h>
+#include <PluginManager/PluginManager.h>
 
 namespace Core {
 namespace NotificationManager {
@@ -19,7 +20,7 @@ NotificationManager::NotificationManager() :
     m_Initialized(false),
     m_StdOut(stdout, QIODevice::WriteOnly),
     m_StdError(stderr, QIODevice::WriteOnly),
-    m_ConsoleWidget(new ConsoleWidget())
+    m_ConsoleWidget(NULL)
 {
 }
 
@@ -32,31 +33,42 @@ NotificationManager::~NotificationManager()
 
 bool NotificationManager::initialize()
 {
+    Q_ASSERT(!m_Initialized);
+
     try {
 
-
-        //! \todo Register actions for hiding and showing the message console
-
-
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+        PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
 
-        QDockWidget *dockWidget = new QDockWidget(tr("Notification Message Console"));
-        dockWidget->setWidget(m_ConsoleWidget);
-        coreWindow.addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
 
-        connect(dockWidget, SIGNAL(visibilityChanged(bool))
+        // Setup dock widget for message console
+        QDockWidget *dockWidget = new QDockWidget(tr("Message Console"), &coreWindow);
 
+        m_ConsoleWidget = new ConsoleWidget(dockWidget);
         m_ConsoleWidget->setEventLevelColor((int)QtDebugMsg, Qt::darkGreen);
         m_ConsoleWidget->setEventLevelColor((int)QtWarningMsg, Qt::darkYellow);
         m_ConsoleWidget->setEventLevelColor((int)QtCriticalMsg, Qt::darkRed);
         m_ConsoleWidget->setEventLevelColor((int)QtFatalMsg, Qt::darkRed);
+        dockWidget->setWidget(m_ConsoleWidget);
+
+        coreWindow.addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
+
+        foreach(QAction *action, coreWindow.menuBar()->actions()) {
+            if(action->text() == tr("Window")) {
+                action->menu()->addAction(dockWidget->toggleViewAction());
+            }
+        }
 
 
+        // Create log file and register handler for qDebug() messages
         m_LogFile.setFileName(QString("%1/%2.txt")
                               .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
                               .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
 
         qInstallMsgHandler(qMessageHandler);
+
+
+        pluginManager.addObject(this);
 
     } catch(...) {
         return false;

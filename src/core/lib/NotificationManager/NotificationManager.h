@@ -2,6 +2,7 @@
 #define CORE_NOTIFICATIONMANAGER_NOTIFICATIONMANAGER_H
 
 #include <QtCore>
+#include <QtGui>
 
 #include <NotificationManager/NotificationManagerLibrary.h>
 
@@ -24,7 +25,7 @@ public:
     void writeToLogFile(const int &level, QString message);
 
 public slots:
-    void modalDialog();
+
 
 protected:
     NotificationManager();
