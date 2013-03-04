@@ -10,6 +10,7 @@ namespace NotificationManager {
 class NotificationWidget : public QFrame
 {
     Q_OBJECT
+
 public:
     enum Icon {
         // keep this in sync with QMessageBox::Icon
@@ -83,19 +84,21 @@ public:
     QPushButton *button(StandardButton button) const;
     QList<QAbstractButton *> buttons() const;
 
+    void setHeight(const int &height);
+
 signals:
     void buttonClicked(StandardButton standardButton);
     void closing();
-
-protected slots:
-    void on_buttonBox_clicked(QAbstractButton *button);
-    void on_closeButton_clicked();
 
 protected:
     void setupUi();
     void keyReleaseEvent(QKeyEvent *event);
 
+protected slots:
+    void on_buttonBox_clicked(QAbstractButton *button);
+    void on_closeButton_clicked();
 
+private:
     QLabel *m_Label;
     QLabel *m_IconLabel;
     Icon m_Icon;

@@ -32,12 +32,19 @@
 #include <QtCore>
 #include <QtGui>
 
-#include <NotificationManager/NotificationWidget.h>
 #include <SettingManager/ISettingPageFactory.h>
 
 #include "CoreWindowLibrary.h"
 
 namespace Core {
+
+namespace WindowManager {
+    class WindowManager;
+}
+namespace NotificationManager {
+    class NotificationManager;
+}
+
 namespace CoreWindow {
 
 namespace Ui {
@@ -61,11 +68,6 @@ public:
 
     void addCentralWidget(QWidget *widget, int priority = 128, QString title = QString(), QIcon icon = QIcon());
     void removeCentralWidget(QWidget *widget);
-
-    NotificationManager::NotificationWidget *notify(const QString &text,
-                NotificationManager::NotificationWidget::Icon icon = NotificationManager::NotificationWidget::NoIcon,
-                NotificationManager::NotificationWidget::StandardButtons buttons = NotificationManager::NotificationWidget::NoButton,
-                const QObject *reciever = NULL, const char *member = NULL);
 
     QList<QAction*> allActions();
 
@@ -91,6 +93,8 @@ protected:
 
     QList<QAction*> allActions(QList<QAction *> actions);
 
+    void addNotificationWidget(QWidget *notificationWidget);
+
 
 protected slots:
     void setCurrentCentralWidget();
@@ -103,6 +107,8 @@ private:
     QString m_StylesheetFilePath;
 
     friend class CoreSettingPage;
+    friend class NotificationManager::NotificationManager;
+    friend class WindowManager::WindowManager;
 };
 
 

@@ -36,6 +36,12 @@
 namespace Core {
 namespace PluginManager {
 
+#ifdef WIN32
+    static const QString m_PathSep = ";";
+#else
+    static const QString m_PathSep = ":";
+#endif
+
 PluginSettingPage::PluginSettingPage(QList<PluginWrapper *> plugins, QWidget *parent) :
     SettingManager::ISettingPage(parent),
     ui(new Ui::PluginSettingPage)
@@ -84,7 +90,6 @@ void PluginSettingPage::changeEvent(QEvent *e)
         break;
     }
 }
-
 void PluginSettingPage::apply()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
@@ -92,12 +97,10 @@ void PluginSettingPage::apply()
     settingManager.beginGroup("PluginManager");
 
     // Store user settable settings
-    PluginManager::instance().m_PluginPath = ui->txtPluginPath->text();
-
-    /* We could let the PluginManager manage this setting (it's stored upon
-       close)... but then if we did, if there was a crash, the setting would
-       never be stored. So we shall for now, until there is a reason not to.*/
-    settingManager.setValue("PluginPath", ui->txtPluginPath->text());
+    if(!PluginManager::instance().m_PluginPathsOverride) {
+        PluginManager::instance().m_PluginPaths = ui->txtPluginPath->text().split(m_PathSep);
+        settingManager.setValue("PluginPath", ui->txtPluginPath->text());
+    }
 
     settingManager.endGroup();
 }
@@ -108,7 +111,12 @@ void PluginSettingPage::reset()
     settingManager.beginGroup("PluginManager");
 
     // Restore user settable settings
-    ui->txtPluginPath->setText(PluginManager::instance().m_PluginPath);
+    ui->txtPluginPath->setText( PluginManager::instance().m_PluginPaths.join(m_PathSep) );
+
+    if(PluginManager::instance().m_PluginPathsOverride) {
+        ui->txtPluginPath->setEnabled(false);
+        ui->txtPluginPath->setToolTip(tr("Environment variable or commandline argument was used, and cannot be modified here"));
+    }
 
     settingManager.endGroup();
 }

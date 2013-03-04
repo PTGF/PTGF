@@ -97,6 +97,9 @@ protected:
 
     void initializePlugins();
 
+    void loadPlugins(QString pluginPath);
+    void loadPlugin(QString fileName);
+
     PluginWrapper *findPlugin(QString name);
     static bool ascending(PluginWrapper *left, PluginWrapper *right);
     static bool descending(PluginWrapper *left, PluginWrapper *right);
@@ -105,7 +108,9 @@ private:
     bool m_Initialized;
     QList<PluginWrapper *> m_Plugins;
     QObjectList m_Objects;
-    QString m_PluginPath;
+
+    QStringList m_PluginPaths;
+    bool m_PluginPathsOverride;
 
     friend class PluginSettingPage;
 };

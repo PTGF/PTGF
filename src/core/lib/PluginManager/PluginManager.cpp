@@ -75,6 +75,13 @@ namespace PluginManager {
     \brief Emitted immediately after the object is removed from the object pool. */
 
 
+#ifdef WIN32
+    static const QString m_PathSep = ";";
+#else
+    static const QString m_PathSep = ":";
+#endif
+
+
 /*!
    \fn PluginManager::instance()
    \brief Access to the singleton instance of this class.
@@ -92,9 +99,10 @@ PluginManager &PluginManager::instance()
  */
 PluginManager::PluginManager() :
     QObject(0),
-    m_Objects()
+    m_Objects(),
+    m_PluginPathsOverride(false),
+    m_Initialized(false)
 {
-    m_Initialized = false;
 }
 
 /*!
@@ -181,23 +189,49 @@ void PluginManager::readSettings()
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
     settingManager.beginGroup("PluginManager");
 
-    m_PluginPath = settingManager.value("PluginPath").toString();
+    m_PluginPathsOverride = false;
 
-    //! \todo Check for environment variable
-    //! \todo Maybe this should be a list of paths to check
+    QStringList pluginPaths;
+    pluginPaths << settingManager.value("PluginPath").toStringList();
 
-    if(!QFile::exists(m_PluginPath)) {
+    // Check for environment variable override
+    QString envPluginPaths = QString(getenv("PTGF_PLUGINPATH"));  //! \todo Add to PTGF user documentation
+    if(!envPluginPaths.isEmpty()) {
+        pluginPaths.clear();
+        pluginPaths << envPluginPaths.split(m_PathSep);
+        m_PluginPathsOverride = true;
+    }
+
+    // Check for command line argument override
+    QString argPattern = "--pluginpath=";  //! \todo Add to PTGF user documentation
+    foreach(QString arg, QApplication::arguments()) {
+        if(arg.startsWith(argPattern, Qt::CaseInsensitive)) {
+            pluginPaths.clear();
+            pluginPaths << arg.remove(argPattern, Qt::CaseInsensitive).split(m_PathSep);
+            m_PluginPathsOverride = true;
+            break;
+        }
+    }
+
+    // Clean up any empty strings, and remove duplicates
+    pluginPaths.removeAll(QString());
+    pluginPaths.removeDuplicates();
+
+    // If we came up empty-handed, default to a basic location based on the OS
+    if(pluginPaths.isEmpty()) {
         QDir pluginPath(QApplication::applicationDirPath());
-
 #ifdef WIN32
-        m_PluginPath = pluginPath.absolutePath();
+        pluginPaths << QDir::toNativeSeparators(pluginPath.absolutePath());
 #else
         if(pluginPath.cd("../lib")) {
-            m_PluginPath = pluginPath.absolutePath();
+            pluginPaths << QDir::toNativeSeparators(pluginPath.absolutePath());
         }
 #endif
-
     }
+
+
+    m_PluginPaths.clear();
+    m_PluginPaths << pluginPaths;
 
     settingManager.endGroup();
 }
@@ -211,61 +245,112 @@ void PluginManager::writeSettings()
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
     settingManager.beginGroup("PluginManager");
 
-    settingManager.setValue("PluginPath", m_PluginPath);
+    if(!m_PluginPathsOverride) {
+        m_PluginPaths.removeDuplicates();
+        settingManager.setValue("PluginPath", m_PluginPaths);
+    }
 
     settingManager.endGroup();
 }
 
 /*!
    \fn PluginManager::loadPlugins()
-   \brief Loads plugins from a location defined in the SettingManager
+   \brief Loads plugins from locations defined in the SettingManager
+ */
+void PluginManager::loadPlugins()
+{
+#ifdef PLUGINMANAGER_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "Loading plugins...";
+#endif
+
+    m_PluginPaths.removeDuplicates();
+    foreach(QString pluginPath, m_PluginPaths) {
+        if(QFile::exists(pluginPath)) {
+            loadPlugins(QDir::fromNativeSeparators(pluginPath));
+
+#ifdef PLUGINMANAGER_DEBUG
+        } else {
+            qWarning() << __FILE__ << __LINE__ << "User specified plugin path doesn't exist: " << pluginPath;
+#endif
+
+        }
+    }
+}
+
+/*!
+   \fn PluginManager::loadPlugins()
+   \brief Loads plugins from a location
+   \param pluginPath the path that is checked for plugins
+ */
+void PluginManager::loadPlugins(QString pluginPath)
+{
+#ifdef PLUGINMANAGER_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "Loading plugins in:" << pluginPath;
+#endif
+
+    QDir pluginDir(pluginPath);
+    foreach (QString fileName, pluginDir.entryList(QDir::Files)) {
+        QString filePath = pluginDir.absoluteFilePath(fileName);
+
+        if(QFile::exists(filePath)) {
+            loadPlugin(filePath);
+
+#ifdef PLUGINMANAGER_DEBUG
+        } else {
+            qWarning() << __FILE__ << __LINE__ << "Ignoring nonexistent plugin file path (which _should_ exist): " << filePath;
+#endif
+
+        }
+    }
+
+    initializePlugins();
+}
+
+/*!
+   \fn PluginManager::loadPlugin()
+   \brief Attempts to load a plugin from a file
+   \param filePath Absolute file path to the plugin
 
    \par Emits
         pluginLoaded() signal after loading \b each plugin
  */
-void PluginManager::loadPlugins()
+void PluginManager::loadPlugin(QString filePath)
 {
-    QDir pluginDir(m_PluginPath);
-    foreach (QString fileName, pluginDir.entryList(QDir::Files)) {
-        QString filePath = pluginDir.absoluteFilePath(fileName);
-
 #ifdef PLUGINMANAGER_DEBUG
-        qDebug() << __FILE__ << __LINE__ << "Attempting to load plugin:" << fileName;
+    qDebug() << __FILE__ << __LINE__ << "Attempting to load plugin:" << filePath;
 #endif
 
-        QPluginLoader pluginLoader(filePath);
-        QObject *object = pluginLoader.instance();
+    QPluginLoader pluginLoader(filePath);
+    QObject *object = pluginLoader.instance();
 
-        if(!object) {
+    if(!object) {
 #ifdef PLUGINMANAGER_DEBUG
-            qDebug() << __FILE__ << __LINE__ << "Not an object (check your $LD_LIBRARY_PATH, it may be failing to load linked libraries):" << fileName;
+        qDebug() << __FILE__ << __LINE__ << "Not an object (check your $LD_LIBRARY_PATH, it may be failing to load linked libraries):" << filePath;
 #endif
-            continue;
-        }
-
-#ifdef PLUGINMANAGER_DEBUG
-        qDebug() << __FILE__ << __LINE__ << "Plugin was object:" << fileName;
-#endif
-
-        IPlugin *plugin = qobject_cast<IPlugin *>(object);
-        if(!plugin) {
-#ifdef PLUGINMANAGER_DEBUG
-            qDebug() << __FILE__ << __LINE__ << "Not an IPlugin object (is everything defined?):" << fileName;
-#endif
-            continue;
-        }
-
-        PluginWrapper *wrapper = new PluginWrapper(plugin, filePath, this);
-        m_Plugins.append(wrapper);
-
-#ifdef PLUGINMANAGER_DEBUG
-        qDebug() << __FILE__ << __LINE__ << "Loaded plugin:" << fileName;
-#endif
-
-        emit pluginLoaded(plugin);
+        return;
     }
 
-    initializePlugins();
+#ifdef PLUGINMANAGER_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "Plugin was object:" << filePath;
+#endif
+
+    IPlugin *plugin = qobject_cast<IPlugin *>(object);
+    if(!plugin) {
+#ifdef PLUGINMANAGER_DEBUG
+        qDebug() << __FILE__ << __LINE__ << "Not an IPlugin object (is everything defined?):" << filePath;
+#endif
+        return;
+    }
+
+    PluginWrapper *wrapper = new PluginWrapper(plugin, filePath, this);
+    m_Plugins.append(wrapper);
+
+#ifdef PLUGINMANAGER_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "Loaded plugin:" << filePath;
+#endif
+
+    emit pluginLoaded(plugin);
+
 }
 
 /*!
@@ -280,6 +365,10 @@ void PluginManager::loadPlugins()
  */
 void PluginManager::initializePlugins()
 {
+#ifdef PLUGINMANAGER_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "Initializing plugins";
+#endif
+
     // Generate a temporary directed graph of plugins and dependencies
     QMap<QString, QStringList *> dag;
     foreach(PluginWrapper *plugin, m_Plugins) {

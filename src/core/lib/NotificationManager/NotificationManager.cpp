@@ -43,6 +43,8 @@ bool NotificationManager::initialize()
 
         // Setup dock widget for message console
         QDockWidget *dockWidget = new QDockWidget(tr("Message Console"), &coreWindow);
+        dockWidget->setObjectName("MessageConsoleDockWidget");
+        dockWidget->hide();
 
         m_ConsoleWidget = new ConsoleWidget(dockWidget);
         m_ConsoleWidget->setEventLevelColor((int)QtDebugMsg, Qt::darkGreen);
@@ -123,23 +125,25 @@ void NotificationManager::qMessageHandler(QtMsgType type, const char *message)
 
     switch (type) {
     case QtDebugMsg:
-        msg = tr("Debug: %1\n").arg(message);
+        msg = tr("Debug: %1").arg(message);
         level = (int)QtDebugMsg;
         break;
     case QtWarningMsg:
-        msg = tr("Warning: %1\n").arg(message);
+        msg = tr("Warning: %1").arg(message);
         level = (int)QtWarningMsg;
+        NotificationManager::instance().notify(msg, NotificationWidget::Warning);
         break;
     case QtCriticalMsg:
-        msg = tr("Critical: %1\n").arg(message);
+        msg = tr("Critical: %1").arg(message);
         level = (int)QtCriticalMsg;
+        NotificationManager::instance().notify(msg, NotificationWidget::Critical);
         break;
     case QtFatalMsg:
-        msg = tr("Fatal: %1\n").arg(message);
+        msg = tr("Fatal: %1").arg(message);
         level = (int)QtFatalMsg;
         break;
     default:
-        msg = tr("Unknown: %1\n").arg(message);
+        msg = tr("Unknown: %1").arg(message);
         break;
     }
 
@@ -148,6 +152,30 @@ void NotificationManager::qMessageHandler(QtMsgType type, const char *message)
     if(type == QtFatalMsg) {
         abort();
     }
+}
+
+/*!
+   \fn NotificationWidget::notify()
+   \returns NotificationWidget, which is owned and destroyed by CoreWindow
+ */
+NotificationWidget *NotificationManager::notify(const QString &text,
+                                       NotificationWidget::Icon icon,
+                                       NotificationWidget::StandardButtons buttons,
+                                       const QObject *reciever, const char *member)
+{
+#ifdef COREWINDOW_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::notify";
+#endif
+
+    CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+
+    NotificationWidget *notificationWidget =
+            new NotificationWidget(text, icon, buttons, reciever, member, &coreWindow);
+
+    coreWindow.addNotificationWidget(notificationWidget);
+    notificationWidget->setFocus();
+
+    return notificationWidget;
 }
 
 

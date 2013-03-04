@@ -106,8 +106,12 @@ styleSheet.files = CoreWindow/StyleSheet.css
 INSTALLS += styleSheet
 
 coreWindowHeaders.path = /include/core/lib/CoreWindow
-coreWindowHeaders.files = CoreWindow/CoreWindowLibrary.h CoreWindow/CoreWindow.h CoreWindow/NotificationWidget.h
+coreWindowHeaders.files = CoreWindow/CoreWindowLibrary.h CoreWindow/CoreWindow.h
 INSTALLS += coreWindowHeaders
+
+notificationManagerHeaders.path = /include/core/lib/NotificationManager
+notificationManagerHeaders.files = NotificationManager/NotificationManagerLibrary.h NotificationManager/NotificationManager.h NotificationManager/NotificationWidget.h
+INSTALLS += notificationManagerHeaders
 
 windowManagerHeaders.path = /include/core/lib/WindowManager
 windowManagerHeaders.files = WindowManager/WindowManagerLibrary.h WindowManager/WindowManager.h WindowManager/IMainWindow.h

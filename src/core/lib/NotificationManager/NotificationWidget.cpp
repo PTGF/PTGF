@@ -3,12 +3,12 @@
 namespace Core {
 namespace NotificationManager {
 
+
 NotificationWidget::NotificationWidget(QWidget *parent) :
     QFrame(parent)
 {
     setupUi();
 }
-
 
 NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardButtons buttons, QWidget *parent) :
     QFrame(parent)
@@ -190,8 +190,6 @@ void NotificationWidget::keyReleaseEvent(QKeyEvent *event)
 
     QFrame::keyReleaseEvent(event);
 }
-
-
 
 
 } // namespace CoreWindow

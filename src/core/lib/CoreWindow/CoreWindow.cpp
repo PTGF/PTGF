@@ -31,6 +31,9 @@
 #include <SettingManager/SettingManager.h>
 #include <PluginManager/PluginManager.h>
 
+#include <NotificationManager/NotificationManager.h>
+#include <NotificationManager/NotificationWidget.h>
+
 #include "CoreSettingPage.h"
 
 #ifdef COREWINDOW_DEBUG
@@ -193,7 +196,11 @@ void CoreWindow::readSettings()
 
     if(!QFile::exists(m_StylesheetFilePath)) {
         QFileInfo fileInfo(m_StylesheetFilePath);
-        notify(tr("Failed to open style sheet: %1<br/>This file path can be changed in the settings").
+
+        NotificationManager::NotificationManager &notificationManager =
+                NotificationManager::NotificationManager::instance();
+
+        notificationManager.notify(tr("Failed to open style sheet: %1\nThis file path can be changed in the settings").
                arg(fileInfo.absoluteFilePath()), NotificationManager::NotificationWidget::Critical);
     }
 
@@ -425,26 +432,15 @@ void CoreWindow::on_actionExit_triggered()
 
 
 /*!
-   \fn CoreWindow::notify()
-   \returns
+   \fn CoreWindow::addNotificationWidget()
+   \brief used by friend class NotificationManager to insert NotificationWidgets at the top of the window.
+   \sa Core::NotificationManager::NotificationManager::notify()
  */
-NotificationManager::NotificationWidget *CoreWindow::notify(const QString &text,
-                                       NotificationManager::NotificationWidget::Icon icon,
-                                       NotificationManager::NotificationWidget::StandardButtons buttons,
-                                       const QObject *reciever, const char *member)
+void CoreWindow::addNotificationWidget(QWidget *notificationWidget)
 {
-#ifdef COREWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::notify";
-#endif
-
-    NotificationManager::NotificationWidget *notificationWidget =
-            new NotificationManager::NotificationWidget(text, icon, buttons, reciever, member, this);
-
     ui->centralLayout->insertWidget(0, notificationWidget);
-    notificationWidget->setFocus();
-
-    return notificationWidget;
 }
+
 
 QList<QAction*> CoreWindow::allActions()
 {
