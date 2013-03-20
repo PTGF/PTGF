@@ -27,7 +27,8 @@ win32:target.path = /
 else:target.path  = /lib
 INSTALLS         += target
 
-HEADERS +=  ActionManager/ActionManager.h \
+HEADERS +=  Global.h \
+            ActionManager/ActionManager.h \
             ActionManager/ActionManagerLibrary.h \
             ActionManager/MenuItem.h \
             CoreWindow/CoreSettingPage.h \
@@ -105,9 +106,9 @@ else: styleSheet.path = /share/ptgf/
 styleSheet.files = CoreWindow/StyleSheet.css
 INSTALLS += styleSheet
 
-coreWindowHeaders.path = /include/core/lib/CoreWindow
-coreWindowHeaders.files = CoreWindow/CoreWindowLibrary.h CoreWindow/CoreWindow.h
-INSTALLS += coreWindowHeaders
+#coreWindowHeaders.path = /include/core/lib/CoreWindow
+#coreWindowHeaders.files = CoreWindow/CoreWindowLibrary.h CoreWindow/CoreWindow.h
+#INSTALLS += coreWindowHeaders
 
 notificationManagerHeaders.path = /include/core/lib/NotificationManager
 notificationManagerHeaders.files = NotificationManager/NotificationManagerLibrary.h NotificationManager/NotificationManager.h NotificationManager/NotificationWidget.h

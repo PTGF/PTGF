@@ -82,6 +82,7 @@ namespace PluginManager {
 #endif
 
 
+
 /*!
    \fn PluginManager::instance()
    \brief Access to the singleton instance of this class.
@@ -99,9 +100,8 @@ PluginManager &PluginManager::instance()
  */
 PluginManager::PluginManager() :
     QObject(0),
-    m_Objects(),
-    m_PluginPathsOverride(false),
-    m_Initialized(false)
+    m_Initialized(false),
+    m_PluginPathsOverride(false)
 {
 }
 
@@ -195,7 +195,7 @@ void PluginManager::readSettings()
     pluginPaths << settingManager.value("PluginPath").toStringList();
 
     // Check for environment variable override
-    QString envPluginPaths = QString(getenv("PTGF_PLUGINPATH"));  //! \todo Add to PTGF user documentation
+    QString envPluginPaths = qgetenv("PTGF_PLUGINPATH");  //! \todo Add to PTGF user documentation
     if(!envPluginPaths.isEmpty()) {
         pluginPaths.clear();
         pluginPaths << envPluginPaths.split(m_PathSep);
