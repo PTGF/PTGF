@@ -1,11 +1,10 @@
 /*!
-   \file 
+   \file %FILENAME%
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version 
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
-   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
+   Copyright (C) 2010-%YEAR% Argo Navis Technologies, LLC
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published by the
