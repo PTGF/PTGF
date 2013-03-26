@@ -98,7 +98,8 @@ int main(int argc, char *argv[])
 #endif
 
     using namespace Core;
-    NotificationManager::NotificationManager &notificationManager = NotificationManager::NotificationManager::instance();
+
+    Core::NotificationManager::NotificationManager notificationManager;
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
     CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
     PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
@@ -108,14 +109,13 @@ int main(int argc, char *argv[])
     qDebug() << __FILE__ << __LINE__ << "\tInitializing the singleton classes";
 #endif
 
-    if(!notificationManager.initialized())
-        notificationManager.initialize();
+    notificationManager.initialize();
+
     if(!settingManager.initialized())
         settingManager.initialize();
     if(!coreWindow.initialized())
         coreWindow.initialize();
-    if(!pluginManager.initialized())
-        pluginManager.initialize();
+    pluginManager.initialize();
     if(!windowManager.initialized())
         windowManager.initialize();
 
@@ -138,14 +138,13 @@ int main(int argc, char *argv[])
 
     if(windowManager.initialized())
         windowManager.shutdown();
-    if(pluginManager.initialized())
-        pluginManager.shutdown();
+    pluginManager.shutdown();
     if(coreWindow.initialized())
         coreWindow.shutdown();
     if(settingManager.initialized())
         settingManager.shutdown();
-    if(notificationManager.initialized())
-        notificationManager.shutdown();
+
+    notificationManager.shutdown();
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tDone";

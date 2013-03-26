@@ -1,4 +1,5 @@
 #include "NotificationManager.h"
+#include "NotificationManagerPrivate.h"
 
 #include <CoreWindow/CoreWindow.h>
 #include <PrettyWidgets/ConsoleWidget.h>
@@ -9,13 +10,59 @@
 namespace Core {
 namespace NotificationManager {
 
-NotificationManager &NotificationManager::instance()
+
+/***** PUBLIC IMPLEMENTATION *****/
+
+NotificationManagerPrivate *NotificationManager::d = &NotificationManagerPrivate::instance();
+
+NotificationManager::NotificationManager()
 {
-    static NotificationManager m_Instance;
+}
+
+bool NotificationManager::initialize()
+{
+    if(!d->initialized()) {
+        return d->initialize();
+    }
+    return false;
+}
+
+void NotificationManager::shutdown()
+{
+    if(d->initialized()) {
+        d->shutdown();
+    }
+}
+
+
+void NotificationManager::writeToLogFile(const int &level, QString message)
+{
+    d->writeToLogFile(level, message);
+}
+
+/*!
+   \fn NotificationWidget::notify()
+   \returns NotificationWidget, which is owned and destroyed by CoreWindow
+ */
+NotificationWidget *NotificationManager::notify(const QString &text,
+                                                NotificationWidget::Icon icon,
+                                                NotificationWidget::StandardButtons buttons,
+                                                const QObject *reciever, const char *member)
+{
+    return d->notify(text, icon, buttons, reciever, member);
+}
+
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+NotificationManagerPrivate &NotificationManagerPrivate::instance()
+{
+    static NotificationManagerPrivate m_Instance;
     return m_Instance;
 }
 
-NotificationManager::NotificationManager() :
+NotificationManagerPrivate::NotificationManagerPrivate() :
     QObject(0),
     m_Initialized(false),
     m_StdOut(stdout, QIODevice::WriteOnly),
@@ -24,21 +71,20 @@ NotificationManager::NotificationManager() :
 {
 }
 
-NotificationManager::~NotificationManager()
+NotificationManagerPrivate::~NotificationManagerPrivate()
 {
     if(m_LogFile.isOpen()) {
         m_LogFile.close();
     }
 }
 
-bool NotificationManager::initialize()
+bool NotificationManagerPrivate::initialize()
 {
     Q_ASSERT(!m_Initialized);
 
     try {
 
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
-        PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
 
 
         // Setup dock widget for message console
@@ -70,7 +116,7 @@ bool NotificationManager::initialize()
         qInstallMsgHandler(qMessageHandler);
 
 
-        pluginManager.addObject(this);
+        Core::PluginManager::PluginManager::instance().addObject(this);
 
     } catch(...) {
         return false;
@@ -79,12 +125,12 @@ bool NotificationManager::initialize()
     return m_Initialized = true;
 }
 
-bool NotificationManager::initialized()
+bool NotificationManagerPrivate::initialized()
 {
     return m_Initialized;
 }
 
-void NotificationManager::shutdown()
+void NotificationManagerPrivate::shutdown()
 {
     Q_ASSERT(m_Initialized);
 
@@ -96,7 +142,7 @@ void NotificationManager::shutdown()
 }
 
 
-void NotificationManager::writeToLogFile(const int &level, QString message)
+void NotificationManagerPrivate::writeToLogFile(const int &level, QString message)
 {
     if(!m_LogFile.isOpen()) {
         m_LogFile.open(QIODevice::Append | QIODevice::Text);
@@ -118,7 +164,7 @@ void NotificationManager::writeToLogFile(const int &level, QString message)
     }
 }
 
-void NotificationManager::qMessageHandler(QtMsgType type, const char *message)
+void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *message)
 {
     QString msg;
     int level = 0;
@@ -131,12 +177,12 @@ void NotificationManager::qMessageHandler(QtMsgType type, const char *message)
     case QtWarningMsg:
         msg = tr("Warning: %1").arg(message);
         level = (int)QtWarningMsg;
-        NotificationManager::instance().notify(msg, NotificationWidget::Warning);
+        NotificationManagerPrivate::instance().notify(msg, NotificationWidget::Warning);
         break;
     case QtCriticalMsg:
         msg = tr("Critical: %1").arg(message);
         level = (int)QtCriticalMsg;
-        NotificationManager::instance().notify(msg, NotificationWidget::Critical);
+        NotificationManagerPrivate::instance().notify(msg, NotificationWidget::Critical);
         break;
     case QtFatalMsg:
         msg = tr("Fatal: %1").arg(message);
@@ -147,18 +193,14 @@ void NotificationManager::qMessageHandler(QtMsgType type, const char *message)
         break;
     }
 
-    NotificationManager::instance().writeToLogFile(level, msg);
+    NotificationManagerPrivate::instance().writeToLogFile(level, msg);
 
     if(type == QtFatalMsg) {
         abort();
     }
 }
 
-/*!
-   \fn NotificationWidget::notify()
-   \returns NotificationWidget, which is owned and destroyed by CoreWindow
- */
-NotificationWidget *NotificationManager::notify(const QString &text,
+NotificationWidget *NotificationManagerPrivate::notify(const QString &text,
                                        NotificationWidget::Icon icon,
                                        NotificationWidget::StandardButtons buttons,
                                        const QObject *reciever, const char *member)

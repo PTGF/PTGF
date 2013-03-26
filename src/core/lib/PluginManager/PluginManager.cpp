@@ -26,6 +26,7 @@
  */
 
 #include "PluginManager.h"
+#include "PluginManagerPrivate.h"
 
 #include <SettingManager/SettingManager.h>
 #include <CoreWindow/CoreWindow.h>
@@ -41,7 +42,7 @@ namespace Core {
 namespace PluginManager {
 
 /*!
-   \class Core::PluginManager::PluginManager
+   \class PluginManager
    \brief Part of the core framework libraries, and manages the loading of and interaction between dynamic extensions and
           plugins.  This includes managing an "object pool."
 
@@ -81,12 +82,11 @@ namespace PluginManager {
     static const QString m_PathSep = ":";
 #endif
 
-
+/***** PUBLIC IMPLEMENTATION *****/
 
 /*!
    \fn PluginManager::instance()
-   \brief Access to the singleton instance of this class.
-   \returns A reference to the singleton instance of this class.
+   \brief Access to the singleton PluginManager instance
  */
 PluginManager &PluginManager::instance()
 {
@@ -96,29 +96,28 @@ PluginManager &PluginManager::instance()
 
 /*!
    \fn PluginManager::PluginManager()
-   \brief Constructor
+   \internal
  */
 PluginManager::PluginManager() :
-    QObject(0),
-    m_Initialized(false),
-    m_PluginPathsOverride(false)
+    d(null)
 {
+    d = new PluginManagerPrivate(this);
 }
 
 /*!
-   \fn PluginManager::PluginManager()
-   \brief Destructor
+   \fn PluginManager::~PluginManager()
+   \internal
  */
 PluginManager::~PluginManager()
 {
-    qSort(m_Plugins.begin(), m_Plugins.end(), descending);
-    qDeleteAll(m_Plugins);
-
-    writeSettings();
+    if(d) {
+        delete d;
+    }
 }
 
 /*!
    \fn PluginManager::initialize()
+   \internal
    \brief Initializes this class after it has been constructed.
    This pattern allows the class to perform any operations after a class (that this object is dependent upon) has been
    constructed.
@@ -127,12 +126,127 @@ PluginManager::~PluginManager()
  */
 bool PluginManager::initialize()
 {
+    if(!d->initialized()) {
+        return d->initialize();
+    }
+    return false;
+}
+
+/*!
+   \fn PluginManager::shutdown()
+   \internal
+   \brief Notifies the instance that it should perform any clean-up operations before destruction.
+   This class is called manually, before the application is closed.  It will occur before destruction of the instance.
+   \sa initialize()
+ */
+void PluginManager::shutdown()
+{
+    if(d->initialized()) {
+        d->shutdown();
+    }
+}
+
+/*!
+   \fn PluginManager::loadPlugins()
+   \internal
+   \brief Loads plugins from locations defined in the SettingManager
+ */
+void PluginManager::loadPlugins()
+{
+    d->loadPlugins();
+}
+
+/*!
+   \fn PluginManager::allObjects()
+   \brief Accessor to list of all objects managed by this PluginManager
+   \sa getObjects addObject delObject
+ */
+QObjectList PluginManager::allObjects() const
+{
+    return d->allObjects();
+}
+
+/*!
+   \fn PluginManager::addObject()
+   \brief Adds an object to the manager for later retrieval. This is typically
+          used by plugins as they are initialized to store factory classes.
+
+   \par Emits
+        objectAdding() signal before adding
+        objectAdded() signal after adding
+   \param object The object to be stored
+   \sa delObject getObjects allObjects
+ */
+void PluginManager::addObject(QObject *object)
+{
+    d->addObject(object);
+}
+
+/*!
+   \fn PluginManager::delObject()
+   \brief Removes a previously stored object from the manager.
+
+   \par Emits
+       objectRemoving() signal before removal
+       objectRemoved() signal after removal
+   \param object The object to be removed
+   \sa addObject getObjects allObjects
+ */
+bool PluginManager::delObject(QObject *object)
+{
+    return d->delObject(object);
+}
+
+/*!
+   \fn PluginManager::pluginDialog()
+   \brief Slot connected to menu item.
+
+   When this slot is called, a QDialog is created as a wrapper to the plugin widget that is
+   registered as a settings page.
+
+   \note This only allows viewing of the plugins that are loaded; user changes should only
+         be performed through the settings dialog.
+ */
+void PluginManager::pluginDialog()
+{
+    d->pluginDialog();
+}
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+PluginManagerPrivate *PluginManagerPrivate::instance()
+{
+    return m_Instance;
+}
+
+
+PluginManagerPrivate *PluginManagerPrivate::m_Instance;
+
+PluginManagerPrivate::PluginManagerPrivate(PluginManager *parent) :
+    QObject(0),
+    q(parent),
+    m_Initialized(false),
+    m_PluginPathsOverride(false)
+{
+    PluginManagerPrivate::m_Instance = this;
+}
+
+PluginManagerPrivate::~PluginManagerPrivate()
+{
+    qSort(m_Plugins.begin(), m_Plugins.end(), descending);
+    qDeleteAll(m_Plugins);
+
+    writeSettings();
+}
+
+bool PluginManagerPrivate::initialize()
+{
     try {
 
         readSettings();
 
-        Core::PluginManager::PluginManager &pluginManager = Core::PluginManager::PluginManager::instance();
-        pluginManager.addObject(this);                         /* Register ourselves as an ISettingPageFactory */
+        addObject(this);                         /* Register ourselves as an ISettingPageFactory */
 
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
         foreach(QAction *action, coreWindow.menuBar()->actions()) {
@@ -152,22 +266,17 @@ bool PluginManager::initialize()
 }
 
 /*!
-   \fn PluginManager::initialized()
+   \fn PluginManagerPrivate::initialized()
+   \internal
    \brief Returns a boolean value indicating whether this instance has been initialized or not.
    \sa initialize()
  */
-bool PluginManager::initialized()
+bool PluginManagerPrivate::initialized()
 {
     return m_Initialized;
 }
 
-/*!
-   \fn PluginManager::shutdown()
-   \brief Notifies the instance that it should perform any clean-up operations before destruction.
-   This class is called manually, before the application is closed.  It will occur before destruction of the instance.
-   \sa initialize()
- */
-void PluginManager::shutdown()
+void PluginManagerPrivate::shutdown()
 {
     qSort(m_Plugins.begin(), m_Plugins.end(), ascending);
     foreach(IPlugin *plugin, m_Plugins) {
@@ -181,10 +290,11 @@ void PluginManager::shutdown()
 }
 
 /*!
-   \fn PluginManager::readSettings()
+   \fn PluginManagerPrivate::readSettings()
+   \internal
    \brief Load settings from the SettingManager.
  */
-void PluginManager::readSettings()
+void PluginManagerPrivate::readSettings()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
     settingManager.beginGroup("PluginManager");
@@ -237,10 +347,11 @@ void PluginManager::readSettings()
 }
 
 /*!
-   \fn PluginManager::writeSettings()
+   \fn PluginManagerPrivate::writeSettings()
+   \internal
    \brief Stores settings in the SettingManager for later retrieval.
  */
-void PluginManager::writeSettings()
+void PluginManagerPrivate::writeSettings()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
     settingManager.beginGroup("PluginManager");
@@ -253,11 +364,7 @@ void PluginManager::writeSettings()
     settingManager.endGroup();
 }
 
-/*!
-   \fn PluginManager::loadPlugins()
-   \brief Loads plugins from locations defined in the SettingManager
- */
-void PluginManager::loadPlugins()
+void PluginManagerPrivate::loadPlugins()
 {
 #ifdef PLUGINMANAGER_DEBUG
     qDebug() << __FILE__ << __LINE__ << "Loading plugins...";
@@ -278,11 +385,12 @@ void PluginManager::loadPlugins()
 }
 
 /*!
-   \fn PluginManager::loadPlugins()
+   \fn PluginManagerPrivate::loadPlugins()
+   \internal
    \brief Loads plugins from a location
    \param pluginPath the path that is checked for plugins
  */
-void PluginManager::loadPlugins(QString pluginPath)
+void PluginManagerPrivate::loadPlugins(QString pluginPath)
 {
 #ifdef PLUGINMANAGER_DEBUG
     qDebug() << __FILE__ << __LINE__ << "Loading plugins in:" << pluginPath;
@@ -307,14 +415,15 @@ void PluginManager::loadPlugins(QString pluginPath)
 }
 
 /*!
-   \fn PluginManager::loadPlugin()
+   \fn PluginManagerPrivate::loadPlugin()
+   \internal
    \brief Attempts to load a plugin from a file
    \param filePath Absolute file path to the plugin
 
    \par Emits
         pluginLoaded() signal after loading \b each plugin
  */
-void PluginManager::loadPlugin(QString filePath)
+void PluginManagerPrivate::loadPlugin(QString filePath)
 {
 #ifdef PLUGINMANAGER_DEBUG
     qDebug() << __FILE__ << __LINE__ << "Attempting to load plugin:" << filePath;
@@ -349,12 +458,13 @@ void PluginManager::loadPlugin(QString filePath)
     qDebug() << __FILE__ << __LINE__ << "Loaded plugin:" << filePath;
 #endif
 
-    emit pluginLoaded(plugin);
+    emit q->pluginLoaded(plugin);
 
 }
 
 /*!
-   \fn PluginManager::initializePlugins()
+   \fn PluginManagerPrivate::initializePlugins()
+   \internal
    \brief Helper function that builds a dependency list.
 
     It checks the dependencies for circular references, and then calls the init function for
@@ -363,7 +473,7 @@ void PluginManager::loadPlugin(QString filePath)
     \note The algorithm used here was inspired from "Algorithms in C++" by Robert Sedgewick,
           section 19.6 --specifically the use of a queue.
  */
-void PluginManager::initializePlugins()
+void PluginManagerPrivate::initializePlugins()
 {
 #ifdef PLUGINMANAGER_DEBUG
     qDebug() << __FILE__ << __LINE__ << "Initializing plugins";
@@ -426,18 +536,19 @@ void PluginManager::initializePlugins()
 #endif
 
         if( plugin->state() == PluginWrapper::State_Loaded && plugin->initialize(args, err) ) {
-            emit pluginInitialized(plugin);
+            emit q->pluginInitialized(plugin);
         }
     }
 }
 
 /*!
-   \fn PluginManager::findPlugin()
+   \fn PluginManagerPrivate::findPlugin()
    \brief Helper function
    \param name Name of the plugin to search for and return
    \returns Pointer to the plugin specified by name
+   \internal
  */
-PluginWrapper *PluginManager::findPlugin(QString name)
+PluginWrapper *PluginManagerPrivate::findPlugin(QString name)
 {
     foreach(PluginWrapper *plugin, m_Plugins) {
         if(plugin->name() == name)
@@ -446,58 +557,29 @@ PluginWrapper *PluginManager::findPlugin(QString name)
     return 0;
 }
 
-/*!
-   \fn PluginManager::addObject()
-   \brief Adds an object to the manager for later retrieval. This is typically
-          used by plugins as they are initialized to store factory classes.
-
-   \par Emits
-        objectAdding() signal before adding
-        objectAdded() signal after adding
-   \param object The object to be stored
- */
-void PluginManager::addObject(QObject *object)
+void PluginManagerPrivate::addObject(QObject *object)
 {
-    emit objectAdding(object);
+    emit q->objectAdding(object);
     m_Objects.append(object);
-    emit objectAdded(object);
+    emit q->objectAdded(object);
 }
 
-QObjectList PluginManager::allObjects() const
+QObjectList PluginManagerPrivate::allObjects() const
 {
     return m_Objects;
 }
 
 
-/*!
-   \fn PluginManager::delObject()
-   \brief Removes a previously stored object from the manager.
-
-   \par Emits
-       objectRemoving() signal before removal
-       objectRemoved() signal after removal
-   \param object The object to be removed
- */
-bool PluginManager::delObject(QObject *object)
+bool PluginManagerPrivate::delObject(QObject *object)
 {
-    emit objectRemoving(object);
+    emit q->objectRemoving(object);
     int RetVal;
     RetVal = m_Objects.removeAll(object);
-    emit objectRemoved(object);
+    emit q->objectRemoved(object);
     return (RetVal);
 }
 
-/*!
-   \fn PluginManager::pluginDialog()
-   \brief Slot connected to menu item.
-
-   When this slot is called, a QDialog is created as a wrapper to the plugin widget that is
-   registered as a settings page.
-
-   \note This only allows viewing of the plugins that are loaded; user changes should only
-         be performed through the settings dialog.
- */
-void PluginManager::pluginDialog()
+void PluginManagerPrivate::pluginDialog()
 {
     // Wrapped in a QDialog because this is also registered as a setting page
 
@@ -513,64 +595,70 @@ void PluginManager::pluginDialog()
 }
 
 /*!
-   \fn PluginManager::ascending()
+   \fn PluginManagerPrivate::ascending()
+   \internal
    \brief Works with qSort to sort an iterable of plugin wrapper pointers
    \returns A boolean value for comparison of the two parameters that sorts in ascending
             order.
  */
-bool PluginManager::ascending(PluginWrapper *left, PluginWrapper *right)
+bool PluginManagerPrivate::ascending(PluginWrapper *left, PluginWrapper *right)
 {
     return left->priority() > right->priority();
 }
 
 /*!
-   \fn PluginManager::descending()
+   \fn PluginManagerPrivate::descending()
+   \internal
    \brief Works with qSort to sort an iterable of plugin wrapper pointers
    \returns A boolean value for comparison of the two parameters that sorts in descending
             order.
  */
-bool PluginManager::descending(PluginWrapper *left, PluginWrapper *right)
+bool PluginManagerPrivate::descending(PluginWrapper *left, PluginWrapper *right)
 {
     return left->priority() < right->priority();
 }
 
 /* BEGIN ISettingPageFactory */
 /*!
-   \fn PluginManager::settingPageIcon()
+   \fn PluginManagerPrivate::settingPageIcon()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \sa Core::SettingManager::ISettingPageFactory::settingPageIcon()
  */
-QIcon PluginManager::settingPageIcon()
+QIcon PluginManagerPrivate::settingPageIcon()
 {
     return QIcon(":/PluginManager/plugin.svg");
 }
 
 /*!
-   \fn PluginManager::settingPageName()
+   \fn PluginManagerPrivate::settingPageName()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \sa Core::SettingManager::ISettingPageFactory::settingPageName()
  */
-QString PluginManager::settingPageName()
+QString PluginManagerPrivate::settingPageName()
 {
     return tr("Plugins");
 }
 
 /*!
-   \fn PluginManager::settingPagePriority()
+   \fn PluginManagerPrivate::settingPagePriority()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \sa Core::SettingManager::ISettingPageFactory::settingPagePriority()
  */
-int PluginManager::settingPagePriority()
+int PluginManagerPrivate::settingPagePriority()
 {
     return 50;
 }
 
 /*!
-   \fn PluginManager::createSettingPage()
+   \fn PluginManagerPrivate::createSettingPage()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \sa Core::SettingManager::ISettingPageFactory::createSettingPage()
  */
-Core::SettingManager::ISettingPage *PluginManager::createSettingPage()
+Core::SettingManager::ISettingPage *PluginManagerPrivate::createSettingPage()
 {
     return new PluginSettingPage();
 }

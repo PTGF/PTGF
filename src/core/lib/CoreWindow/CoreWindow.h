@@ -43,6 +43,7 @@ namespace WindowManager {
 }
 namespace NotificationManager {
     class NotificationManager;
+    class NotificationManagerPrivate;
 }
 
 namespace CoreWindow {
@@ -107,7 +108,7 @@ private:
     QString m_StylesheetFilePath;
 
     friend class CoreSettingPage;
-    friend class NotificationManager::NotificationManager;
+    friend class NotificationManager::NotificationManagerPrivate;
     friend class WindowManager::WindowManager;
 };
 

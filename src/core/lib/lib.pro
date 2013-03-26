@@ -27,7 +27,7 @@ win32:target.path = /
 else:target.path  = /lib
 INSTALLS         += target
 
-HEADERS +=  Global.h \
+HEADERS +=  \
             ActionManager/ActionManager.h \
             ActionManager/ActionManagerLibrary.h \
             ActionManager/MenuItem.h \
@@ -38,7 +38,6 @@ HEADERS +=  Global.h \
             NotificationManager/NotificationManagerLibrary.h \
             NotificationManager/NotificationWidget.h \
             PluginManager/IPlugin.h \
-            PluginManager/PluginManager.h \
             PluginManager/PluginManagerLibrary.h \
             PluginManager/PluginSettingPage.h \
             PluginManager/PluginWrapper.h \
@@ -53,7 +52,11 @@ HEADERS +=  Global.h \
             WindowManager/AboutWidget.h \
             WindowManager/IMainWindow.h \
             WindowManager/WindowManager.h \
-            WindowManager/WindowManagerLibrary.h
+            WindowManager/WindowManagerLibrary.h \
+            NotificationManager/NotificationManagerPrivate.h \
+            Global.h \
+            PluginManager/PluginManagerPrivate.h \
+            PluginManager/PluginManager.h
 
 SOURCES +=  ActionManager/ActionManager.cpp \
             ActionManager/MenuItem.cpp \
@@ -74,7 +77,8 @@ SOURCES +=  ActionManager/ActionManager.cpp \
             WindowManager/AboutDialog.cpp \
             WindowManager/AboutWidget.cpp \
             WindowManager/IMainWindow.cpp \
-            WindowManager/WindowManager.cpp
+            WindowManager/WindowManager.cpp \
+            Global.cpp
 
 FORMS   +=  CoreWindow/CoreSettingPage.ui \
             CoreWindow/CoreWindow.ui \
@@ -105,10 +109,6 @@ win32: styleSheet.path = /ptgf/
 else: styleSheet.path = /share/ptgf/
 styleSheet.files = CoreWindow/StyleSheet.css
 INSTALLS += styleSheet
-
-#coreWindowHeaders.path = /include/core/lib/CoreWindow
-#coreWindowHeaders.files = CoreWindow/CoreWindowLibrary.h CoreWindow/CoreWindow.h
-#INSTALLS += coreWindowHeaders
 
 notificationManagerHeaders.path = /include/core/lib/NotificationManager
 notificationManagerHeaders.files = NotificationManager/NotificationManagerLibrary.h NotificationManager/NotificationManager.h NotificationManager/NotificationWidget.h

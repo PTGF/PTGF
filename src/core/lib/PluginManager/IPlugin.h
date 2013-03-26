@@ -1,7 +1,6 @@
 /*!
    \file IPlugin.h
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
@@ -20,15 +19,14 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this library; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-   \section DESCRIPTION
-
  */
 
 #ifndef IPLUGIN_H
 #define IPLUGIN_H
 
-#include <QtCore>
+#include <QString>
+#include <QList>
+#include <QtPlugin>
 #include "PluginManagerLibrary.h"
 
 namespace Core {
@@ -61,10 +59,6 @@ public:
 
 } // namespace PluginManager
 } // namespace Core
-
-#ifndef STRINGIFY
-#define STRINGIFY(X) # X
-#endif
 
 #define IPLUGIN_VERSION "org.krellinst.ptgf.IPlugin/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Core::PluginManager::IPlugin, IPLUGIN_VERSION)

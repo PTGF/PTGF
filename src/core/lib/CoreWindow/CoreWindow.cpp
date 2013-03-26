@@ -49,6 +49,7 @@ namespace CoreWindow {
 
 /*!
    \class Core::CoreWindow::CoreWindow
+   \internal
    \brief The CoreWindow class is part of the core framework libraries.
    It is the actual viewport that the user sees. All plugins manipulate this view to expose data to the user.
 
@@ -61,6 +62,7 @@ namespace CoreWindow {
 
 /*!
    \fn CoreWindow::instance()
+   \internal
    \brief Access to the singleton instance of this class
    \returns A reference to the singleton instance of this class
  */
@@ -75,6 +77,7 @@ CoreWindow &CoreWindow::instance()
 
 /*!
    \fn CoreWindow::CoreWindow()
+   \internal
    \brief Constructor.
  */
 CoreWindow::CoreWindow(QWidget *parent) :
@@ -93,6 +96,7 @@ CoreWindow::CoreWindow(QWidget *parent) :
 
 /*!
    \fn CoreWindow::~CoreWindow()
+   \internal
    \brief Destructor.
  */
 CoreWindow::~CoreWindow()
@@ -106,6 +110,7 @@ CoreWindow::~CoreWindow()
 
 /*!
    \fn CoreWindow::initialize()
+   \internal
    \brief Initializes this class after it has been constructed.
    This design pattern allows the class to perform any operations after a class (that this object is dependent upon) has been
    constructed.
@@ -125,8 +130,7 @@ bool CoreWindow::initialize()
         ui->toolbar->setVisible(true);
         addToolBar(Qt::LeftToolBarArea, ui->toolbar);
 
-        Core::PluginManager::PluginManager &pluginManager = Core::PluginManager::PluginManager::instance();
-        pluginManager.addObject(this);                         /* Register ourselves as an ISettingPageFactory */
+        Core::PluginManager::PluginManager::instance().addObject(this);    /* Register ourselves as an ISettingPageFactory */
     } catch(...) {
         return false;
     }
@@ -136,6 +140,7 @@ bool CoreWindow::initialize()
 
 /*!
    \fn CoreWindow::initialized()
+   \internal
    \brief Returns a boolean value indicating whether this instance has been initialized or not.
    \sa initialize()
  */
@@ -150,6 +155,7 @@ bool CoreWindow::initialized()
 
 /*!
    \fn CoreWindow::shutdown()
+   \internal
    \brief Notifies the instance that it should perform any clean-up operations before destruction.
    This class is called manually, before the application is closed.  It will occur before destruction of the instance.
    \sa initialize()
@@ -167,6 +173,7 @@ void CoreWindow::shutdown()
 
 /*!
    \fn CoreWindow::readSettings()
+   \internal
    \brief Load settings from the SettingManager.
  */
 void CoreWindow::readSettings()
@@ -197,10 +204,7 @@ void CoreWindow::readSettings()
     if(!QFile::exists(m_StylesheetFilePath)) {
         QFileInfo fileInfo(m_StylesheetFilePath);
 
-        NotificationManager::NotificationManager &notificationManager =
-                NotificationManager::NotificationManager::instance();
-
-        notificationManager.notify(tr("Failed to open style sheet: %1\nThis file path can be changed in the settings").
+        NotificationManager::NotificationManager().notify(tr("Failed to open style sheet: %1\nThis file path can be changed in the settings").
                arg(fileInfo.absoluteFilePath()), NotificationManager::NotificationWidget::Critical);
     }
 
@@ -218,6 +222,7 @@ void CoreWindow::readSettings()
 
 /*!
    \fn CoreWindow::writeSettings()
+   \internal
    \brief Stores settings in the SettingManager for later retrieval.
  */
 void CoreWindow::writeSettings()
@@ -241,7 +246,7 @@ void CoreWindow::writeSettings()
 
 /*!
    \fn CoreWindow::initActions()
-   \returns
+   \internal
  */
 void CoreWindow::initActions()
 {
@@ -252,7 +257,7 @@ void CoreWindow::initActions()
 
 /*!
    \fn CoreWindow::addProgressBar()
-   \returns
+   \internal
  */
 QProgressBar *CoreWindow::addProgressBar()
 {
@@ -271,7 +276,7 @@ QProgressBar *CoreWindow::addProgressBar()
 
 /*!
    \fn CoreWindow::removeProgressBar()
-   \returns
+   \internal
  */
 void CoreWindow::removeProgressBar(QProgressBar *progressBar)
 {
@@ -285,8 +290,8 @@ void CoreWindow::removeProgressBar(QProgressBar *progressBar)
 
 /*!
    \fn CoreWindow::addCentralWidget()
+   \internal
    This function takes ownership of the supplied widget.
-   \returns
  */
 void CoreWindow::addCentralWidget(QWidget *widget, int priority, QString title, QIcon icon)
 {
@@ -348,7 +353,7 @@ void CoreWindow::addCentralWidget(QWidget *widget, int priority, QString title, 
 
 /*!
    \fn CoreWindow::removeCentralWidget()
-   \returns
+   \internal
  */
 void CoreWindow::removeCentralWidget(QWidget *widget)
 {
@@ -433,6 +438,7 @@ void CoreWindow::on_actionExit_triggered()
 
 /*!
    \fn CoreWindow::addNotificationWidget()
+   \internal
    \brief used by friend class NotificationManager to insert NotificationWidgets at the top of the window.
    \sa Core::NotificationManager::NotificationManager::notify()
  */
@@ -462,6 +468,7 @@ QList<QAction*> CoreWindow::allActions(QList<QAction *> actions)
 
 /*!
    \fn CoreWindow::settingPageIcon()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \sa Core::SettingManager::ISettingPageFactory::settingPageIcon()
  */
@@ -472,6 +479,7 @@ QIcon CoreWindow::settingPageIcon()
 
 /*!
    \fn CoreWindow::settingPageName()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \reimp Core::SettingManager::ISettingPageFactory::settingPageName()
  */
@@ -482,6 +490,7 @@ QString CoreWindow::settingPageName()
 
 /*!
    \fn CoreWindow::settingPagePriority()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \reimp Core::SettingManager::ISettingPageFactory::settingPagePriority()
  */
@@ -492,6 +501,7 @@ int CoreWindow::settingPagePriority()
 
 /*!
    \fn CoreWindow::createSettingPage()
+   \internal
    \brief Reimplemented from ISettingPageFactory.
    \reimp Core::SettingManager::ISettingPageFactory::createSettingPage()
  */

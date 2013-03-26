@@ -29,7 +29,8 @@
 #include "ui_PluginSettingPage.h"
 
 #include <SettingManager/SettingManager.h>
-#include <PluginManager/PluginManager.h>
+#include "PluginManager.h"
+#include "PluginManagerPrivate.h"
 
 #include "PluginWrapper.h"
 
@@ -68,7 +69,7 @@ PluginSettingPage::PluginSettingPage(QWidget *parent) :
 
     readSettings();
 
-    buildTree( PluginManager::PluginManager::instance().m_Plugins );
+    buildTree( PluginManagerPrivate::instance()->m_Plugins );
     reset();
 }
 
@@ -97,8 +98,8 @@ void PluginSettingPage::apply()
     settingManager.beginGroup("PluginManager");
 
     // Store user settable settings
-    if(!PluginManager::instance().m_PluginPathsOverride) {
-        PluginManager::instance().m_PluginPaths = ui->txtPluginPath->text().split(m_PathSep);
+    if(!PluginManagerPrivate::instance()->m_PluginPathsOverride) {
+        PluginManagerPrivate::instance()->m_PluginPaths = ui->txtPluginPath->text().split(m_PathSep);
         settingManager.setValue("PluginPath", ui->txtPluginPath->text());
     }
 
@@ -111,9 +112,9 @@ void PluginSettingPage::reset()
     settingManager.beginGroup("PluginManager");
 
     // Restore user settable settings
-    ui->txtPluginPath->setText( PluginManager::instance().m_PluginPaths.join(m_PathSep) );
+    ui->txtPluginPath->setText( PluginManagerPrivate::instance()->m_PluginPaths.join(m_PathSep) );
 
-    if(PluginManager::instance().m_PluginPathsOverride) {
+    if(PluginManagerPrivate::instance()->m_PluginPathsOverride) {
         ui->txtPluginPath->setEnabled(false);
         ui->txtPluginPath->setToolTip(tr("Environment variable or commandline argument was used, and cannot be modified here"));
     }

@@ -1,7 +1,6 @@
 /*!
    \file PluginWrapper.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
