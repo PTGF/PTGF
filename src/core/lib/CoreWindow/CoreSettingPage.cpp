@@ -28,6 +28,9 @@
 #include "CoreSettingPage.h"
 #include "ui_CoreSettingPage.h"
 
+#include <QStyleFactory>
+#include <QFileDialog>
+
 #include <SettingManager/SettingManager.h>
 
 namespace Core {

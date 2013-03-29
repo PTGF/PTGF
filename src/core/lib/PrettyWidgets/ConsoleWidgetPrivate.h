@@ -1,5 +1,5 @@
 /*!
-   \file WindowManagerLibrary.h
+   \file ConsoleWidgetPrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,15 +21,27 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CORE_WINDOWMANAGER_WINDOWMANGERLIBRARY_H
-#define CORE_WINDOWMANAGER_WINDOWMANGERLIBRARY_H
+#ifndef CONSOLEWIDGETPRIVATE_H
+#define CONSOLEWIDGETPRIVATE_H
+
+#include <QMap>
+#include <QTextCharFormat>
 
 #include "Global.h"
+#include "ConsoleWidget.h"
 
-#if defined(WINDOWMANAGER_LIBRARY)
-#  define WINDOWMANAGER_EXPORT Q_DECL_EXPORT
-#else
-#  define WINDOWMANAGER_EXPORT Q_DECL_IMPORT
-#endif
+class ConsoleWidgetPrivate : QObject
+{
+    Q_OBJECT
+    DECLARE_PUBLIC(ConsoleWidget)
 
-#endif // CORE_WINDOWMANAGER_WINDOWMANGERLIBRARY_H
+public:
+    ConsoleWidgetPrivate(ConsoleWidget *parent);
+
+private:
+    QMap<int, QTextCharFormat> m_EventLevelCharFormats;
+    QTextCharFormat m_DefaultCharFormat;
+
+};
+
+#endif // CONSOLEWIDGETPRIVATE_H

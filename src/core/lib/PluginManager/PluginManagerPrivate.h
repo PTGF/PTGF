@@ -24,10 +24,14 @@
 #ifndef CORE_PLUGINMANAGER_PLUGINMANAGERPRIVATE_H
 #define CORE_PLUGINMANAGER_PLUGINMANAGER_H
 
-#include <QtCore>
+#include <QObject>
+#include <QString>
+#include <QIcon>
+#include <QList>
+#include <QObjectList>
 
-#include <Global.h>
 #include <SettingManager/ISettingPageFactory.h>
+#include "Global.h"
 
 namespace Core {
 namespace PluginManager {
@@ -46,28 +50,8 @@ class PluginManagerPrivate :
     DECLARE_PUBLIC(PluginManager)
 
 public:
-    static PluginManagerPrivate *instance();
+    PluginManagerPrivate(PluginManager *parent);
     ~PluginManagerPrivate();
-
-    bool initialize();
-    bool initialized();
-    void shutdown();
-
-    void loadPlugins();
-
-    QObjectList allObjects() const;
-    void addObject(QObject *object);
-    bool delObject(QObject *object);
-
-    template <typename Type> QList<Type *> getObjects() const {
-        QList<Type *> list;
-        Type *type = 0;
-        foreach (QObject *object, m_Objects) {
-            if( (type = qobject_cast<Type *>(object)) )
-                list.append(type);
-        }
-        return list;
-    }
 
     /* BEGIN ISettingPageFactory */
     QIcon settingPageIcon();
@@ -76,11 +60,7 @@ public:
     SettingManager::ISettingPage *createSettingPage();
     /* END ISettingPageFactory */
 
-public slots:
-    void pluginDialog();
-
 protected:
-    PluginManagerPrivate(PluginManager *parent);
 
     void readSettings();
     void writeSettings();

@@ -21,10 +21,13 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PLUGINWRAPPER_H
-#define PLUGINWRAPPER_H
+#ifndef CORE_PLUGINMANAGER_PLUGINWRAPPER_H
+#define CORE_PLUGINMANAGER_PLUGINWRAPPER_H
 
-#include <QtCore>
+#include <QObject>
+#include <QString>
+#include <QList>
+#include <QStringList>
 
 #include "IPlugin.h"
 
@@ -71,4 +74,4 @@ protected:
 
 } // namespace PluginManager
 } // namespace Core
-#endif // PLUGINWRAPPER_H
+#endif // CORE_PLUGINMANAGER_PLUGINWRAPPER_H

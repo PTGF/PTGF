@@ -26,6 +26,10 @@
  */
 
 #include "SettingManager.h"
+#include "SettingManagerPrivate.h"
+
+#include <QMenuBar>
+#include <QAction>
 
 #include <CoreWindow/CoreWindow.h>
 #include <PluginManager/PluginManager.h>
@@ -67,9 +71,9 @@ SettingManager &SettingManager::instance()
    \internal
  */
 SettingManager::SettingManager(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    d(new SettingManagerPrivate(this))
 {
-    m_Initialized = false;
 }
 
 /*!
@@ -79,11 +83,15 @@ SettingManager::SettingManager(QObject *parent) :
  */
 SettingManager::~SettingManager()
 {
-    m_Settings.sync();
+    d->m_Settings.sync();
 }
 
 bool SettingManager::initialize()
 {
+    if(d->m_Initialized) {
+        return false;
+    }
+
     try {
 
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
@@ -99,25 +107,24 @@ bool SettingManager::initialize()
 
         /* Check the object pool for anything we should manage */
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
-        foreach(QObject *object, pluginManager.allObjects()) { pluginObjectRegistered(object); }
-        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), this, SLOT(pluginObjectRegistered(QObject*)));
-        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), this, SLOT(pluginObjectDeregistered(QObject*)));
+        foreach(QObject *object, pluginManager.allObjects()) { d->pluginObjectRegistered(object); }
+        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), d, SLOT(pluginObjectRegistered(QObject*)));
+        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), d, SLOT(pluginObjectDeregistered(QObject*)));
 
     } catch(...) {
         return false;
     }
 
-    return m_Initialized = true;
-}
-
-bool SettingManager::initialized()
-{
-    return m_Initialized;
+    return d->m_Initialized = true;
 }
 
 void SettingManager::shutdown()
 {
-    Q_ASSERT(m_Initialized);
+    if(!d->m_Initialized) {
+        return;
+    }
+
+    // ...
 }
 
 /*!
@@ -128,7 +135,7 @@ void SettingManager::shutdown()
  */
 void SettingManager::setValue(const QString &key, const QVariant &value)
 {
-    m_Settings.setValue(key, value);
+    d->m_Settings.setValue(key, value);
 }
 
 /*!
@@ -139,7 +146,7 @@ void SettingManager::setValue(const QString &key, const QVariant &value)
  */
 QVariant SettingManager::value(const QString &key, const QVariant &defaultValue) const
 {
-    return m_Settings.value(key, defaultValue);
+    return d->m_Settings.value(key, defaultValue);
 }
 
 /*!
@@ -148,7 +155,7 @@ QVariant SettingManager::value(const QString &key, const QVariant &defaultValue)
  */
 void SettingManager::remove(const QString &key)
 {
-    m_Settings.remove(key);
+    d->m_Settings.remove(key);
 }
 
 /*!
@@ -157,7 +164,7 @@ void SettingManager::remove(const QString &key)
  */
 bool SettingManager::contains(const QString &key) const
 {
-    return m_Settings.contains(key);
+    return d->m_Settings.contains(key);
 }
 
 /*!
@@ -169,7 +176,7 @@ bool SettingManager::contains(const QString &key) const
  */
 void SettingManager::beginGroup(const QString &prefix)
 {
-    m_Settings.beginGroup(prefix);
+    d->m_Settings.beginGroup(prefix);
 }
 
 /*!
@@ -180,7 +187,7 @@ void SettingManager::beginGroup(const QString &prefix)
  */
 void SettingManager::endGroup()
 {
-    m_Settings.endGroup();
+    d->m_Settings.endGroup();
 }
 
 /*!
@@ -192,38 +199,53 @@ void SettingManager::endGroup()
  */
 QString SettingManager::group() const
 {
-    return m_Settings.group();
+    return d->m_Settings.group();
 }
 
-void SettingManager::pluginObjectRegistered(QObject *object)
+
+void SettingManager::settingDialog()
 {
-    ISettingPageFactory *settingPageFactory = qobject_cast<ISettingPageFactory *>(object);
-    if(settingPageFactory) registerPageFactory(settingPageFactory);
+    SettingDialog dialog(d->m_Pages, &CoreWindow::CoreWindow::instance());
+    dialog.exec();
 }
 
-void SettingManager::pluginObjectDeregistered(QObject *object)
+
+
+
+
+
+
+SettingManagerPrivate::SettingManagerPrivate(SettingManager *parent) :
+    QObject(parent),
+    q(parent),
+    m_Initialized(false)
 {
-    ISettingPageFactory *settingPageFactory = qobject_cast<ISettingPageFactory *>(object);
-    if(settingPageFactory) deregisterPageFactory(settingPageFactory);
 }
 
-void SettingManager::registerPageFactory(ISettingPageFactory *page)
+void SettingManagerPrivate::registerPageFactory(ISettingPageFactory *page)
 {
     m_Pages.append(page);
 }
 
-void SettingManager::deregisterPageFactory(ISettingPageFactory *page)
+void SettingManagerPrivate::deregisterPageFactory(ISettingPageFactory *page)
 {
     if(m_Pages.contains(page)) {
         m_Pages.removeAll(page);
     }
 }
 
-void SettingManager::settingDialog()
+void SettingManagerPrivate::pluginObjectRegistered(QObject *object)
 {
-    SettingDialog dialog(m_Pages, &CoreWindow::CoreWindow::instance());
-    dialog.exec();
+    ISettingPageFactory *settingPageFactory = qobject_cast<ISettingPageFactory *>(object);
+    if(settingPageFactory) registerPageFactory(settingPageFactory);
 }
+
+void SettingManagerPrivate::pluginObjectDeregistered(QObject *object)
+{
+    ISettingPageFactory *settingPageFactory = qobject_cast<ISettingPageFactory *>(object);
+    if(settingPageFactory) deregisterPageFactory(settingPageFactory);
+}
+
 
 } // namespace SettingManager
 } // namespace Core

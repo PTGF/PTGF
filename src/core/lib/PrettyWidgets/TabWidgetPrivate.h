@@ -1,5 +1,5 @@
 /*!
-   \file IMainWindow.h
+   \file TabWidgetPrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,45 +21,31 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CORE_WINDOWMANAGER_IMAINWINDOW_H
-#define CORE_WINDOWMANAGER_IMAINWINDOW_H
+#ifndef TABWIDGETPRIVATE_H
+#define TABWIDGETPRIVATE_H
 
 #include <QObject>
-#include <QString>
-#include <QIcon>
-#include <QtPlugin>
 
-#include "WindowManagerLibrary.h"
+#include "Global.h"
 
-class QWidget;
+class TabWidget;
 
-namespace Core {
-namespace WindowManager {
-
-class WINDOWMANAGER_EXPORT IMainWindow : public QObject
+class TabWidgetPrivate : public QObject
 {
     Q_OBJECT
+    DECLARE_PUBLIC(TabWidget)
+
 public:
-    IMainWindow(QObject *parent = 0) : QObject(parent) {}
-    virtual ~IMainWindow() {}
+    explicit TabWidgetPrivate(TabWidget *parent);
 
-    virtual QWidget *mainWindowWidget() = 0;
-    virtual QString mainWindowName() = 0;
-    virtual int mainWindowPriority() = 0;
-    virtual QIcon mainWindowIcon() = 0;
+protected:
+    void updateTabBar();
+    void updateStyleSheet();
 
-    virtual QWidget *createAboutWidget() = 0;
-
-signals:
-    void active();
-    void notify(const int &level, const QString &message);
+    QString m_StyleSheet;
+    bool m_HideBarOnOne;
+    bool m_ClearStyleSheet;
 
 };
 
-} // namespace WindowManager
-} // namespace Core
-
-#define IMAINWINDOW_VERSION "org.krellinst.ptgf.IMainWindow/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
-Q_DECLARE_INTERFACE(Core::WindowManager::IMainWindow, IMAINWINDOW_VERSION)
-
-#endif // CORE_WINDOWMANAGER_IMAINWINDOW_H
+#endif // TABWIDGETPRIVATE_H

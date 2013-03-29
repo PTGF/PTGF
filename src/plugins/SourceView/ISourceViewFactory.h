@@ -47,10 +47,6 @@ public:
 } // namespace SourceView
 } // namespace Plugins
 
-#ifndef STRINGIFY
-#define STRINGIFY(X) # X
-#endif
-
 #define ISOURCEVIEWFACTORY_VERSION "org.krellinst.ptgf.ISourceViewFactory/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Plugins::SourceView::ISourceViewFactory, ISOURCEVIEWFACTORY_VERSION)
 

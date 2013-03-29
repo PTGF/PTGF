@@ -1,5 +1,5 @@
 /*!
-   \file IMainWindow.h
+   \file SettingManagerPrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,45 +21,42 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CORE_WINDOWMANAGER_IMAINWINDOW_H
-#define CORE_WINDOWMANAGER_IMAINWINDOW_H
+#ifndef CORE_SETTINGMANAGER_SETTINGMANAGERPRIVATE_H
+#define CORE_SETTINGMANAGER_SETTINGMANAGERPRIVATE_H
 
 #include <QObject>
-#include <QString>
-#include <QIcon>
-#include <QtPlugin>
+#include <QSettings>
 
-#include "WindowManagerLibrary.h"
-
-class QWidget;
+#include "SettingManager.h"
 
 namespace Core {
-namespace WindowManager {
+namespace SettingManager {
 
-class WINDOWMANAGER_EXPORT IMainWindow : public QObject
+class ISettingPageFactory;
+
+class SettingManagerPrivate : public QObject
 {
     Q_OBJECT
+    DECLARE_PUBLIC(SettingManager)
+
 public:
-    IMainWindow(QObject *parent = 0) : QObject(parent) {}
-    virtual ~IMainWindow() {}
+    explicit SettingManagerPrivate(SettingManager *parent);
 
-    virtual QWidget *mainWindowWidget() = 0;
-    virtual QString mainWindowName() = 0;
-    virtual int mainWindowPriority() = 0;
-    virtual QIcon mainWindowIcon() = 0;
+protected:
+    void registerPageFactory(ISettingPageFactory *page);
+    void deregisterPageFactory(ISettingPageFactory *page);
 
-    virtual QWidget *createAboutWidget() = 0;
+protected slots:
+    void pluginObjectRegistered(QObject *object);
+    void pluginObjectDeregistered(QObject *object);
 
-signals:
-    void active();
-    void notify(const int &level, const QString &message);
-
+private:
+    bool m_Initialized;
+    QSettings m_Settings;
+    QList<ISettingPageFactory *> m_Pages;
 };
 
-} // namespace WindowManager
+} // namespace SettingManager
 } // namespace Core
 
-#define IMAINWINDOW_VERSION "org.krellinst.ptgf.IMainWindow/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
-Q_DECLARE_INTERFACE(Core::WindowManager::IMainWindow, IMAINWINDOW_VERSION)
-
-#endif // CORE_WINDOWMANAGER_IMAINWINDOW_H
+#endif // CORE_SETTINGMANAGER_SETTINGMANAGERPRIVATE_H

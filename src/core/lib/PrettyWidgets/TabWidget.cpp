@@ -1,7 +1,6 @@
 /*!
    \file TabWidget.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
@@ -20,24 +19,25 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this library; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-   \section DESCRIPTION
-
  */
 
 #include "TabWidget.h"
+#include "TabWidgetPrivate.h"
+
 #include <QTabBar>
 
 TabWidget::TabWidget(QWidget *parent) :
-    QTabWidget(parent)
+    QTabWidget(parent),
+    d(NULL)
 {
-    m_HideBarOnOne = true;
-    m_ClearStyleSheet = true;
+    d = new TabWidgetPrivate(this);
 
-    updateTabBar();
-    updateStyleSheet();
+    d->m_HideBarOnOne = true;
+    d->m_ClearStyleSheet = true;
+
+    d->updateTabBar();
+    d->updateStyleSheet();
 }
-
 
 QTabBar *TabWidget::tabBar()
 {
@@ -46,69 +46,80 @@ QTabBar *TabWidget::tabBar()
 
 void TabWidget::setHideBarOnOne(bool hide)
 {
-    m_HideBarOnOne = hide;
-    updateTabBar();
+    d->m_HideBarOnOne = hide;
+    d->updateTabBar();
 }
 
 bool TabWidget::hideBarOnOne()
 {
-    return m_HideBarOnOne;
+    return d->m_HideBarOnOne;
 }
-
-void TabWidget::updateTabBar()
-{
-    if(m_HideBarOnOne) {
-        if(count() < 2) {
-            tabBar()->hide();
-        } else {
-            tabBar()->show();
-        }
-    } else {
-        tabBar()->show();
-    }
-}
-
 
 void TabWidget::setClearStyleSheet(bool clear)
 {
-    m_ClearStyleSheet = clear;
-    updateStyleSheet();
+    d->m_ClearStyleSheet = clear;
+    d->updateStyleSheet();
 }
 
 bool TabWidget::clearStyleSheet()
 {
-    return m_ClearStyleSheet;
+    return d->m_ClearStyleSheet;
 }
-
-void TabWidget::updateStyleSheet()
-{
-    if(!m_ClearStyleSheet || count() < 0) {
-        if(!m_StyleSheet.isEmpty()) {
-            setStyleSheet(m_StyleSheet);
-            m_StyleSheet.clear();
-        }
-        return;
-    }
-
-    if(m_StyleSheet.isEmpty()) {
-        m_StyleSheet = styleSheet();
-        setStyleSheet(QString());
-    }
-}
-
 
 void TabWidget::tabInserted(int index)
 {
     Q_UNUSED(index)
 
-    updateTabBar();
-    updateStyleSheet();
+    d->updateTabBar();
+    d->updateStyleSheet();
 }
 
 void TabWidget::tabRemoved(int index)
 {
     Q_UNUSED(index)
 
-    updateTabBar();
-    updateStyleSheet();
+    d->updateTabBar();
+    d->updateStyleSheet();
 }
+
+
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+TabWidgetPrivate::TabWidgetPrivate(TabWidget *parent) :
+    QObject(parent),
+    q(parent)
+{
+}
+
+
+void TabWidgetPrivate::updateTabBar()
+{
+    if(m_HideBarOnOne) {
+        if(q->count() < 2) {
+            q->tabBar()->hide();
+        } else {
+            q->tabBar()->show();
+        }
+    } else {
+        q->tabBar()->show();
+    }
+}
+
+void TabWidgetPrivate::updateStyleSheet()
+{
+    if(!m_ClearStyleSheet || q->count() < 0) {
+        if(!m_StyleSheet.isEmpty()) {
+            q->setStyleSheet(m_StyleSheet);
+            m_StyleSheet.clear();
+        }
+        return;
+    }
+
+    if(m_StyleSheet.isEmpty()) {
+        m_StyleSheet = q->styleSheet();
+        q->setStyleSheet(QString());
+    }
+}
+

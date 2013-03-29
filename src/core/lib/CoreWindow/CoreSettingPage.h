@@ -25,12 +25,10 @@
 
  */
 
-#ifndef CORESETTINGPAGE_H
-#define CORESETTINGPAGE_H
+#ifndef CORE_COREWINDOW_CORESETTINGPAGE_H
+#define CORE_COREWINDOW_CORESETTINGPAGE_H
 
-#include <QtCore>
-#include <QtGui>
-
+#include <QString>
 #include <SettingManager/ISettingPage.h>
 
 namespace Core {
@@ -65,4 +63,4 @@ private:
 
 } // namespace CoreWindow
 } // namespace Core
-#endif // CORESETTINGPAGE_H
+#endif // CORE_COREWINDOW_CORESETTINGPAGE_H

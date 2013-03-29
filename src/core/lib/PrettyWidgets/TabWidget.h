@@ -30,9 +30,14 @@
 
 #include <QTabWidget>
 
+#include "Global.h"
+
+class TabWidgetPrivate;
+
 class TabWidget : public QTabWidget
 {
     Q_OBJECT
+    DECLARE_PRIVATE(TabWidget)
 
 public:
     explicit TabWidget(QWidget *parent = 0);
@@ -48,14 +53,6 @@ public:
 protected:
     virtual void tabInserted(int index);
     virtual void tabRemoved(int index);
-
-    void updateTabBar();
-    void updateStyleSheet();
-
-private:
-    QString m_StyleSheet;
-    bool m_HideBarOnOne;
-    bool m_ClearStyleSheet;
 
 };
 

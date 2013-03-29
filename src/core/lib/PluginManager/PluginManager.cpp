@@ -1,7 +1,6 @@
 /*!
    \file PluginManager.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
@@ -20,13 +19,19 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this library; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-   \section DESCRIPTION
-
  */
 
 #include "PluginManager.h"
 #include "PluginManagerPrivate.h"
+
+#include <QMenuBar>
+#include <QAction>
+#include <QDialog>
+#include <QGridLayout>
+#include <QFile>
+#include <QDir>
+#include <QPluginLoader>
+#include <QApplication>
 
 #include <SettingManager/SettingManager.h>
 #include <CoreWindow/CoreWindow.h>
@@ -99,7 +104,7 @@ PluginManager &PluginManager::instance()
    \internal
  */
 PluginManager::PluginManager() :
-    d(null)
+    d(NULL)
 {
     d = new PluginManagerPrivate(this);
 }
@@ -126,127 +131,15 @@ PluginManager::~PluginManager()
  */
 bool PluginManager::initialize()
 {
-    if(!d->initialized()) {
-        return d->initialize();
+    if(d->m_Initialized) {
+        return false;
     }
-    return false;
-}
 
-/*!
-   \fn PluginManager::shutdown()
-   \internal
-   \brief Notifies the instance that it should perform any clean-up operations before destruction.
-   This class is called manually, before the application is closed.  It will occur before destruction of the instance.
-   \sa initialize()
- */
-void PluginManager::shutdown()
-{
-    if(d->initialized()) {
-        d->shutdown();
-    }
-}
-
-/*!
-   \fn PluginManager::loadPlugins()
-   \internal
-   \brief Loads plugins from locations defined in the SettingManager
- */
-void PluginManager::loadPlugins()
-{
-    d->loadPlugins();
-}
-
-/*!
-   \fn PluginManager::allObjects()
-   \brief Accessor to list of all objects managed by this PluginManager
-   \sa getObjects addObject delObject
- */
-QObjectList PluginManager::allObjects() const
-{
-    return d->allObjects();
-}
-
-/*!
-   \fn PluginManager::addObject()
-   \brief Adds an object to the manager for later retrieval. This is typically
-          used by plugins as they are initialized to store factory classes.
-
-   \par Emits
-        objectAdding() signal before adding
-        objectAdded() signal after adding
-   \param object The object to be stored
-   \sa delObject getObjects allObjects
- */
-void PluginManager::addObject(QObject *object)
-{
-    d->addObject(object);
-}
-
-/*!
-   \fn PluginManager::delObject()
-   \brief Removes a previously stored object from the manager.
-
-   \par Emits
-       objectRemoving() signal before removal
-       objectRemoved() signal after removal
-   \param object The object to be removed
-   \sa addObject getObjects allObjects
- */
-bool PluginManager::delObject(QObject *object)
-{
-    return d->delObject(object);
-}
-
-/*!
-   \fn PluginManager::pluginDialog()
-   \brief Slot connected to menu item.
-
-   When this slot is called, a QDialog is created as a wrapper to the plugin widget that is
-   registered as a settings page.
-
-   \note This only allows viewing of the plugins that are loaded; user changes should only
-         be performed through the settings dialog.
- */
-void PluginManager::pluginDialog()
-{
-    d->pluginDialog();
-}
-
-
-/***** PRIVATE IMPLEMENTATION *****/
-
-PluginManagerPrivate *PluginManagerPrivate::instance()
-{
-    return m_Instance;
-}
-
-
-PluginManagerPrivate *PluginManagerPrivate::m_Instance;
-
-PluginManagerPrivate::PluginManagerPrivate(PluginManager *parent) :
-    QObject(0),
-    q(parent),
-    m_Initialized(false),
-    m_PluginPathsOverride(false)
-{
-    PluginManagerPrivate::m_Instance = this;
-}
-
-PluginManagerPrivate::~PluginManagerPrivate()
-{
-    qSort(m_Plugins.begin(), m_Plugins.end(), descending);
-    qDeleteAll(m_Plugins);
-
-    writeSettings();
-}
-
-bool PluginManagerPrivate::initialize()
-{
     try {
 
-        readSettings();
+        d->readSettings();
 
-        addObject(this);                         /* Register ourselves as an ISettingPageFactory */
+        addObject(d);                         /* Register our ISettingPageFactory */
 
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
         foreach(QAction *action, coreWindow.menuBar()->actions()) {
@@ -262,24 +155,25 @@ bool PluginManagerPrivate::initialize()
         return false;
     }
 
-    return m_Initialized = true;
+    return d->m_Initialized = true;
 }
 
 /*!
-   \fn PluginManagerPrivate::initialized()
+   \fn PluginManager::shutdown()
    \internal
-   \brief Returns a boolean value indicating whether this instance has been initialized or not.
+   \brief Notifies the instance that it should perform any clean-up operations before destruction.
+   This class is called manually, before the application is closed.  It will occur before destruction of the instance.
    \sa initialize()
  */
-bool PluginManagerPrivate::initialized()
-{
-    return m_Initialized;
-}
 
-void PluginManagerPrivate::shutdown()
+void PluginManager::shutdown()
 {
-    qSort(m_Plugins.begin(), m_Plugins.end(), ascending);
-    foreach(IPlugin *plugin, m_Plugins) {
+    if(!d->m_Initialized) {
+        return;
+    }
+
+    qSort(d->m_Plugins.begin(), d->m_Plugins.end(), d->ascending);
+    foreach(IPlugin *plugin, d->m_Plugins) {
 
 #ifdef PLUGINMANAGER_DEBUG
         qDebug() << __FILE__ << __LINE__ << "Shutting down plugin:" << plugin->name();
@@ -287,6 +181,122 @@ void PluginManagerPrivate::shutdown()
 
         plugin->shutdown();
     }
+}
+
+/*!
+   \fn PluginManager::loadPlugins()
+   \internal
+   \brief Loads plugins from locations defined in the SettingManager
+ */
+void PluginManager::loadPlugins()
+{
+#ifdef PLUGINMANAGER_DEBUG
+    qDebug() << __FILE__ << __LINE__ << "Loading plugins...";
+#endif
+
+    d->m_PluginPaths.removeDuplicates();
+    foreach(QString pluginPath, d->m_PluginPaths) {
+        if(QFile::exists(pluginPath)) {
+            d->loadPlugins(QDir::fromNativeSeparators(pluginPath));
+
+#ifdef PLUGINMANAGER_DEBUG
+        } else {
+            qWarning() << __FILE__ << __LINE__ << "User specified plugin path doesn't exist: " << pluginPath;
+#endif
+
+        }
+    }
+}
+
+/*!
+   \fn PluginManager::allObjects()
+   \brief Accessor to list of all objects managed by this PluginManager
+   \sa getObjects addObject delObject
+ */
+QObjectList PluginManager::allObjects() const
+{
+    return d->m_Objects;
+}
+
+/*!
+   \fn PluginManager::addObject()
+   \brief Adds an object to the manager for later retrieval. This is typically
+          used by plugins as they are initialized to store factory classes.
+
+   \par Emits
+        objectAdding() signal before adding
+        objectAdded() signal after adding
+   \param object The object to be stored
+   \sa delObject getObjects allObjects
+ */
+void PluginManager::addObject(QObject *object)
+{
+    emit objectAdding(object);
+    d->m_Objects.append(object);
+    emit objectAdded(object);
+}
+
+/*!
+   \fn PluginManager::delObject()
+   \brief Removes a previously stored object from the manager.
+
+   \par Emits
+       objectRemoving() signal before removal
+       objectRemoved() signal after removal
+   \param object The object to be removed
+   \sa addObject getObjects allObjects
+ */
+bool PluginManager::delObject(QObject *object)
+{
+    emit objectRemoving(object);
+    int RetVal;
+    RetVal = d->m_Objects.removeAll(object);
+    emit objectRemoved(object);
+    return (RetVal);
+}
+
+/*!
+   \fn PluginManager::pluginDialog()
+   \brief Slot connected to menu item.
+
+   When this slot is called, a QDialog is created as a wrapper to the plugin widget that is
+   registered as a settings page.
+
+   \note This only allows viewing of the plugins that are loaded; user changes should only
+         be performed through the settings dialog.
+ */
+void PluginManager::pluginDialog()
+{
+    // Wrapped in a QDialog because this is also registered as a setting page
+
+    QDialog *dialog = new QDialog(&CoreWindow::CoreWindow::instance());
+    QGridLayout *layout = new QGridLayout(dialog);
+    layout->addWidget(new PluginSettingPage(d->m_Plugins, dialog));
+    dialog->setLayout(layout);
+    dialog->resize(640, 480);
+    dialog->setWindowIcon(QIcon(":/PluginManager/plugin.svg"));
+    dialog->exec();
+
+    delete dialog;
+}
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+PluginManagerPrivate::PluginManagerPrivate(PluginManager *parent) :
+    QObject(0),
+    q(parent),
+    m_Initialized(false),
+    m_PluginPathsOverride(false)
+{
+}
+
+PluginManagerPrivate::~PluginManagerPrivate()
+{
+    qSort(m_Plugins.begin(), m_Plugins.end(), descending);
+    qDeleteAll(m_Plugins);
+
+    writeSettings();
 }
 
 /*!
@@ -364,25 +374,6 @@ void PluginManagerPrivate::writeSettings()
     settingManager.endGroup();
 }
 
-void PluginManagerPrivate::loadPlugins()
-{
-#ifdef PLUGINMANAGER_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "Loading plugins...";
-#endif
-
-    m_PluginPaths.removeDuplicates();
-    foreach(QString pluginPath, m_PluginPaths) {
-        if(QFile::exists(pluginPath)) {
-            loadPlugins(QDir::fromNativeSeparators(pluginPath));
-
-#ifdef PLUGINMANAGER_DEBUG
-        } else {
-            qWarning() << __FILE__ << __LINE__ << "User specified plugin path doesn't exist: " << pluginPath;
-#endif
-
-        }
-    }
-}
 
 /*!
    \fn PluginManagerPrivate::loadPlugins()
@@ -555,43 +546,6 @@ PluginWrapper *PluginManagerPrivate::findPlugin(QString name)
             return plugin;
     }
     return 0;
-}
-
-void PluginManagerPrivate::addObject(QObject *object)
-{
-    emit q->objectAdding(object);
-    m_Objects.append(object);
-    emit q->objectAdded(object);
-}
-
-QObjectList PluginManagerPrivate::allObjects() const
-{
-    return m_Objects;
-}
-
-
-bool PluginManagerPrivate::delObject(QObject *object)
-{
-    emit q->objectRemoving(object);
-    int RetVal;
-    RetVal = m_Objects.removeAll(object);
-    emit q->objectRemoved(object);
-    return (RetVal);
-}
-
-void PluginManagerPrivate::pluginDialog()
-{
-    // Wrapped in a QDialog because this is also registered as a setting page
-
-    QDialog *dialog = new QDialog(&CoreWindow::CoreWindow::instance());
-    QGridLayout *layout = new QGridLayout(dialog);
-    layout->addWidget(new PluginSettingPage(m_Plugins, dialog));
-    dialog->setLayout(layout);
-    dialog->resize(640, 480);
-    dialog->setWindowIcon(QIcon(":/PluginManager/plugin.svg"));
-    dialog->exec();
-
-    delete dialog;
 }
 
 /*!

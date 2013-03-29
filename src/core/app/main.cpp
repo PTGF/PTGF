@@ -64,7 +64,7 @@
  */
 
 
-#include <QtGui/QApplication>
+#include <QApplication>
 
 #include <NotificationManager/NotificationManager.h>
 #include <SettingManager/SettingManager.h>
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
     using namespace Core;
 
-    Core::NotificationManager::NotificationManager notificationManager;
+    Core::NotificationManager::NotificationManager &notificationManager = Core::NotificationManager::NotificationManager::instance();
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
     CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
     PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
@@ -108,16 +108,15 @@ int main(int argc, char *argv[])
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tInitializing the singleton classes";
 #endif
-
     notificationManager.initialize();
+    settingManager.initialize();
 
-    if(!settingManager.initialized())
-        settingManager.initialize();
     if(!coreWindow.initialized())
         coreWindow.initialize();
+
     pluginManager.initialize();
-    if(!windowManager.initialized())
-        windowManager.initialize();
+    windowManager.initialize();
+
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tLoading plugins";
@@ -135,16 +134,15 @@ int main(int argc, char *argv[])
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tShutting down singleton classes";
 #endif
-
-    if(windowManager.initialized())
-        windowManager.shutdown();
+    windowManager.shutdown();
     pluginManager.shutdown();
+
     if(coreWindow.initialized())
         coreWindow.shutdown();
-    if(settingManager.initialized())
-        settingManager.shutdown();
 
+    settingManager.shutdown();
     notificationManager.shutdown();
+
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tDone";

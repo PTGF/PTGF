@@ -1,7 +1,6 @@
 /*!
-   \file
+   \file ISettingPage.h
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
@@ -20,16 +19,12 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this library; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-   \section DESCRIPTION
-
  */
 
-#ifndef ISETTINGPAGE_H
-#define ISETTINGPAGE_H
+#ifndef CORE_SETTINGMANAGER_ISETTINGPAGE_H
+#define CORE_SETTINGMANAGER_ISETTINGPAGE_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QWidget>
 #include <QtPlugin>
 
 #include "SettingManagerLibrary.h"
@@ -51,11 +46,7 @@ public slots:
 } // namespace SettingManager
 } // namespace Core
 
-#ifndef STRINGIFY
-#define STRINGIFY(X) # X
-#endif
-
 #define ISETTINGPAGE_VERSION "org.krellinst.ptgf.ISettingPage/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPage, ISETTINGPAGE_VERSION)
 
-#endif // ISETTINGPAGE_H
+#endif // CORE_SETTINGMANAGER_ISETTINGPAGE_H

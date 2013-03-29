@@ -28,7 +28,7 @@
 #ifndef WELCOMELIBRARY_H
 #define WELCOMELIBRARY_H
 
-#include <QtCore/QtGlobal>
+#include <Global.h>
 
 #if defined(WELCOME_LIBRARY)
 #  define WELCOME_EXPORT Q_DECL_EXPORT

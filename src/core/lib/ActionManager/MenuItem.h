@@ -25,11 +25,12 @@
 
  */
 
-#ifndef MENUITEM_H
-#define MENUITEM_H
+#ifndef CORE_ACTIONMANAGER_MENUITEM_H
+#define CORE_ACTIONMANAGER_MENUITEM_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QObject>
+#include <QList>
+#include <QAction>
 
 namespace Core {
 namespace ActionManager {
@@ -79,4 +80,4 @@ protected:
 } // namespace ActionManager
 } // namespace Core
 
-#endif // MENUITEM_H
+#endif // CORE_ACTIONMANAGER_MENUITEM_H

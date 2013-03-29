@@ -26,15 +26,15 @@
  */
 
 
-#ifndef COREWINDOW_H
-#define COREWINDOW_H
+#ifndef CORE_COREWINDOW_COREWINDOW_H
+#define CORE_COREWINDOW_COREWINDOW_H
 
-#include <QtCore>
-#include <QtGui>
-
+#include <QMainWindow>
 #include <SettingManager/ISettingPageFactory.h>
-
 #include "CoreWindowLibrary.h"
+
+class QProgressBar;
+
 
 namespace Core {
 
@@ -42,7 +42,6 @@ namespace WindowManager {
     class WindowManager;
 }
 namespace NotificationManager {
-    class NotificationManager;
     class NotificationManagerPrivate;
 }
 
@@ -115,4 +114,4 @@ private:
 
 } // namespace CoreWindow
 } // namespace Core
-#endif // COREWINDOW_H
+#endif // CORE_COREWINDOW_COREWINDOW_H

@@ -25,11 +25,11 @@
 
  */
 
-#ifndef ISETTINGPAGEFACTORY_H
-#define ISETTINGPAGEFACTORY_H
+#ifndef CORE_SETTINGMANAGER_ISETTINGPAGEFACTORY_H
+#define CORE_SETTINGMANAGER_ISETTINGPAGEFACTORY_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QIcon>
+#include <QString>
 #include <QtPlugin>
 
 #include "SettingManagerLibrary.h"
@@ -51,11 +51,7 @@ public:
 } // namespace SettingManager
 } // namespace Core
 
-#ifndef STRINGIFY
-#define STRINGIFY(X) # X
-#endif
-
 #define ISETTINGPAGEFACTORY_VERSION "org.krellinst.ptgf.ISettingPageFactory/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPageFactory, ISETTINGPAGEFACTORY_VERSION)
 
-#endif // ISETTINGPAGEFACTORY_H
+#endif // CORE_SETTINGMANAGER_ISETTINGPAGEFACTORY_H

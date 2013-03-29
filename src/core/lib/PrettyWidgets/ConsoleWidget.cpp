@@ -1,10 +1,16 @@
 #include "ConsoleWidget.h"
+#include "ConsoleWidgetPrivate.h"
+
+#include <QScrollBar>
 
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
-    QPlainTextEdit(parent)
+    QPlainTextEdit(parent),
+    d(NULL)
 {
-    m_DefaultCharFormat.setForeground(palette().foreground());
-    m_DefaultCharFormat.setFontWeight(QFont::Normal);
+    d = new ConsoleWidgetPrivate(this);
+
+    d->m_DefaultCharFormat.setForeground(palette().foreground());
+    d->m_DefaultCharFormat.setFontWeight(QFont::Normal);
 
     setReadOnly(true);
 }
@@ -17,7 +23,7 @@ void ConsoleWidget::setEventLevelColor(const int &EventLevel, const QColor &colo
 }
 void ConsoleWidget::setEventLevelCharFormat(const int &EventLevel, const QTextCharFormat &charFormat)
 {
-    m_EventLevelCharFormats[EventLevel] = charFormat;
+    d->m_EventLevelCharFormats[EventLevel] = charFormat;
 }
 void ConsoleWidget::messageEvent(const int &eventLevel, const QString &message)
 {
@@ -32,7 +38,7 @@ void ConsoleWidget::messageEvent(const int &eventLevel, const QString &message)
     QTextCursor cursor = QTextCursor(document());
     cursor.movePosition(QTextCursor::End);
     cursor.beginEditBlock();
-    cursor.insertText(text, m_EventLevelCharFormats.value(eventLevel, m_DefaultCharFormat));
+    cursor.insertText(text, d->m_EventLevelCharFormats.value(eventLevel, d->m_DefaultCharFormat));
     cursor.endEditBlock();
 
     // Scroll to bottom, only if the display was there when we started
@@ -64,4 +70,14 @@ void ConsoleWidget::resizeEvent(QResizeEvent *event)
     if(wasScrolledToBottom) {
         scrollToBottom();
     }
+}
+
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+ConsoleWidgetPrivate::ConsoleWidgetPrivate(ConsoleWidget *parent) :
+    QObject(parent),
+    q(parent)
+{
 }

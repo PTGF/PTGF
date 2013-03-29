@@ -1,7 +1,6 @@
 /*!
    \file SettingPage.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
@@ -20,9 +19,6 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this library; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-   \section DESCRIPTION
-
  */
 
 #include "PluginSettingPage.h"
@@ -69,7 +65,7 @@ PluginSettingPage::PluginSettingPage(QWidget *parent) :
 
     readSettings();
 
-    buildTree( PluginManagerPrivate::instance()->m_Plugins );
+    buildTree( PluginManager::instance().d->m_Plugins );
     reset();
 }
 
@@ -98,8 +94,8 @@ void PluginSettingPage::apply()
     settingManager.beginGroup("PluginManager");
 
     // Store user settable settings
-    if(!PluginManagerPrivate::instance()->m_PluginPathsOverride) {
-        PluginManagerPrivate::instance()->m_PluginPaths = ui->txtPluginPath->text().split(m_PathSep);
+    if(!PluginManager::instance().d->m_PluginPathsOverride) {
+        PluginManager::instance().d->m_PluginPaths = ui->txtPluginPath->text().split(m_PathSep);
         settingManager.setValue("PluginPath", ui->txtPluginPath->text());
     }
 
@@ -112,9 +108,9 @@ void PluginSettingPage::reset()
     settingManager.beginGroup("PluginManager");
 
     // Restore user settable settings
-    ui->txtPluginPath->setText( PluginManagerPrivate::instance()->m_PluginPaths.join(m_PathSep) );
+    ui->txtPluginPath->setText( PluginManager::instance().d->m_PluginPaths.join(m_PathSep) );
 
-    if(PluginManagerPrivate::instance()->m_PluginPathsOverride) {
+    if(PluginManager::instance().d->m_PluginPathsOverride) {
         ui->txtPluginPath->setEnabled(false);
         ui->txtPluginPath->setToolTip(tr("Environment variable or commandline argument was used, and cannot be modified here"));
     }

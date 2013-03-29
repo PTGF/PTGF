@@ -1,5 +1,5 @@
 /*!
-   \file IMainWindow.h
+   \file NotificationWidgetPrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -19,47 +19,39 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this library; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+   \section DESCRIPTION
+
  */
 
-#ifndef CORE_WINDOWMANAGER_IMAINWINDOW_H
-#define CORE_WINDOWMANAGER_IMAINWINDOW_H
+#ifndef CORE_NOTIFICATIONMANAGER_NOTIFICATIONWIDGETPRIVATE_H
+#define CORE_NOTIFICATIONMANAGER_NOTIFICATIONWIDGETPRIVATE_H
 
-#include <QObject>
-#include <QString>
-#include <QIcon>
-#include <QtPlugin>
-
-#include "WindowManagerLibrary.h"
-
-class QWidget;
+#include "Global.h"
+#include "NotificationWidget.h"
 
 namespace Core {
-namespace WindowManager {
+namespace NotificationManager {
 
-class WINDOWMANAGER_EXPORT IMainWindow : public QObject
+class NotificationWidgetPrivate
 {
-    Q_OBJECT
+    DECLARE_PUBLIC(NotificationWidget)
+
 public:
-    IMainWindow(QObject *parent = 0) : QObject(parent) {}
-    virtual ~IMainWindow() {}
+    explicit NotificationWidgetPrivate(NotificationWidget *parent);
 
-    virtual QWidget *mainWindowWidget() = 0;
-    virtual QString mainWindowName() = 0;
-    virtual int mainWindowPriority() = 0;
-    virtual QIcon mainWindowIcon() = 0;
+protected:
+    void setupUi();
 
-    virtual QWidget *createAboutWidget() = 0;
-
-signals:
-    void active();
-    void notify(const int &level, const QString &message);
-
+private:
+    QLabel *m_Label;
+    QLabel *m_IconLabel;
+    NotificationWidget::Icon m_Icon;
+    QDialogButtonBox *m_ButtonBox;
+    QToolButton *m_CloseButton;
 };
 
-} // namespace WindowManager
+} // namespace CoreWindow
 } // namespace Core
 
-#define IMAINWINDOW_VERSION "org.krellinst.ptgf.IMainWindow/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
-Q_DECLARE_INTERFACE(Core::WindowManager::IMainWindow, IMAINWINDOW_VERSION)
-
-#endif // CORE_WINDOWMANAGER_IMAINWINDOW_H
+#endif // CORE_NOTIFICATIONMANAGER_NOTIFICATIONWIDGETPRIVATE_H

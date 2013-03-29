@@ -1,4 +1,31 @@
+/*!
+   \file WindowManager.cpp
+   \author Dane Gardner <dane.gardner@gmail.com>
+
+   \section LICENSE
+   This file is part of the Parallel Tools GUI Framework (PTGF)
+   Copyright (C) 2010-2013 Argo Navis Technologies, LLC
+
+   This library is free software; you can redistribute it and/or modify it
+   under the terms of the GNU Lesser General Public License as published by the
+   Free Software Foundation; either version 2.1 of the License, or (at your
+   option) any later version.
+
+   This library is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+   for more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with this library; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
 #include "WindowManager.h"
+#include "WindowManagerPrivate.h"
+
+#include <QMenuBar>
+#include <QAction>
 
 #include <CoreWindow/CoreWindow.h>
 #include <PluginManager/PluginManager.h>
@@ -9,6 +36,10 @@
 namespace Core {
 namespace WindowManager {
 
+/*! \class WindowManager
+    \brief Manages the main window interface implementors
+    \todo documentation
+ */
 
 WindowManager &WindowManager::instance()
 {
@@ -18,74 +49,80 @@ WindowManager &WindowManager::instance()
 
 WindowManager::WindowManager() :
     QObject(0),
-    m_Initialized(false),
-    m_AboutPage(new QAction(this))
+    d(new WindowManagerPrivate(this))
 {
     AboutDialog::splash();
 }
 
 WindowManager::~WindowManager()
 {
-    if(m_AboutPage) {
-        delete m_AboutPage;
+    if(d->m_AboutPage) {
+        delete d->m_AboutPage;
     }
 }
 
 
 bool WindowManager::initialize()
 {
+    if(d->m_Initialized) {
+        return false;
+    }
+
     try {
 
         /*** Register our menu structure ***/
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
         foreach(QAction *action, coreWindow.menuBar()->actions()) {
             if(action->text() == tr("Help")) {
-                Q_ASSERT(m_AboutPage);
-                m_AboutPage->setText(tr("About"));
-                m_AboutPage->setToolTip(tr("Displays the about dialog"));
-                m_AboutPage->setIcon(QIcon(":/CoreWindow/app.png"));
-                m_AboutPage->setIconVisibleInMenu(true);
-                connect(m_AboutPage, SIGNAL(triggered()), this, SLOT(aboutDialog()));
-                action->menu()->addAction(m_AboutPage);
+                Q_ASSERT(d->m_AboutPage);
+                d->m_AboutPage->setText(tr("About"));
+                d->m_AboutPage->setToolTip(tr("Displays the about dialog"));
+                d->m_AboutPage->setIcon(QIcon(":/CoreWindow/app.png"));
+                d->m_AboutPage->setIconVisibleInMenu(true);
+                connect(d->m_AboutPage, SIGNAL(triggered()), d, SLOT(aboutDialog()));
+                action->menu()->addAction(d->m_AboutPage);
             }
         }
 
         /* Check the object pool for anything we should manage */
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
-        foreach(QObject *object, pluginManager.allObjects()) { pluginObjectRegistered(object); }
-        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), this, SLOT(pluginObjectRegistered(QObject*)));
-        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), this, SLOT(pluginObjectDeregistered(QObject*)));
+        foreach(QObject *object, pluginManager.allObjects()) { d->pluginObjectRegistered(object); }
+        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), d, SLOT(pluginObjectRegistered(QObject*)));
+        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), d, SLOT(pluginObjectDeregistered(QObject*)));
 
     } catch(...) {
         return false;
     }
 
-    return m_Initialized = true;
-}
-
-bool WindowManager::initialized()
-{
-    return m_Initialized;
+    return d->m_Initialized = true;
 }
 
 void WindowManager::shutdown()
 {
-    Q_ASSERT(m_Initialized);
+    if(!d->m_Initialized) {
+        return;
+    }
+
+    // ...
 }
 
 
-//! \returns sorted list of all registered MainWindows
+/*! \internal
+    \returns sorted list of all registered MainWindows
+ */
 QList<IMainWindow *> WindowManager::mainWindows()
 {
     // Resort by priority
-    if(m_MainWindows.count() > 1) {
-        qSort(m_MainWindows.begin(), m_MainWindows.end(), ascending);
+    if(d->m_MainWindows.count() > 1) {
+        qSort(d->m_MainWindows.begin(), d->m_MainWindows.end(), d->ascending);
     }
 
-    return m_MainWindows;
+    return d->m_MainWindows;
 }
 
-//! \returns sorted list of all registered about dialog widgets
+/*! \internal
+    \returns sorted list of all registered about dialog widgets
+ */
 QList<QWidget *> WindowManager::aboutWidgets()
 {
     QList<QWidget *> aboutWidgets;
@@ -101,7 +138,20 @@ QList<QWidget *> WindowManager::aboutWidgets()
 }
 
 
-void WindowManager::aboutDialog()
+
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+WindowManagerPrivate::WindowManagerPrivate(WindowManager *parent) :
+    QObject(parent),
+    q(parent),
+    m_Initialized(false),
+    m_AboutPage(new QAction(parent))
+{
+}
+
+void WindowManagerPrivate::aboutDialog()
 {
 //    try {
         AboutDialog aboutDialog;
@@ -114,19 +164,19 @@ void WindowManager::aboutDialog()
 //    }
 }
 
-void WindowManager::pluginObjectRegistered(QObject *object)
+void WindowManagerPrivate::pluginObjectRegistered(QObject *object)
 {
     IMainWindow *mainWindow = qobject_cast<IMainWindow *>(object);
     if(mainWindow) registerMainWindow(mainWindow);
 }
 
-void WindowManager::pluginObjectDeregistered(QObject *object)
+void WindowManagerPrivate::pluginObjectDeregistered(QObject *object)
 {
     IMainWindow *mainWindow = qobject_cast<IMainWindow *>(object);
     if(mainWindow) deregisterMainWindow(mainWindow);
 }
 
-void WindowManager::registerMainWindow(IMainWindow *window)
+void WindowManagerPrivate::registerMainWindow(IMainWindow *window)
 {
     m_MainWindows.append(window);
 
@@ -146,7 +196,7 @@ void WindowManager::registerMainWindow(IMainWindow *window)
 
 }
 
-void WindowManager::deregisterMainWindow(IMainWindow *window)
+void WindowManagerPrivate::deregisterMainWindow(IMainWindow *window)
 {
     if(m_MainWindows.contains(window)) {
         m_MainWindows.removeOne(window);
@@ -157,7 +207,7 @@ void WindowManager::deregisterMainWindow(IMainWindow *window)
     }
 }
 
-void WindowManager::windowActivated()
+void WindowManagerPrivate::windowActivated()
 {
     IMainWindow *mainWindow = qobject_cast<IMainWindow *>(sender());
 
@@ -171,10 +221,12 @@ void WindowManager::windowActivated()
 }
 
 
-/*! Used by qSort to sort the m_MainWindows QList in order of priority
- *  \sa qSort
+/*! \fn WindowManagerPrivate::ascending()
+    \internal
+    \brief Used by qSort to sort the m_MainWindows QList in order of priority
+    \sa qSort
  */
-bool WindowManager::ascending(IMainWindow *left, IMainWindow *right)
+bool WindowManagerPrivate::ascending(IMainWindow *left, IMainWindow *right)
 {
     return left->mainWindowPriority() < right->mainWindowPriority();
 }

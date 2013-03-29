@@ -1,5 +1,5 @@
 /*!
-   \file IMainWindow.h
+   \file WindowManagerPrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,45 +21,49 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CORE_WINDOWMANAGER_IMAINWINDOW_H
-#define CORE_WINDOWMANAGER_IMAINWINDOW_H
+#ifndef CORE_WINDOWMANAGER_WINDOWMANAGERPRIVATE_H
+#define CORE_WINDOWMANAGER_WINDOWMANAGERPRIVATE_H
 
-#include <QObject>
-#include <QString>
-#include <QIcon>
-#include <QtPlugin>
+#include <QList>
 
-#include "WindowManagerLibrary.h"
+#include "Global.h"
+#include "WindowManager.h"
 
-class QWidget;
+class QAction;
 
 namespace Core {
 namespace WindowManager {
 
-class WINDOWMANAGER_EXPORT IMainWindow : public QObject
+class IMainWindow;
+
+class WindowManagerPrivate : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(WindowManagerPrivate)
+    DECLARE_PUBLIC(WindowManager)
+
 public:
-    IMainWindow(QObject *parent = 0) : QObject(parent) {}
-    virtual ~IMainWindow() {}
+    explicit WindowManagerPrivate(WindowManager *parent);
 
-    virtual QWidget *mainWindowWidget() = 0;
-    virtual QString mainWindowName() = 0;
-    virtual int mainWindowPriority() = 0;
-    virtual QIcon mainWindowIcon() = 0;
+    void registerMainWindow(IMainWindow *window);
+    void deregisterMainWindow(IMainWindow *window);
 
-    virtual QWidget *createAboutWidget() = 0;
+    static bool ascending(IMainWindow *left, IMainWindow *right);
 
-signals:
-    void active();
-    void notify(const int &level, const QString &message);
+public slots:
+    void aboutDialog();
+    void pluginObjectRegistered(QObject *object);
+    void pluginObjectDeregistered(QObject *object);
+    void windowActivated();
+
+private:
+    bool m_Initialized;
+    QList<IMainWindow *> m_MainWindows;
+    QAction *m_AboutPage;
 
 };
 
 } // namespace WindowManager
 } // namespace Core
 
-#define IMAINWINDOW_VERSION "org.krellinst.ptgf.IMainWindow/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
-Q_DECLARE_INTERFACE(Core::WindowManager::IMainWindow, IMAINWINDOW_VERSION)
-
-#endif // CORE_WINDOWMANAGER_IMAINWINDOW_H
+#endif // CORE_WINDOWMANAGER_WINDOWMANAGERPRIVATE_H

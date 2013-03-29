@@ -25,11 +25,11 @@
 
  */
 
-#ifndef ACTIONMANAGER_H
-#define ACTIONMANAGER_H
+#ifndef CORE_ACTIONMANAGER_ACTIONMANAGER_H
+#define CORE_ACTIONMANAGER_ACTIONMANAGER_H
 
-#include <QtCore>
-
+#include <QObject>
+#include <QList>
 #include "ActionManagerLibrary.h"
 
 namespace Core {
@@ -66,4 +66,4 @@ protected:
 };
 
 }}
-#endif // ACTIONMANAGER_H
+#endif // CORE_ACTIONMANAGER_ACTIONMANAGER_H

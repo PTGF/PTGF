@@ -21,12 +21,13 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef IPLUGIN_H
-#define IPLUGIN_H
+#ifndef CORE_PLUGINMANAGER_IPLUGIN_H
+#define CORE_PLUGINMANAGER_IPLUGIN_H
 
 #include <QString>
 #include <QList>
 #include <QtPlugin>
+
 #include "PluginManagerLibrary.h"
 
 namespace Core {
@@ -63,4 +64,4 @@ public:
 #define IPLUGIN_VERSION "org.krellinst.ptgf.IPlugin/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Core::PluginManager::IPlugin, IPLUGIN_VERSION)
 
-#endif // IPLUGIN_H
+#endif // CORE_PLUGINMANAGER_IPLUGIN_H

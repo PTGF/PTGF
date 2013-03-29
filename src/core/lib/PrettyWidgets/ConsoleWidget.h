@@ -1,11 +1,16 @@
 #ifndef CONSOLEWIDGET_H
 #define CONSOLEWIDGET_H
 
-#include <QtGui>
+#include <QPlainTextEdit>
+
+#include "Global.h"
+
+class ConsoleWidgetPrivate;
 
 class ConsoleWidget : public QPlainTextEdit
 {
     Q_OBJECT
+    DECLARE_PRIVATE(ConsoleWidget)
 
 public:
     explicit ConsoleWidget(QWidget *parent = 0);
@@ -15,20 +20,13 @@ public:
 
     bool isScrolledToBottom() const;
 
-
 public slots:
     void messageEvent(const int &eventLevel, const QString &message);
 
     void scrollToBottom();
 
-signals:
-
 protected:
     virtual void resizeEvent(QResizeEvent *event);
-
-private:
-    QMap<int, QTextCharFormat> m_EventLevelCharFormats;
-    QTextCharFormat m_DefaultCharFormat;
 
 };
 

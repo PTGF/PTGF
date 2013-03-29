@@ -28,6 +28,8 @@
 #include "SettingDialog.h"
 #include "ui_SettingDialog.h"
 
+#include <QPushButton>
+
 #include "ISettingPage.h"
 #include "SettingManager.h"
 

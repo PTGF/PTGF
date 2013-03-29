@@ -21,13 +21,12 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PLUGINSETTINGPAGE_H
-#define PLUGINSETTINGPAGE_H
-
-#include <QtCore>
-#include <QtGui>
+#ifndef CORE_PLUGINMANAGER_PLUGINSETTINGPAGE_H
+#define CORE_PLUGINMANAGER_PLUGINSETTINGPAGE_H
 
 #include <SettingManager/ISettingPage.h>
+
+class QTreeWidgetItem;
 
 namespace Core {
 namespace PluginManager {
@@ -68,4 +67,4 @@ private:
 
 } // namespace PluginManager
 } // namespace Core
-#endif // PLUGINSETTINGPAGE_H
+#endif // CORE_PLUGINMANAGER_PLUGINSETTINGPAGE_H

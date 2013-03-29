@@ -28,7 +28,7 @@
 #ifndef SOURCEVIEWLIBRARY_H
 #define SOURCEVIEWLIBRARY_H
 
-#include <QtCore/QtGlobal>
+#include <Global.h>
 
 #if defined(SOURCEVIEW_LIBRARY)
 #  define SOURCEVIEW_EXPORT Q_DECL_EXPORT

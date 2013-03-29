@@ -25,27 +25,31 @@
 
  */
 
-#ifndef SETTINGMANAGER_H
-#define SETTINGMANAGER_H
+#ifndef CORE_SETTINGMANAGER_SETTINGMANAGER_H
+#define CORE_SETTINGMANAGER_SETTINGMANAGER_H
 
-#include <QtCore>
+#include <QObject>
+#include <QVariant>
+#include <QString>
 
 #include "SettingManagerLibrary.h"
 
 namespace Core {
 namespace SettingManager {
 
-class ISettingPageFactory;
+class SettingManagerPrivate;
 
 class SETTINGMANAGER_EXPORT SettingManager : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(SettingManager)
+    DECLARE_PRIVATE(SettingManager)
+
 public:
     static SettingManager &instance();
     ~SettingManager();
 
     bool initialize();
-    bool initialized();
     void shutdown();
 
     void setValue(const QString &key, const QVariant &value);
@@ -58,28 +62,14 @@ public:
     void endGroup();
     QString group() const;
 
-
-signals:
-
 public slots:
     void settingDialog();
 
 protected:
     explicit SettingManager(QObject *parent = NULL);
-    void registerPageFactory(ISettingPageFactory *page);
-    void deregisterPageFactory(ISettingPageFactory *page);
-
-    bool m_Initialized;
-
-    QSettings m_Settings;
-    QList<ISettingPageFactory *> m_Pages;
-
-protected slots:
-    void pluginObjectRegistered(QObject *object);
-    void pluginObjectDeregistered(QObject *object);
 
 };
 
 } // namespace SettingManager
 } // namespace Core
-#endif // SETTINGMANAGER_H
+#endif // CORE_SETTINGMANAGER_SETTINGMANAGER_H

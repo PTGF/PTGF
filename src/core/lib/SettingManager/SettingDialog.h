@@ -25,11 +25,10 @@
 
  */
 
-#ifndef SETTINGDIALOG_H
-#define SETTINGDIALOG_H
+#ifndef CORE_SETTINGMANAGER_SETTINGDIALOG_H
+#define CORE_SETTINGMANAGER_SETTINGDIALOG_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QDialog>
 
 #include "ISettingPageFactory.h"
 
@@ -62,4 +61,4 @@ private:
 
 } // namespace SettingManager
 } // namespace Core
-#endif // SETTINGDIALOG_H
+#endif // CORE_SETTINGMANAGER_SETTINGDIALOG_H

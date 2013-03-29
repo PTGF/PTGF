@@ -56,7 +56,12 @@ HEADERS +=  \
             NotificationManager/NotificationManagerPrivate.h \
             Global.h \
             PluginManager/PluginManagerPrivate.h \
-            PluginManager/PluginManager.h
+            PluginManager/PluginManager.h \
+            NotificationManager/NotificationWidgetPrivate.h \
+            WindowManager/WindowManagerPrivate.h \
+    SettingManager/SettingManagerPrivate.h \
+    PrettyWidgets/ConsoleWidgetPrivate.h \
+    PrettyWidgets/TabWidgetPrivate.h
 
 SOURCES +=  ActionManager/ActionManager.cpp \
             ActionManager/MenuItem.cpp \
@@ -131,5 +136,5 @@ actionManagerHeaders.files = ActionManager/ActionManagerLibrary.h ActionManager/
 INSTALLS += actionManagerHeaders
 
 prettyWidgetsHeaders.path = /include/core/lib/PrettyWidgets
-prettyWidgetsHeaders.files = PrettyWidgets/TabWidget.h
+prettyWidgetsHeaders.files = PrettyWidgets/TabWidget.h PrettyWidgets/ConsoleWidget.h
 INSTALLS += prettyWidgetsHeaders

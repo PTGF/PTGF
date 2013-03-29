@@ -28,6 +28,14 @@
 #include "CoreWindow.h"
 #include "ui_CoreWindow.h"
 
+#include <QMenuBar>
+#include <QStyleFactory>
+#include <QFile>
+#include <QFileInfo>
+#include <QProgressBar>
+#include <QStatusBar>
+#include <QToolButton>
+
 #include <SettingManager/SettingManager.h>
 #include <PluginManager/PluginManager.h>
 
@@ -40,9 +48,8 @@
 #  include <QDebug>
 #endif
 
-
-#include <typeinfo>
-#include <QtDebug>
+//#include <typeinfo>
+//#include <QtDebug>
 
 namespace Core {
 namespace CoreWindow {
@@ -204,7 +211,7 @@ void CoreWindow::readSettings()
     if(!QFile::exists(m_StylesheetFilePath)) {
         QFileInfo fileInfo(m_StylesheetFilePath);
 
-        NotificationManager::NotificationManager().notify(tr("Failed to open style sheet: %1\nThis file path can be changed in the settings").
+        NotificationManager::NotificationManager::instance().notify(tr("Failed to open style sheet: %1\nThis file path can be changed in the settings").
                arg(fileInfo.absoluteFilePath()), NotificationManager::NotificationWidget::Critical);
     }
 
