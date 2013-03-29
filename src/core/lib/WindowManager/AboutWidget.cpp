@@ -24,7 +24,7 @@
 #include "AboutWidget.h"
 #include "ui_AboutWidget.h"
 
-#include <QtCore>
+#include <QDate>
 
 AboutWidget::AboutWidget(QWidget *parent) :
     QWidget(parent),

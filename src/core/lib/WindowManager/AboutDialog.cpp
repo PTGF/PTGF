@@ -24,14 +24,9 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 
+#include <QDesktopWidget>
 #include <QApplication>
 #include <QTimer>
-
-#if QT_VERSION >= 0x050000
-#  include <QtWidgets/QDesktopWidget>
-#else
-#  include <QtGui/QDesktopWidget>
-#endif
 
 #include <PrettyWidgets/TabWidget.h>
 #include <WindowManager/WindowManager.h>

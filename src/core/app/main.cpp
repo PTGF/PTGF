@@ -1,7 +1,6 @@
 /*!
    \file main.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
-   \version 0.3.dev
 
    \section LICENSE
    This file is part of the Parallel Tools GUI Framework (PTGF)
@@ -20,14 +19,11 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this library; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-   \section DESCRIPTION
-
  */
 
 /*! \mainpage Parallel Tool GUI Framework (PTGF)
     \author Dane Gardner <dane.gardner@gmail.com>
-    \version 0.3.dev
+    \version 0.4.dev
 
     \section intro Introduction
     \par

@@ -1,5 +1,5 @@
 /*!
-   \file
+   \file MenuItem.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
