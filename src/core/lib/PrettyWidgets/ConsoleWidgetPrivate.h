@@ -24,19 +24,27 @@
 #ifndef CONSOLEWIDGETPRIVATE_H
 #define CONSOLEWIDGETPRIVATE_H
 
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the public PTGF API.  This header file may change
+// from version to version without notice, or even be removed.
+//
+
+
 #include <QMap>
 #include <QTextCharFormat>
 
-#include "Global.h"
 #include "ConsoleWidget.h"
 
-class ConsoleWidgetPrivate : QObject
+class ConsoleWidgetPrivate
 {
-    Q_OBJECT
     DECLARE_PUBLIC(ConsoleWidget)
 
 public:
-    ConsoleWidgetPrivate(ConsoleWidget *parent);
+    explicit ConsoleWidgetPrivate();
 
 private:
     QMap<int, QTextCharFormat> m_EventLevelCharFormats;

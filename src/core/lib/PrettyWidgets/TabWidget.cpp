@@ -21,22 +21,27 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "TabWidget.h"
 #include "TabWidgetPrivate.h"
 
 #include <QTabBar>
 
 TabWidget::TabWidget(QWidget *parent) :
     QTabWidget(parent),
-    d(NULL)
+    d(new TabWidgetPrivate)
 {
-    d = new TabWidgetPrivate(this);
+    d->q = this;
 
     d->m_HideBarOnOne = true;
     d->m_ClearStyleSheet = true;
 
     d->updateTabBar();
     d->updateStyleSheet();
+}
+
+/*! \internal
+ */
+TabWidget::~TabWidget()
+{
 }
 
 QTabBar *TabWidget::tabBar()
@@ -87,9 +92,9 @@ void TabWidget::tabRemoved(int index)
 
 /***** PRIVATE IMPLEMENTATION *****/
 
-TabWidgetPrivate::TabWidgetPrivate(TabWidget *parent) :
-    QObject(parent),
-    q(parent)
+TabWidgetPrivate::TabWidgetPrivate() :
+    QObject(NULL),
+    q(NULL)
 {
 }
 

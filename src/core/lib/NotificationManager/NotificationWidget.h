@@ -41,6 +41,12 @@ class NotificationWidgetPrivate;
 class NotificationWidget : public QFrame
 {
     Q_OBJECT
+
+    Q_PROPERTY(QString text READ text WRITE setText)
+    Q_PROPERTY(Icon icon READ icon WRITE setIcon)
+    Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap)
+    Q_PROPERTY(StandardButtons standardButtons READ standardButtons WRITE setStandardButtons)
+
     DECLARE_PRIVATE(NotificationWidget)
 
 public:
@@ -116,14 +122,12 @@ public:
     QPushButton *button(StandardButton button) const;
     QList<QAbstractButton *> buttons() const;
 
-    void setHeight(const int &height);
-
 signals:
     void buttonClicked(StandardButton standardButton);
     void closing();
 
 protected:
-    void keyReleaseEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event);
 
 protected slots:
     void on_buttonBox_clicked(QAbstractButton *button);

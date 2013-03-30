@@ -24,9 +24,16 @@
 #ifndef CORE_WINDOWMANAGER_WINDOWMANAGERPRIVATE_H
 #define CORE_WINDOWMANAGER_WINDOWMANAGERPRIVATE_H
 
-#include <QList>
 
-#include "Global.h"
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the public PTGF API.  This header file may change
+// from version to version without notice, or even be removed.
+//
+
+
 #include "WindowManager.h"
 
 class QAction;
@@ -43,7 +50,7 @@ class WindowManagerPrivate : public QObject
     DECLARE_PUBLIC(WindowManager)
 
 public:
-    explicit WindowManagerPrivate(WindowManager *parent);
+    explicit WindowManagerPrivate();
 
     void registerMainWindow(IMainWindow *window);
     void deregisterMainWindow(IMainWindow *window);

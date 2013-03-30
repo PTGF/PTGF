@@ -22,22 +22,26 @@
  */
 
 #ifndef CORE_PLUGINMANAGER_PLUGINMANAGERPRIVATE_H
-#define CORE_PLUGINMANAGER_PLUGINMANAGER_H
+#define CORE_PLUGINMANAGER_PLUGINMANAGERPRIVATE_H
 
-#include <QObject>
-#include <QString>
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the public PTGF API.  This header file may change
+// from version to version without notice, or even be removed.
+//
+
+
 #include <QIcon>
-#include <QList>
-#include <QObjectList>
-
 #include <SettingManager/ISettingPageFactory.h>
-#include "Global.h"
+#include "PluginManager.h"
 
 namespace Core {
 namespace PluginManager {
 
 class PluginWrapper;
-class PluginManager;
 class IPlugin;
 
 class PluginManagerPrivate :
@@ -50,7 +54,7 @@ class PluginManagerPrivate :
     DECLARE_PUBLIC(PluginManager)
 
 public:
-    PluginManagerPrivate(PluginManager *parent);
+    explicit PluginManagerPrivate();
     ~PluginManagerPrivate();
 
     /* BEGIN ISettingPageFactory */
@@ -90,4 +94,4 @@ private:
 
 } // namespace PluginManager
 } // namespace Core
-#endif // CORE_PLUGINMANAGER_PLUGINMANAGER_H
+#endif // CORE_PLUGINMANAGER_PLUGINMANAGERPRIVATE_H

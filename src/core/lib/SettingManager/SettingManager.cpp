@@ -21,7 +21,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "SettingManager.h"
 #include "SettingManagerPrivate.h"
 
 #include <QMenuBar>
@@ -68,8 +67,9 @@ SettingManager &SettingManager::instance()
  */
 SettingManager::SettingManager(QObject *parent) :
     QObject(parent),
-    d(new SettingManagerPrivate(this))
+    d(new SettingManagerPrivate)
 {
+    d->q = this;
 }
 
 /*!
@@ -104,8 +104,8 @@ bool SettingManager::initialize()
         /* Check the object pool for anything we should manage */
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
         foreach(QObject *object, pluginManager.allObjects()) { d->pluginObjectRegistered(object); }
-        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), d, SLOT(pluginObjectRegistered(QObject*)));
-        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), d, SLOT(pluginObjectDeregistered(QObject*)));
+        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), d.data(), SLOT(pluginObjectRegistered(QObject*)));
+        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), d.data(), SLOT(pluginObjectDeregistered(QObject*)));
 
     } catch(...) {
         return false;
@@ -210,10 +210,11 @@ void SettingManager::settingDialog()
 
 
 
+/***** PRIVATE IMPLEMENTATION *****/
 
-SettingManagerPrivate::SettingManagerPrivate(SettingManager *parent) :
-    QObject(parent),
-    q(parent),
+SettingManagerPrivate::SettingManagerPrivate() :
+    QObject(NULL),
+    q(NULL),
     m_Initialized(false)
 {
 }

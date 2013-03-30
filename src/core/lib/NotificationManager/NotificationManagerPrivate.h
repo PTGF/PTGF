@@ -24,12 +24,22 @@
 #ifndef CORE_NOTIFICATIONMANAGER_NOTIFICATIONMANAGERPRIVATE_H
 #define CORE_NOTIFICATIONMANAGER_NOTIFICATIONMANAGERPRIVATE_H
 
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the public PTGF API.  This header file may change
+// from version to version without notice, or even be removed.
+//
+
+
 #include <QObject>
 #include <QString>
 #include <QFile>
 #include <QTextStream>
 
-#include "Global.h"
+#include "NotificationManager.h"
 #include "NotificationWidget.h"
 
 class ConsoleWidget;
@@ -37,20 +47,13 @@ class ConsoleWidget;
 namespace Core {
 namespace NotificationManager {
 
-class NotificationManager;
-
-class NotificationManagerPrivate : public QObject
+class NotificationManagerPrivate
 {
-    Q_OBJECT
     DECLARE_PUBLIC(NotificationManager)
 
 public:
-    NotificationManagerPrivate(NotificationManager *parent);
+    NotificationManagerPrivate();
     ~NotificationManagerPrivate();
-
-    bool initialize();
-    bool initialized();
-    void shutdown();
 
     void writeToLogFile(const int &level, QString message);
 

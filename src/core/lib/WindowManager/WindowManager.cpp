@@ -21,7 +21,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "WindowManager.h"
 #include "WindowManagerPrivate.h"
 
 #include <QMenuBar>
@@ -49,8 +48,9 @@ WindowManager &WindowManager::instance()
 
 WindowManager::WindowManager() :
     QObject(0),
-    d(new WindowManagerPrivate(this))
+    d(new WindowManagerPrivate)
 {
+    d->q = this;
     AboutDialog::splash();
 }
 
@@ -79,7 +79,7 @@ bool WindowManager::initialize()
                 d->m_AboutPage->setToolTip(tr("Displays the about dialog"));
                 d->m_AboutPage->setIcon(QIcon(":/CoreWindow/app.png"));
                 d->m_AboutPage->setIconVisibleInMenu(true);
-                connect(d->m_AboutPage, SIGNAL(triggered()), d, SLOT(aboutDialog()));
+                connect(d->m_AboutPage, SIGNAL(triggered()), d.data(), SLOT(aboutDialog()));
                 action->menu()->addAction(d->m_AboutPage);
             }
         }
@@ -87,8 +87,8 @@ bool WindowManager::initialize()
         /* Check the object pool for anything we should manage */
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
         foreach(QObject *object, pluginManager.allObjects()) { d->pluginObjectRegistered(object); }
-        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), d, SLOT(pluginObjectRegistered(QObject*)));
-        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), d, SLOT(pluginObjectDeregistered(QObject*)));
+        connect(&pluginManager, SIGNAL(objectAdded(QObject*)), d.data(), SLOT(pluginObjectRegistered(QObject*)));
+        connect(&pluginManager, SIGNAL(objectRemoving(QObject*)), d.data(), SLOT(pluginObjectDeregistered(QObject*)));
 
     } catch(...) {
         return false;
@@ -143,12 +143,13 @@ QList<QWidget *> WindowManager::aboutWidgets()
 
 /***** PRIVATE IMPLEMENTATION *****/
 
-WindowManagerPrivate::WindowManagerPrivate(WindowManager *parent) :
-    QObject(parent),
-    q(parent),
+WindowManagerPrivate::WindowManagerPrivate() :
+    QObject(NULL),
+    q(NULL),
     m_Initialized(false),
-    m_AboutPage(new QAction(parent))
+    m_AboutPage(NULL)
 {
+    m_AboutPage = new QAction(q);
 }
 
 void WindowManagerPrivate::aboutDialog()

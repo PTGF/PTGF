@@ -24,6 +24,16 @@
 #ifndef CORE_NOTIFICATIONMANAGER_NOTIFICATIONWIDGETPRIVATE_H
 #define CORE_NOTIFICATIONMANAGER_NOTIFICATIONWIDGETPRIVATE_H
 
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the public PTGF API.  This header file may change
+// from version to version without notice, or even be removed.
+//
+
+
 #include "Global.h"
 #include "NotificationWidget.h"
 
@@ -35,7 +45,7 @@ class NotificationWidgetPrivate
     DECLARE_PUBLIC(NotificationWidget)
 
 public:
-    explicit NotificationWidgetPrivate(NotificationWidget *parent);
+    explicit NotificationWidgetPrivate();
 
 protected:
     void setupUi();

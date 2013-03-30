@@ -43,6 +43,7 @@ class PLUGINMANAGER_EXPORT PluginManager : public QObject
 
 public:
     static PluginManager &instance();
+    explicit PluginManager();
     ~PluginManager();
 
     bool initialize();
@@ -75,9 +76,6 @@ signals:
 
 public slots:
     void pluginDialog();
-
-protected:
-    explicit PluginManager();
 
 private:
     friend class PluginSettingPage;

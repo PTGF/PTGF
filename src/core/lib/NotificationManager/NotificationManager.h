@@ -42,6 +42,7 @@ class NOTIFICATIONMANAGER_EXPORT NotificationManager : public QObject
 
 public:
     static NotificationManager &instance();
+    explicit NotificationManager();
     ~NotificationManager();
 
     bool initialize();
@@ -55,7 +56,6 @@ public:
                                const QObject *reciever = 0, const char *member = 0);
 
 protected:
-    explicit NotificationManager();
 
 };
 

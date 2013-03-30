@@ -24,9 +24,19 @@
 #ifndef TABWIDGETPRIVATE_H
 #define TABWIDGETPRIVATE_H
 
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the public PTGF API.  This header file may change
+// from version to version without notice, or even be removed.
+//
+
+
 #include <QObject>
 
-#include "Global.h"
+#include "TabWidget.h"
 
 class TabWidget;
 
@@ -36,7 +46,7 @@ class TabWidgetPrivate : public QObject
     DECLARE_PUBLIC(TabWidget)
 
 public:
-    explicit TabWidgetPrivate(TabWidget *parent);
+    explicit TabWidgetPrivate();
 
 protected:
     void updateTabBar();

@@ -21,7 +21,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "NotificationManager.h"
 #include "NotificationManagerPrivate.h"
 
 #include <QDesktopServices>
@@ -61,38 +60,84 @@ NotificationManager &NotificationManager::instance()
 /*! \internal
  */
 NotificationManager::NotificationManager() :
-    d(NULL)
+    d(new NotificationManagerPrivate)
 {
-    d = new NotificationManagerPrivate(this);
+    d->q = this;
 }
 
 /*! \internal
  */
 NotificationManager::~NotificationManager()
 {
-    if(d) {
-        delete d;
-    }
 }
+
 
 /*! \internal
  */
 bool NotificationManager::initialize()
 {
-    if(!d->initialized()) {
-        return d->initialize();
+    if(d->m_Initialized) {
+        return false;
     }
-    return false;
+
+    try {
+
+        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+
+
+        // Setup dock widget for message console
+        QDockWidget *dockWidget = new QDockWidget(tr("Message Console"), &coreWindow);
+        dockWidget->setObjectName("MessageConsoleDockWidget");
+        dockWidget->hide();
+
+        d->m_ConsoleWidget = new ConsoleWidget(dockWidget);
+        d->m_ConsoleWidget->setEventLevelColor((int)QtDebugMsg, Qt::darkGreen);
+        d->m_ConsoleWidget->setEventLevelColor((int)QtWarningMsg, Qt::darkYellow);
+        d->m_ConsoleWidget->setEventLevelColor((int)QtCriticalMsg, Qt::darkRed);
+        d->m_ConsoleWidget->setEventLevelColor((int)QtFatalMsg, Qt::darkRed);
+        dockWidget->setWidget(d->m_ConsoleWidget);
+
+        coreWindow.addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
+
+        foreach(QAction *action, coreWindow.menuBar()->actions()) {
+            if(action->text() == tr("Window")) {
+                action->menu()->addAction(dockWidget->toggleViewAction());
+            }
+        }
+
+
+        // Create log file and register handler for qDebug() messages
+        d->m_LogFile.setFileName(QString("%1/%2.txt")
+                                 .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
+                                 .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
+
+        qInstallMsgHandler(d->qMessageHandler);
+
+
+        Core::PluginManager::PluginManager::instance().addObject(this);
+
+    } catch(...) {
+        return false;
+    }
+
+    return d->m_Initialized = true;
 }
 
 /*! \internal
  */
 void NotificationManager::shutdown()
 {
-    if(d->initialized()) {
-        d->shutdown();
+    if(!d->m_Initialized) {
+        return;
+    }
+
+    qInstallMsgHandler(0);
+
+    if(d->m_LogFile.isOpen()) {
+        d->m_LogFile.close();
     }
 }
+
 
 /*! \fn NotificationManager::writeToLogFile()
     \brief Writes message to log file
@@ -120,9 +165,8 @@ NotificationWidget *NotificationManager::notify(const QString &text,
 
 /***** PRIVATE IMPLEMENTATION *****/
 
-NotificationManagerPrivate::NotificationManagerPrivate(NotificationManager *parent) :
-    QObject(0),
-    q(parent),
+NotificationManagerPrivate::NotificationManagerPrivate() :
+    q(NULL),
     m_Initialized(false),
     m_StdOut(stdout, QIODevice::WriteOnly),
     m_StdError(stderr, QIODevice::WriteOnly),
@@ -136,70 +180,6 @@ NotificationManagerPrivate::~NotificationManagerPrivate()
         m_LogFile.close();
     }
 }
-
-bool NotificationManagerPrivate::initialize()
-{
-    Q_ASSERT(!m_Initialized);
-
-    try {
-
-        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
-
-
-        // Setup dock widget for message console
-        QDockWidget *dockWidget = new QDockWidget(tr("Message Console"), &coreWindow);
-        dockWidget->setObjectName("MessageConsoleDockWidget");
-        dockWidget->hide();
-
-        m_ConsoleWidget = new ConsoleWidget(dockWidget);
-        m_ConsoleWidget->setEventLevelColor((int)QtDebugMsg, Qt::darkGreen);
-        m_ConsoleWidget->setEventLevelColor((int)QtWarningMsg, Qt::darkYellow);
-        m_ConsoleWidget->setEventLevelColor((int)QtCriticalMsg, Qt::darkRed);
-        m_ConsoleWidget->setEventLevelColor((int)QtFatalMsg, Qt::darkRed);
-        dockWidget->setWidget(m_ConsoleWidget);
-
-        coreWindow.addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
-
-        foreach(QAction *action, coreWindow.menuBar()->actions()) {
-            if(action->text() == tr("Window")) {
-                action->menu()->addAction(dockWidget->toggleViewAction());
-            }
-        }
-
-
-        // Create log file and register handler for qDebug() messages
-        m_LogFile.setFileName(QString("%1/%2.txt")
-                              .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
-                              .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
-
-        qInstallMsgHandler(qMessageHandler);
-
-
-        Core::PluginManager::PluginManager::instance().addObject(this);
-
-    } catch(...) {
-        return false;
-    }
-
-    return m_Initialized = true;
-}
-
-bool NotificationManagerPrivate::initialized()
-{
-    return m_Initialized;
-}
-
-void NotificationManagerPrivate::shutdown()
-{
-    Q_ASSERT(m_Initialized);
-
-    qInstallMsgHandler(0);
-
-    if(m_LogFile.isOpen()) {
-        m_LogFile.close();
-    }
-}
-
 
 void NotificationManagerPrivate::writeToLogFile(const int &level, QString message)
 {
@@ -228,31 +208,35 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
     QString msg;
     int level = 0;
 
+    // Static member function requires that we get the singleton pointer directly
+    NotificationManager *q = &NotificationManager::instance();
+
     switch (type) {
     case QtDebugMsg:
-        msg = tr("Debug: %1").arg(message);
+
+        msg = q->tr("Debug: %1").arg(message);
         level = (int)QtDebugMsg;
         break;
     case QtWarningMsg:
-        msg = tr("Warning: %1").arg(message);
+        msg = q->tr("Warning: %1").arg(message);
         level = (int)QtWarningMsg;
-        NotificationManager::instance().notify(msg, NotificationWidget::Warning);
+        q->notify(msg, NotificationWidget::Warning);
         break;
     case QtCriticalMsg:
-        msg = tr("Critical: %1").arg(message);
+        msg = q->tr("Critical: %1").arg(message);
         level = (int)QtCriticalMsg;
-        NotificationManager::instance().notify(msg, NotificationWidget::Critical);
+        q->notify(msg, NotificationWidget::Critical);
         break;
     case QtFatalMsg:
-        msg = tr("Fatal: %1").arg(message);
+        msg = q->tr("Fatal: %1").arg(message);
         level = (int)QtFatalMsg;
         break;
     default:
-        msg = tr("Unknown: %1").arg(message);
+        msg = q->tr("Unknown: %1").arg(message);
         break;
     }
 
-    NotificationManager::instance().writeToLogFile(level, msg);
+    q->writeToLogFile(level, msg);
 
     if(type == QtFatalMsg) {
         abort();

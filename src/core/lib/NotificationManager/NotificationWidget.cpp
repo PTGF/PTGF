@@ -41,17 +41,17 @@ namespace NotificationManager {
 
 NotificationWidget::NotificationWidget(QWidget *parent) :
     QFrame(parent),
-    d(NULL)
+    d(new NotificationWidgetPrivate)
 {
-    d = new NotificationWidgetPrivate(this);
+    d->q = this;
     d->setupUi();
 }
 
 NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardButtons buttons, QWidget *parent) :
     QFrame(parent),
-    d(NULL)
+    d(new NotificationWidgetPrivate)
 {
-    d = new NotificationWidgetPrivate(this);
+    d->q = this;
     d->setupUi();
 
     setIcon(icon);
@@ -62,9 +62,9 @@ NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardB
 NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardButtons buttons,
                                   const QObject *reciever, const char *member, QWidget *parent) :
     QFrame(parent),
-    d(NULL)
+    d(new NotificationWidgetPrivate)
 {
-    d = new NotificationWidgetPrivate(this);
+    d->q = this;
     d->setupUi();
 
     setIcon(icon);
@@ -79,6 +79,7 @@ NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardB
 NotificationWidget::~NotificationWidget()
 {
 }
+
 
 QString NotificationWidget::text() const
 {
@@ -194,8 +195,13 @@ void NotificationWidget::keyReleaseEvent(QKeyEvent *event)
 
 /***** PRIVATE IMPLEMENTATION *****/
 
-NotificationWidgetPrivate::NotificationWidgetPrivate(NotificationWidget *parent) :
-    q(parent)
+NotificationWidgetPrivate::NotificationWidgetPrivate() :
+    q(NULL),
+    m_Label(NULL),
+    m_IconLabel(NULL),
+    m_Icon(NotificationWidget::NoIcon),
+    m_ButtonBox(NULL),
+    m_CloseButton(NULL)
 {
 }
 

@@ -24,6 +24,16 @@
 #ifndef CORE_SETTINGMANAGER_SETTINGMANAGERPRIVATE_H
 #define CORE_SETTINGMANAGER_SETTINGMANAGERPRIVATE_H
 
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the public PTGF API.  This header file may change
+// from version to version without notice, or even be removed.
+//
+
+
 #include <QObject>
 #include <QSettings>
 
@@ -40,7 +50,7 @@ class SettingManagerPrivate : public QObject
     DECLARE_PUBLIC(SettingManager)
 
 public:
-    explicit SettingManagerPrivate(SettingManager *parent);
+    explicit SettingManagerPrivate();
 
 protected:
     void registerPageFactory(ISettingPageFactory *page);

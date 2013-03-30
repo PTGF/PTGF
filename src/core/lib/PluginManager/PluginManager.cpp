@@ -21,7 +21,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "PluginManager.h"
 #include "PluginManagerPrivate.h"
 
 #include <QMenuBar>
@@ -104,20 +103,15 @@ PluginManager &PluginManager::instance()
    \internal
  */
 PluginManager::PluginManager() :
-    d(NULL)
+    d(new PluginManagerPrivate)
 {
-    d = new PluginManagerPrivate(this);
+    d->q = this;
 }
 
-/*!
-   \fn PluginManager::~PluginManager()
-   \internal
+/*! \internal
  */
 PluginManager::~PluginManager()
 {
-    if(d) {
-        delete d;
-    }
 }
 
 /*!
@@ -139,7 +133,7 @@ bool PluginManager::initialize()
 
         d->readSettings();
 
-        addObject(d);                         /* Register our ISettingPageFactory */
+        addObject(d.data());                         /* Register our ISettingPageFactory */
 
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
         foreach(QAction *action, coreWindow.menuBar()->actions()) {
@@ -283,9 +277,9 @@ void PluginManager::pluginDialog()
 
 /***** PRIVATE IMPLEMENTATION *****/
 
-PluginManagerPrivate::PluginManagerPrivate(PluginManager *parent) :
-    QObject(0),
-    q(parent),
+PluginManagerPrivate::PluginManagerPrivate() :
+    QObject(NULL),
+    q(NULL),
     m_Initialized(false),
     m_PluginPathsOverride(false)
 {

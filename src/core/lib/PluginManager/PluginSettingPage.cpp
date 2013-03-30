@@ -25,7 +25,6 @@
 #include "ui_PluginSettingPage.h"
 
 #include <SettingManager/SettingManager.h>
-#include "PluginManager.h"
 #include "PluginManagerPrivate.h"
 
 #include "PluginWrapper.h"

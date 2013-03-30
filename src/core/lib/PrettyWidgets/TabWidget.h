@@ -37,6 +37,7 @@ class TabWidget : public QTabWidget
 
 public:
     explicit TabWidget(QWidget *parent = 0);
+    ~TabWidget();
 
     QTabBar *tabBar();
 

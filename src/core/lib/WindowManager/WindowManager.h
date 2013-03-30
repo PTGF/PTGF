@@ -25,7 +25,6 @@
 #define CORE_WINDOWMANAGER_WINDOWMANAGER_H
 
 #include <QObject>
-#include <QList>
 
 #include "WindowManagerLibrary.h"
 
@@ -45,6 +44,7 @@ class WINDOWMANAGER_EXPORT WindowManager : public QObject
 
 public:
     static WindowManager &instance();
+    explicit WindowManager();
     ~WindowManager();
 
     bool initialize();
@@ -52,9 +52,6 @@ public:
 
     QList<IMainWindow *> mainWindows();
     QList<QWidget *> aboutWidgets();
-
-protected:
-    WindowManager();
 };
 
 } // namespace WindowManager
