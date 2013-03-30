@@ -61,7 +61,10 @@ HEADERS +=  \
             WindowManager/WindowManagerPrivate.h \
     SettingManager/SettingManagerPrivate.h \
     PrettyWidgets/ConsoleWidgetPrivate.h \
-    PrettyWidgets/TabWidgetPrivate.h
+    PrettyWidgets/TabWidgetPrivate.h \
+    ActionManager/Context.h \
+    ActionManager/ContextPrivate.h \
+    ActionManager/ActionManagerPrivate.h
 
 SOURCES +=  ActionManager/ActionManager.cpp \
             ActionManager/MenuItem.cpp \
@@ -83,7 +86,8 @@ SOURCES +=  ActionManager/ActionManager.cpp \
             WindowManager/AboutWidget.cpp \
             WindowManager/IMainWindow.cpp \
             WindowManager/WindowManager.cpp \
-            Global.cpp
+            Global.cpp \
+    ActionManager/Context.cpp
 
 FORMS   +=  CoreWindow/CoreSettingPage.ui \
             CoreWindow/CoreWindow.ui \

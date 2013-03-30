@@ -1,5 +1,5 @@
 /*!
-   \file Global.h
+   \file Context.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,25 +21,64 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PTGF_GLOBAL_H
-#define PTGF_GLOBAL_H
+#include "ContextPrivate.h"
 
-#include <QtGlobal>
-#include <QScopedPointer>
-
-#ifndef STRINGIFY
-#define STRINGIFY(X) # X
-#endif
-
-#define DECLARE_PRIVATE(Class) \
-    QScopedPointer<Class##Private> d; \
-    friend class Class##Private;
-
-#define DECLARE_PUBLIC(Class) \
-    Class *q; \
-    friend class Class;
-
-bool qunsetenv(const char *varName);
+namespace Core {
+namespace ActionManager {
 
 
-#endif // PTGF_GLOBAL_H
+Context::Context(QObject *parent) :
+    QObject(parent),
+    d(new ContextPrivate)
+{
+    d->q = this;
+}
+
+/*! \internal
+ */
+Context::~Context()
+{
+}
+
+QList<Context *> Context::contexts() const
+{
+    return d->m_Contexts;
+}
+
+
+
+bool Context::isEnabled()
+{
+    return d->m_Enabled;
+}
+
+void Context::setEnabled(bool enable)
+{
+    d->m_Enabled = enable;
+}
+
+void Context::enable()
+{
+    this->setEnabled(true);
+}
+
+void Context::disable()
+{
+    this->setEnabled(false);
+}
+
+
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+ContextPrivate::ContextPrivate() :
+    q(NULL),
+    m_Enabled(true)
+{
+}
+
+
+} // namespace ActionManager
+} // namespace Core
+

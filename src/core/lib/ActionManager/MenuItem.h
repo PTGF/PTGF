@@ -34,6 +34,8 @@ namespace ActionManager {
 class MenuItem : public QObject
 {
     Q_OBJECT
+
+
 public:
 
     enum Types {

@@ -1,5 +1,5 @@
 /*!
-   \file Global.h
+   \file ContextPrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,25 +21,29 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PTGF_GLOBAL_H
-#define PTGF_GLOBAL_H
+#ifndef CORE_ACTIONMANAGER_CONTEXTPRIVATE_H
+#define CORE_ACTIONMANAGER_CONTEXTPRIVATE_H
 
-#include <QtGlobal>
-#include <QScopedPointer>
+#include "Context.h"
 
-#ifndef STRINGIFY
-#define STRINGIFY(X) # X
-#endif
+namespace Core {
+namespace ActionManager {
 
-#define DECLARE_PRIVATE(Class) \
-    QScopedPointer<Class##Private> d; \
-    friend class Class##Private;
+class ContextPrivate
+{
+    DECLARE_PUBLIC(Context)
 
-#define DECLARE_PUBLIC(Class) \
-    Class *q; \
-    friend class Class;
-
-bool qunsetenv(const char *varName);
+public:
+    explicit ContextPrivate();
 
 
-#endif // PTGF_GLOBAL_H
+private:
+    QList<Context *> m_Contexts;
+    bool m_Enabled;
+
+};
+
+} // namespace ActionManager
+} // namespace Core
+
+#endif // CORE_ACTIONMANAGER_CONTEXTPRIVATE_H

@@ -21,7 +21,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "ActionManager.h"
+#include "ActionManagerPrivate.h"
 
 #include <QMenuBar>
 #include <CoreWindow/CoreWindow.h>
@@ -58,15 +58,13 @@ ActionManager &ActionManager::instance()
    \fn ActionManager::ActionManager()
    \brief Constructor
  */
-ActionManager::ActionManager() : QObject(0)
+ActionManager::ActionManager() :
+    QObject(NULL),
+    d(new ActionManagerPrivate)
 {
-    m_Initialized = false;
+    d->q = this;
 }
 
-/*!
-   \fn ActionManager::~ActionManager()
-   \brief Destructor
- */
 ActionManager::~ActionManager()
 {
 }
@@ -80,16 +78,11 @@ ActionManager::~ActionManager()
  */
 bool ActionManager::initialize()
 {
-    return m_Initialized = true;
-}
+    if(d->m_Initialized) {
+        return false;
+    }
 
-/*!
-   \fn ActionManager::initialized()
-   \returns A boolean value indicating whether this instance has been initialized or not.
- */
-bool ActionManager::initialized()
-{
-    return m_Initialized;
+    return d->m_Initialized = true;
 }
 
 /*!
@@ -99,13 +92,43 @@ bool ActionManager::initialized()
  */
 void ActionManager::shutdown()
 {
+    if(!d->m_Initialized) {
+        return;
+    }
+
+    // ...
+
 }
 
 /*!
-   \fn ActionManager::refreshMenuItems()
+   \fn ActionManager::registerMenuItem()
    \brief This has not been implemented fully.
  */
-void ActionManager::refreshMenuItems()
+void ActionManager::registerMenuItem(MenuItem *menuItem)
+{
+    d->m_MenuItems.append(menuItem);
+    emit menuItemAdded(menuItem);
+    d->refreshMenuItems();
+}
+
+
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+
+
+ActionManagerPrivate::ActionManagerPrivate() :
+    q(NULL),
+    m_Initialized(false)
+{
+}
+
+/*!
+   \fn ActionManagerPrivate::refreshMenuItems()
+   \internal
+   \brief This has not been implemented fully.
+ */
+void ActionManagerPrivate::refreshMenuItems()
 {
     QMenuBar *menuBar = CoreWindow::CoreWindow::instance().menuBar();
 
@@ -151,16 +174,8 @@ void ActionManager::refreshMenuItems()
     }
 }
 
-/*!
-   \fn ActionManager::refreshMenuItems()
-   \brief This has not been implemented fully.
- */
-void ActionManager::registerMenuItem(MenuItem *menuItem)
-{
-    m_MenuItems.append(menuItem);
-    emit menuItemAdded(menuItem);
-    refreshMenuItems();
-}
+
+
 
 
 }}

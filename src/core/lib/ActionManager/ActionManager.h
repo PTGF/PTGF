@@ -25,41 +25,40 @@
 #define CORE_ACTIONMANAGER_ACTIONMANAGER_H
 
 #include <QObject>
-#include <QList>
 #include "ActionManagerLibrary.h"
 
 namespace Core {
 namespace ActionManager {
 
+class ActionManagerPrivate;
 class MenuItem;
 
 class ACTIONMANAGER_EXPORT ActionManager : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(ActionManager)
+    DECLARE_PRIVATE(ActionManager)
+
 public:
     static ActionManager &instance();
+    explicit ActionManager();
     ~ActionManager();
 
-    void registerMenuItem(MenuItem *menuItem);
-    void refreshMenuItems();
-
     bool initialize();
-    bool initialized();
     void shutdown();
+
+    void registerMenuItem(MenuItem *menuItem);
+
 
 signals:
     void menuItemAdded(MenuItem *);
 
-public slots:
-
 protected:
-    ActionManager();
 
-    bool m_Initialized;
-
-    QList<MenuItem *> m_MenuItems;
 
 };
 
-}}
+} // namespace ActionManager
+} // namespace Core
+
 #endif // CORE_ACTIONMANAGER_ACTIONMANAGER_H
