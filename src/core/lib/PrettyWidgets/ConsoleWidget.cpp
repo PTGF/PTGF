@@ -25,6 +25,16 @@
 
 #include <QScrollBar>
 
+/*!
+ * \class ConsoleWidget
+ * \brief ConsoleWidget
+ */
+
+
+
+/*! \brief ConsoleWidget::ConsoleWidget
+    \param parent
+ */
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
     QPlainTextEdit(parent),
     d(new ConsoleWidgetPrivate)
@@ -43,16 +53,33 @@ ConsoleWidget::~ConsoleWidget()
 {
 }
 
+/*!
+ * \brief ConsoleWidget::setEventLevelColor
+ * \param EventLevel
+ * \param color
+ */
 void ConsoleWidget::setEventLevelColor(const int &EventLevel, const QColor &color)
 {
     QTextCharFormat charFormat;
     charFormat.setForeground(color);
     setEventLevelCharFormat(EventLevel, charFormat);
 }
+
+/*!
+ * \brief ConsoleWidget::setEventLevelCharFormat
+ * \param EventLevel
+ * \param charFormat
+ */
 void ConsoleWidget::setEventLevelCharFormat(const int &EventLevel, const QTextCharFormat &charFormat)
 {
     d->m_EventLevelCharFormats[EventLevel] = charFormat;
 }
+
+/*!
+ * \brief ConsoleWidget::messageEvent
+ * \param eventLevel
+ * \param message
+ */
 void ConsoleWidget::messageEvent(const int &eventLevel, const QString &message)
 {
     bool wasScrolledToBottom = isScrolledToBottom();
@@ -75,19 +102,30 @@ void ConsoleWidget::messageEvent(const int &eventLevel, const QString &message)
     }
 }
 
-
+/*!
+ * \brief ConsoleWidget::isScrolledToBottom
+ * \return
+ */
 bool ConsoleWidget::isScrolledToBottom() const
 {
     QScrollBar *vert = verticalScrollBar();
     return vert->value() == vert->maximum();
 }
 
+/*!
+ * \brief ConsoleWidget::scrollToBottom
+ */
 void ConsoleWidget::scrollToBottom()
 {
     QScrollBar *vert = verticalScrollBar();
     vert->setValue(vert->maximum());
 }
 
+/*!
+ * \internal
+ * \brief ConsoleWidget::resizeEvent
+ * \param event
+ */
 void ConsoleWidget::resizeEvent(QResizeEvent *event)
 {
     bool wasScrolledToBottom = isScrolledToBottom();
@@ -105,7 +143,17 @@ void ConsoleWidget::resizeEvent(QResizeEvent *event)
 
 
 /***** PRIVATE IMPLEMENTATION *****/
+/*!
+ * \class ConsoleWidgetPrivate
+ * \internal
+ * \brief ConsoleWidgetPrivate
+ */
 
+
+/*!
+ * \internal
+ * \brief ConsoleWidgetPrivate::ConsoleWidgetPrivate
+ */
 ConsoleWidgetPrivate::ConsoleWidgetPrivate() :
     q(NULL)
 {

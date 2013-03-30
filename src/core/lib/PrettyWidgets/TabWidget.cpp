@@ -25,6 +25,14 @@
 
 #include <QTabBar>
 
+/*! \class TabWidget
+ *  \brief TabWidget
+ */
+
+/*!
+ * \brief TabWidget::TabWidget
+ * \param parent
+ */
 TabWidget::TabWidget(QWidget *parent) :
     QTabWidget(parent),
     d(new TabWidgetPrivate)
@@ -38,28 +46,46 @@ TabWidget::TabWidget(QWidget *parent) :
     d->updateStyleSheet();
 }
 
-/*! \internal
+/*!
+ * \internal
+ * \brief TabWidget::~TabWidget
  */
 TabWidget::~TabWidget()
 {
 }
 
+/*!
+ * \brief TabWidget::tabBar
+ * \return
+ */
 QTabBar *TabWidget::tabBar()
 {
     return QTabWidget::tabBar();
 }
 
+/*!
+ * \brief TabWidget::setHideBarOnOne
+ * \param hide
+ */
 void TabWidget::setHideBarOnOne(bool hide)
 {
     d->m_HideBarOnOne = hide;
     d->updateTabBar();
 }
 
+/*!
+ * \brief TabWidget::hideBarOnOne
+ * \return
+ */
 bool TabWidget::hideBarOnOne()
 {
     return d->m_HideBarOnOne;
 }
 
+/*!
+ * \brief TabWidget::setClearStyleSheet
+ * \param clear
+ */
 void TabWidget::setClearStyleSheet(bool clear)
 {
     d->m_ClearStyleSheet = clear;
@@ -71,6 +97,10 @@ bool TabWidget::clearStyleSheet()
     return d->m_ClearStyleSheet;
 }
 
+/*!
+ * \brief TabWidget::tabInserted
+ * \param index
+ */
 void TabWidget::tabInserted(int index)
 {
     Q_UNUSED(index)
@@ -79,6 +109,10 @@ void TabWidget::tabInserted(int index)
     d->updateStyleSheet();
 }
 
+/*!
+ * \brief TabWidget::tabRemoved
+ * \param index
+ */
 void TabWidget::tabRemoved(int index)
 {
     Q_UNUSED(index)
@@ -98,7 +132,10 @@ TabWidgetPrivate::TabWidgetPrivate() :
 {
 }
 
-
+/*!
+ * \internal
+ * \brief TabWidgetPrivate::updateTabBar
+ */
 void TabWidgetPrivate::updateTabBar()
 {
     if(m_HideBarOnOne) {
@@ -112,6 +149,10 @@ void TabWidgetPrivate::updateTabBar()
     }
 }
 
+/*!
+ * \internal
+ * \brief TabWidgetPrivate::updateStyleSheet
+ */
 void TabWidgetPrivate::updateStyleSheet()
 {
     if(!m_ClearStyleSheet || q->count() < 0) {
