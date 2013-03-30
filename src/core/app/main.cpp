@@ -66,6 +66,7 @@
 #include <SettingManager/SettingManager.h>
 #include <PluginManager/PluginManager.h>
 #include <CoreWindow/CoreWindow.h>
+#include <ActionManager/ActionManager.h>
 #include <WindowManager/WindowManager.h>
 
 #ifdef MAIN_DEBUG
@@ -100,6 +101,7 @@ int main(int argc, char *argv[])
     CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
     PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
     WindowManager::WindowManager &windowManager = WindowManager::WindowManager::instance();
+    ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tInitializing the singleton classes";
@@ -111,6 +113,7 @@ int main(int argc, char *argv[])
         coreWindow.initialize();
 
     pluginManager.initialize();
+    actionManager.initialize();
     windowManager.initialize();
 
 
@@ -130,6 +133,7 @@ int main(int argc, char *argv[])
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tShutting down singleton classes";
 #endif
+    actionManager.shutdown();
     windowManager.shutdown();
     pluginManager.shutdown();
 

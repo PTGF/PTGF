@@ -45,8 +45,6 @@ QList<Context *> Context::contexts() const
     return d->m_Contexts;
 }
 
-
-
 bool Context::isEnabled()
 {
     return d->m_Enabled;
@@ -55,16 +53,17 @@ bool Context::isEnabled()
 void Context::setEnabled(bool enable)
 {
     d->m_Enabled = enable;
+    emit enableChanged(d->m_Enabled);
 }
 
 void Context::enable()
 {
-    this->setEnabled(true);
+    setEnabled(true);
 }
 
 void Context::disable()
 {
-    this->setEnabled(false);
+    setEnabled(false);
 }
 
 

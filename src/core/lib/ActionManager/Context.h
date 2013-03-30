@@ -35,6 +35,7 @@ class ContextPrivate;
 class ACTIONMANAGER_EXPORT Context : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enableChanged)
     DECLARE_PRIVATE(Context)
 
 public:
@@ -47,8 +48,7 @@ public:
     void setEnabled(bool enable);
 
 signals:
-    void enabled();
-    void disabled();
+    void enableChanged(bool enabled);
 
 public slots:
     void enable();

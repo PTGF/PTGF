@@ -27,46 +27,47 @@ win32:target.path = /
 else:target.path  = /lib
 INSTALLS         += target
 
-HEADERS +=  \
+HEADERS +=  Global.h \
             ActionManager/ActionManager.h \
             ActionManager/ActionManagerLibrary.h \
+            ActionManager/ActionManagerPrivate.h \
             ActionManager/MenuItem.h \
+            ActionManager/Context.h \
+            ActionManager/ContextPrivate.h \
             CoreWindow/CoreSettingPage.h \
             CoreWindow/CoreWindow.h \
             CoreWindow/CoreWindowLibrary.h \
             NotificationManager/NotificationManager.h \
             NotificationManager/NotificationManagerLibrary.h \
+            NotificationManager/NotificationManagerPrivate.h \
             NotificationManager/NotificationWidget.h \
+            NotificationManager/NotificationWidgetPrivate.h \
             PluginManager/IPlugin.h \
+            PluginManager/PluginManager.h \
             PluginManager/PluginManagerLibrary.h \
+            PluginManager/PluginManagerPrivate.h \
             PluginManager/PluginSettingPage.h \
             PluginManager/PluginWrapper.h \
             PrettyWidgets/ConsoleWidget.h \
+            PrettyWidgets/ConsoleWidgetPrivate.h \
             PrettyWidgets/TabWidget.h \
+            PrettyWidgets/TabWidgetPrivate.h \
             SettingManager/ISettingPage.h \
             SettingManager/ISettingPageFactory.h \
             SettingManager/SettingDialog.h \
             SettingManager/SettingManager.h \
+            SettingManager/SettingManagerPrivate.h \
             SettingManager/SettingManagerLibrary.h \
             WindowManager/AboutDialog.h \
             WindowManager/AboutWidget.h \
             WindowManager/IMainWindow.h \
             WindowManager/WindowManager.h \
             WindowManager/WindowManagerLibrary.h \
-            NotificationManager/NotificationManagerPrivate.h \
-            Global.h \
-            PluginManager/PluginManagerPrivate.h \
-            PluginManager/PluginManager.h \
-            NotificationManager/NotificationWidgetPrivate.h \
-            WindowManager/WindowManagerPrivate.h \
-    SettingManager/SettingManagerPrivate.h \
-    PrettyWidgets/ConsoleWidgetPrivate.h \
-    PrettyWidgets/TabWidgetPrivate.h \
-    ActionManager/Context.h \
-    ActionManager/ContextPrivate.h \
-    ActionManager/ActionManagerPrivate.h
+            WindowManager/WindowManagerPrivate.h
 
-SOURCES +=  ActionManager/ActionManager.cpp \
+SOURCES +=  Global.cpp \
+            ActionManager/ActionManager.cpp \
+            ActionManager/Context.cpp \
             ActionManager/MenuItem.cpp \
             CoreWindow/CoreSettingPage.cpp \
             CoreWindow/CoreWindow.cpp \
@@ -86,8 +87,6 @@ SOURCES +=  ActionManager/ActionManager.cpp \
             WindowManager/AboutWidget.cpp \
             WindowManager/IMainWindow.cpp \
             WindowManager/WindowManager.cpp \
-            Global.cpp \
-    ActionManager/Context.cpp
 
 FORMS   +=  CoreWindow/CoreSettingPage.ui \
             CoreWindow/CoreWindow.ui \
@@ -107,17 +106,21 @@ DEFINES          += COREWINDOW_LIBRARY \
                     WINDOWMANAGER_LIBRARY \
                     NOTIFICATIONMANAGER_LIBRARY
 
-debug:DEFINES    += COREWINDOW_DEBUG
-debug:DEFINES    += WINDOWMANAGER_DEBUG
-debug:DEFINES    += ACTIONMANAGER_DEBUG
-debug:DEFINES    += PLUGINMANAGER_DEBUG
-debug:DEFINES    += SETTINGMANAGER_DEBUG
+#debug:DEFINES    += COREWINDOW_DEBUG
+#debug:DEFINES    += WINDOWMANAGER_DEBUG
+#debug:DEFINES    += ACTIONMANAGER_DEBUG
+#debug:DEFINES    += PLUGINMANAGER_DEBUG
+#debug:DEFINES    += SETTINGMANAGER_DEBUG
 
 OTHER_FILES += CoreWindow/StyleSheet.css
 win32: styleSheet.path = /ptgf/
 else: styleSheet.path = /share/ptgf/
 styleSheet.files = CoreWindow/StyleSheet.css
 INSTALLS += styleSheet
+
+coreHeaders.path = /include/core/lib
+coreHeaders.files = Global.h
+INSTALLS += coreHeaders
 
 notificationManagerHeaders.path = /include/core/lib/NotificationManager
 notificationManagerHeaders.files = NotificationManager/NotificationManagerLibrary.h NotificationManager/NotificationManager.h NotificationManager/NotificationWidget.h
