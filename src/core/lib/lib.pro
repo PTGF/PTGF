@@ -33,6 +33,7 @@ HEADERS +=  Global.h \
             ActionManager/ActionManagerPrivate.h \
             ActionManager/Context.h \
             ActionManager/ContextPrivate.h \
+            ActionManager/Menu.h \
             CoreWindow/CoreSettingPage.h \
             CoreWindow/CoreWindow.h \
             CoreWindow/CoreWindowLibrary.h \
@@ -62,13 +63,12 @@ HEADERS +=  Global.h \
             WindowManager/IMainWindow.h \
             WindowManager/WindowManager.h \
             WindowManager/WindowManagerLibrary.h \
-            WindowManager/WindowManagerPrivate.h \
-    ActionManager/UndoCommand.h \
-    ActionManager/Menu.h
+            WindowManager/WindowManagerPrivate.h
 
 SOURCES +=  Global.cpp \
             ActionManager/ActionManager.cpp \
             ActionManager/Context.cpp \
+            ActionManager/Menu.cpp \
             CoreWindow/CoreSettingPage.cpp \
             CoreWindow/CoreWindow.cpp \
             NotificationManager/NotificationManager.cpp \
@@ -86,9 +86,7 @@ SOURCES +=  Global.cpp \
             WindowManager/AboutDialog.cpp \
             WindowManager/AboutWidget.cpp \
             WindowManager/IMainWindow.cpp \
-            WindowManager/WindowManager.cpp \
-    ActionManager/UndoCommand.cpp \
-    ActionManager/Menu.cpp
+            WindowManager/WindowManager.cpp
 
 FORMS   +=  CoreWindow/CoreSettingPage.ui \
             CoreWindow/CoreWindow.ui \
