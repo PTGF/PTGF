@@ -26,55 +26,194 @@
 namespace Core {
 namespace ActionManager {
 
+/*!
+   \class Context
+   \todo Better documentation
+   \brief Core::ActionManager::Context
+ */
 
-Context::Context(QObject *parent) :
-    QObject(parent),
+/*!
+   \brief Context::Context
+   \todo Better documentation
+   \param parent
+ */
+Context::Context(Context *parent) :
     d(new ContextPrivate)
 {
     d->q = this;
+    setParent(parent);
 }
 
 /*! \internal
  */
 Context::~Context()
 {
+    //TODO: Remove self from ActionManager
 }
 
+/*!
+   \brief parent
+   \todo Better documentation
+   \return
+ */
+Context *Context::parentContext() const
+{
+    if(QObject *parent = this->parent()) {
+        return qobject_cast<Context *>(parent);
+    }
+    return NULL;
+}
+
+/*!
+   \brief Sets the parent of the Context to parent, and resets all flags.
+   If the new parent Context is the same as the old parent, this function does nothing.
+   \todo Better documentation
+   \param parent
+ */
+void Context::setParent(Context *parent)
+{
+    if(parent == parentContext()) {
+        return;
+    }
+
+    disconnect(d.data(), SLOT(parentChanged()));
+
+    QObject::setParent(parent);
+
+    if(parent) {
+        connect(parent, SIGNAL(changed()), d.data(), SLOT(parentChanged()));
+    }
+
+    emit changed();
+}
+
+
+/*!
+   \brief Context::contexts
+   \todo Better documentation
+   \return
+ */
 QList<Context *> Context::contexts() const
 {
-    return d->m_Contexts;
+    return findChildren<Context *>();
 }
 
+/*!
+   \brief Context::isEnabled
+   \todo Better documentation
+   \return
+ */
 bool Context::isEnabled()
 {
-    return d->m_Enabled;
+    /* We have to be visible
+       AND
+       All parents have to also be enabled
+       AND
+       We have to be enabled
+     */
+    return (isVisible() && d->parentEnabled() && d->m_Enabled);
 }
 
+/*!
+   \brief Context::setEnabled
+   \todo Better documentation
+   \param enable
+ */
 void Context::setEnabled(bool enable)
 {
     d->m_Enabled = enable;
+    emit changed();
     emit enableChanged(d->m_Enabled);
 }
 
-void Context::enable()
+/*!
+   \brief Context::isVisible
+   \todo Better documentation
+   \return
+ */
+bool Context::isVisible()
 {
-    setEnabled(true);
+    /* All parents have to also be visible
+       AND
+       We have to be visible
+     */
+    return (d->parentVisible() && d->m_Visible);
+}
+/*!
+   \brief Context::setVisible
+   \todo Better documentation
+   \param visible
+ */
+void Context::setVisible(bool visible)
+{
+    d->m_Visible = visible;
+    emit changed();
+    emit visibleChanged(d->m_Visible);
 }
 
-void Context::disable()
-{
-    setEnabled(false);
-}
+/*!
+   \brief Context::enable
+   \todo Better documentation
+ */
 
+/*!
+   \brief Context::disable
+   \todo Better documentation
+ */
 
+/*!
+   \brief Context::show
+   \todo Better documentation
+ */
 
+/*!
+   \brief Context::hide
+   \todo Better documentation
+ */
 
 /***** PRIVATE IMPLEMENTATION *****/
 
+/*!
+   \internal
+   \brief ContextPrivate::ContextPrivate
+ */
 ContextPrivate::ContextPrivate() :
     q(NULL),
-    m_Enabled(true)
+    m_Enabled(true),
+    m_Visible(true)
 {
+}
+
+/*!
+   \internal
+   \brief ContextPrivate::parentEnabled
+   \return
+ */
+bool ContextPrivate::parentEnabled()
+{
+    if(Context *parent = q->parentContext()) {
+        return parent->isEnabled();
+    }
+    return true;
+}
+
+/*!
+   \internal
+   \brief ContextPrivate::parentVisible
+   \return
+ */
+bool ContextPrivate::parentVisible()
+{
+    if(Context *parent = q->parentContext()) {
+        return parent->isVisible();
+    }
+    return true;
+}
+
+
+void ContextPrivate::parentChanged()
+{
+    emit q->changed();
 }
 
 

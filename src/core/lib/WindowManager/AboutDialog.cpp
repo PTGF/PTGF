@@ -81,8 +81,8 @@ void AboutDialog::splash(int ms)
     aboutDialog->open();
 
     /*! \todo I would like to see this timer start when the entire system is done loading and is
-     *        displayed to the user.  Doing it this way, means the user is either not seeing it
-     *        long enough, or too long depending on their system speed.
+              displayed to the user.  Doing it this way, means the user is either not seeing it
+              long enough, or too long depending on their system speed.
      */
     QTimer::singleShot(ms, aboutDialog, SLOT(close()));
 }

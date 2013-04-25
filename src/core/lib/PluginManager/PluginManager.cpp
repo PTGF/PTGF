@@ -24,7 +24,6 @@
 #include "PluginManagerPrivate.h"
 
 #include <QMenuBar>
-#include <QAction>
 #include <QDialog>
 #include <QGridLayout>
 #include <QFile>
@@ -32,6 +31,7 @@
 #include <QPluginLoader>
 #include <QApplication>
 
+#include <ActionManager/ActionManager.h>
 #include <SettingManager/SettingManager.h>
 #include <CoreWindow/CoreWindow.h>
 
@@ -135,15 +135,12 @@ bool PluginManager::initialize()
 
         addObject(d.data());                         /* Register our ISettingPageFactory */
 
-        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
-        foreach(QAction *action, coreWindow.menuBar()->actions()) {
-            if(action->text() == tr("Help")) {
-                QAction *pluginDialog = new QAction("Plugins", this);
-                pluginDialog->setToolTip(tr("View loaded plugins"));
-                connect(pluginDialog, SIGNAL(triggered()), this, SLOT(pluginDialog()));
-                action->menu()->addAction(pluginDialog);
-            }
-        }
+        ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
+        ActionManager::MenuPath path("Help");
+        QAction *pluginDialog = actionManager.createAction(NULL, path);
+        pluginDialog->setText(tr("Plugins"));
+        pluginDialog->setToolTip(tr("View loaded plugins"));
+        connect(pluginDialog, SIGNAL(triggered()), this, SLOT(pluginDialog()));
 
     } catch(...) {
         return false;

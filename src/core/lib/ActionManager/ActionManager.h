@@ -25,13 +25,19 @@
 #define CORE_ACTIONMANAGER_ACTIONMANAGER_H
 
 #include <QObject>
+#include <QAction>
+
 #include "ActionManagerLibrary.h"
+#include "Menu.h"
+#include "Context.h"
+
+class QAction;
+class QShortcut;
 
 namespace Core {
 namespace ActionManager {
 
 class ActionManagerPrivate;
-class MenuItem;
 
 class ACTIONMANAGER_EXPORT ActionManager : public QObject
 {
@@ -47,11 +53,19 @@ public:
     bool initialize();
     void shutdown();
 
-    void registerMenuItem(MenuItem *menuItem);
+    Context *createContext(Context *parent = 0);
 
+    MenuWidget *createMenuPath(const MenuPath &path);
+
+    QAction *createAction(const MenuPath &path);
+    QAction *createAction(Context *context, const MenuPath &path);
+
+    void registerAction(const MenuPath &path, QAction *action);
+    void registerAction(Context *context, const MenuPath &path, QAction *action);
+
+    QShortcut *createShortcut(Context *context);
 
 signals:
-    void menuItemAdded(MenuItem *);
 
 protected:
 

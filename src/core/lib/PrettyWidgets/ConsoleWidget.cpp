@@ -26,8 +26,8 @@
 #include <QScrollBar>
 
 /*!
- * \class ConsoleWidget
- * \brief ConsoleWidget
+   \class ConsoleWidget
+   \brief ConsoleWidget
  */
 
 
@@ -54,9 +54,9 @@ ConsoleWidget::~ConsoleWidget()
 }
 
 /*!
- * \brief ConsoleWidget::setEventLevelColor
- * \param EventLevel
- * \param color
+   \brief ConsoleWidget::setEventLevelColor
+   \param EventLevel
+   \param color
  */
 void ConsoleWidget::setEventLevelColor(const int &EventLevel, const QColor &color)
 {
@@ -66,9 +66,9 @@ void ConsoleWidget::setEventLevelColor(const int &EventLevel, const QColor &colo
 }
 
 /*!
- * \brief ConsoleWidget::setEventLevelCharFormat
- * \param EventLevel
- * \param charFormat
+   \brief ConsoleWidget::setEventLevelCharFormat
+   \param EventLevel
+   \param charFormat
  */
 void ConsoleWidget::setEventLevelCharFormat(const int &EventLevel, const QTextCharFormat &charFormat)
 {
@@ -76,9 +76,9 @@ void ConsoleWidget::setEventLevelCharFormat(const int &EventLevel, const QTextCh
 }
 
 /*!
- * \brief ConsoleWidget::messageEvent
- * \param eventLevel
- * \param message
+   \brief ConsoleWidget::messageEvent
+   \param eventLevel
+   \param message
  */
 void ConsoleWidget::messageEvent(const int &eventLevel, const QString &message)
 {
@@ -103,8 +103,8 @@ void ConsoleWidget::messageEvent(const int &eventLevel, const QString &message)
 }
 
 /*!
- * \brief ConsoleWidget::isScrolledToBottom
- * \return
+   \brief ConsoleWidget::isScrolledToBottom
+   \return
  */
 bool ConsoleWidget::isScrolledToBottom() const
 {
@@ -113,7 +113,7 @@ bool ConsoleWidget::isScrolledToBottom() const
 }
 
 /*!
- * \brief ConsoleWidget::scrollToBottom
+   \brief ConsoleWidget::scrollToBottom
  */
 void ConsoleWidget::scrollToBottom()
 {
@@ -122,9 +122,9 @@ void ConsoleWidget::scrollToBottom()
 }
 
 /*!
- * \internal
- * \brief ConsoleWidget::resizeEvent
- * \param event
+   \internal
+   \brief ConsoleWidget::resizeEvent
+   \param event
  */
 void ConsoleWidget::resizeEvent(QResizeEvent *event)
 {
@@ -144,15 +144,15 @@ void ConsoleWidget::resizeEvent(QResizeEvent *event)
 
 /***** PRIVATE IMPLEMENTATION *****/
 /*!
- * \class ConsoleWidgetPrivate
- * \internal
- * \brief ConsoleWidgetPrivate
+   \class ConsoleWidgetPrivate
+   \internal
+   \brief ConsoleWidgetPrivate
  */
 
 
 /*!
- * \internal
- * \brief ConsoleWidgetPrivate::ConsoleWidgetPrivate
+   \internal
+   \brief ConsoleWidgetPrivate::ConsoleWidgetPrivate
  */
 ConsoleWidgetPrivate::ConsoleWidgetPrivate() :
     q(NULL)

@@ -24,8 +24,8 @@
 #include "SettingManagerPrivate.h"
 
 #include <QMenuBar>
-#include <QAction>
 
+#include <ActionManager/ActionManager.h>
 #include <CoreWindow/CoreWindow.h>
 #include <PluginManager/PluginManager.h>
 
@@ -90,16 +90,15 @@ bool SettingManager::initialize()
 
     try {
 
-        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
-        foreach(QAction *action, coreWindow.menuBar()->actions()) {
-            if(action->text() == tr("Tools")) {
-                QAction *settingDialog = new QAction(tr("Settings"), this);
-                settingDialog->setToolTip(tr("Change application and plugin settings"));
-                settingDialog->setShortcut(QKeySequence::Preferences);
-                connect(settingDialog, SIGNAL(triggered()), this, SLOT(settingDialog()));
-                action->menu()->addAction(settingDialog);
-            }
-        }
+
+        ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
+        ActionManager::MenuPath path("Tools");
+        QAction *settingDialog = actionManager.createAction(NULL, path);
+        settingDialog->setText(tr("Settings"));
+        settingDialog->setToolTip(tr("Change application and plugin settings"));
+        settingDialog->setShortcut(QKeySequence::Preferences);
+        connect(settingDialog, SIGNAL(triggered()), this, SLOT(settingDialog()));
+
 
         /* Check the object pool for anything we should manage */
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();

@@ -29,17 +29,23 @@
 namespace Core {
 namespace ActionManager {
 
-class ContextPrivate
+class ContextPrivate : public QObject
 {
+    Q_OBJECT
     DECLARE_PUBLIC(Context)
 
 public:
     explicit ContextPrivate();
 
+    bool parentEnabled();
+    bool parentVisible();
+
+protected slots:
+    void parentChanged();
 
 private:
-    QList<Context *> m_Contexts;
     bool m_Enabled;
+    bool m_Visible;
 
 };
 

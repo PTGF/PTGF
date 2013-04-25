@@ -26,13 +26,13 @@
 #include <QDesktopServices>
 #include <QDockWidget>
 #include <QMenuBar>
-#include <QAction>
 #include <QDateTime>
 #include <QDebug>
 
 #include <CoreWindow/CoreWindow.h>
 #include <PluginManager/PluginManager.h>
 #include <PrettyWidgets/ConsoleWidget.h>
+#include <ActionManager/ActionManager.h>
 
 namespace Core {
 namespace NotificationManager {
@@ -99,12 +99,9 @@ bool NotificationManager::initialize()
 
         coreWindow.addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
 
-        foreach(QAction *action, coreWindow.menuBar()->actions()) {
-            if(action->text() == tr("Window")) {
-                action->menu()->addAction(dockWidget->toggleViewAction());
-            }
-        }
-
+        ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
+        ActionManager::MenuPath path("Window");
+        actionManager.registerAction(path, dockWidget->toggleViewAction());
 
         // Create log file and register handler for qDebug() messages
         d->m_LogFile.setFileName(QString("%1/%2.txt")

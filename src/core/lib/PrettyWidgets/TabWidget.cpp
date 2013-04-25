@@ -26,12 +26,12 @@
 #include <QTabBar>
 
 /*! \class TabWidget
- *  \brief TabWidget
+    \brief TabWidget
  */
 
 /*!
- * \brief TabWidget::TabWidget
- * \param parent
+   \brief TabWidget::TabWidget
+   \param parent
  */
 TabWidget::TabWidget(QWidget *parent) :
     QTabWidget(parent),
@@ -47,16 +47,16 @@ TabWidget::TabWidget(QWidget *parent) :
 }
 
 /*!
- * \internal
- * \brief TabWidget::~TabWidget
+   \internal
+   \brief TabWidget::~TabWidget
  */
 TabWidget::~TabWidget()
 {
 }
 
 /*!
- * \brief TabWidget::tabBar
- * \return
+   \brief TabWidget::tabBar
+   \return
  */
 QTabBar *TabWidget::tabBar()
 {
@@ -64,8 +64,8 @@ QTabBar *TabWidget::tabBar()
 }
 
 /*!
- * \brief TabWidget::setHideBarOnOne
- * \param hide
+   \brief TabWidget::setHideBarOnOne
+   \param hide
  */
 void TabWidget::setHideBarOnOne(bool hide)
 {
@@ -74,8 +74,8 @@ void TabWidget::setHideBarOnOne(bool hide)
 }
 
 /*!
- * \brief TabWidget::hideBarOnOne
- * \return
+   \brief TabWidget::hideBarOnOne
+   \return
  */
 bool TabWidget::hideBarOnOne()
 {
@@ -83,8 +83,8 @@ bool TabWidget::hideBarOnOne()
 }
 
 /*!
- * \brief TabWidget::setClearStyleSheet
- * \param clear
+   \brief TabWidget::setClearStyleSheet
+   \param clear
  */
 void TabWidget::setClearStyleSheet(bool clear)
 {
@@ -98,8 +98,8 @@ bool TabWidget::clearStyleSheet()
 }
 
 /*!
- * \brief TabWidget::tabInserted
- * \param index
+   \brief TabWidget::tabInserted
+   \param index
  */
 void TabWidget::tabInserted(int index)
 {
@@ -110,8 +110,8 @@ void TabWidget::tabInserted(int index)
 }
 
 /*!
- * \brief TabWidget::tabRemoved
- * \param index
+   \brief TabWidget::tabRemoved
+   \param index
  */
 void TabWidget::tabRemoved(int index)
 {
@@ -133,8 +133,8 @@ TabWidgetPrivate::TabWidgetPrivate() :
 }
 
 /*!
- * \internal
- * \brief TabWidgetPrivate::updateTabBar
+   \internal
+   \brief TabWidgetPrivate::updateTabBar
  */
 void TabWidgetPrivate::updateTabBar()
 {
@@ -150,8 +150,8 @@ void TabWidgetPrivate::updateTabBar()
 }
 
 /*!
- * \internal
- * \brief TabWidgetPrivate::updateStyleSheet
+   \internal
+   \brief TabWidgetPrivate::updateStyleSheet
  */
 void TabWidgetPrivate::updateStyleSheet()
 {

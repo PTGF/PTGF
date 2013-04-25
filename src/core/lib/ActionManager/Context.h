@@ -31,29 +31,48 @@ namespace Core {
 namespace ActionManager {
 
 class ContextPrivate;
+class ActionManager;
 
 class ACTIONMANAGER_EXPORT Context : public QObject
 {
     Q_OBJECT
+
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enableChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+
+    Q_DISABLE_COPY(Context)
     DECLARE_PRIVATE(Context)
 
 public:
-    explicit Context(QObject *parent = 0);
     ~Context();
+
+    Context *parentContext() const;
+    void setParent(Context *parent);
 
     QList<Context *> contexts() const;
 
     bool isEnabled();
-    void setEnabled(bool enable);
+
+    bool isVisible();
 
 signals:
+    void changed();
     void enableChanged(bool enabled);
+    void visibleChanged(bool visible);
 
 public slots:
-    void enable();
-    void disable();
+    void setEnabled(bool enable);
+    inline void enable() { setEnabled(true); }
+    inline void disable() { setEnabled(false); }
 
+    void setVisible(bool visible);
+    inline void show() { setVisible(true); }
+    inline void hide() { setVisible(false); }
+
+private:
+    explicit Context(Context *parent = 0);
+
+    friend class ActionManager;
 };
 
 } // namespace ActionManager

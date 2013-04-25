@@ -23,9 +23,14 @@
 
 #include "ActionManagerPrivate.h"
 
-#include <QMenuBar>
+#include <QAction>
+#include <QShortcut>
+#include <QMenu>
+
+#include <private/qshortcutmap_p.h>
+#include <private/qapplication_p.h>
+
 #include <CoreWindow/CoreWindow.h>
-#include "MenuItem.h"
 
 #ifdef ACTIONMANAGER_DEBUG
 #  include <QDebug>
@@ -39,8 +44,10 @@ namespace ActionManager {
    \class ActionManager
    \brief The ActionManager class is part of the core framework libraries, and
           manages the menus and toolbars in the CoreWindow.
-
+ *
           singleton class
+ *
+   \todo Better documentation
  */
 
 /*!
@@ -65,6 +72,10 @@ ActionManager::ActionManager() :
     d->q = this;
 }
 
+/*!
+   \internal
+   \brief ActionManager::~ActionManager()
+ */
 ActionManager::~ActionManager()
 {
 }
@@ -101,22 +112,177 @@ void ActionManager::shutdown()
 }
 
 /*!
-   \fn ActionManager::registerMenuItem()
-   \brief This has not been implemented fully.
+   \brief ActionManager::createContext
+   \param parent
+   \return
  */
-void ActionManager::registerMenuItem(MenuItem *menuItem)
+Context *ActionManager::createContext(Context *parent)
 {
-    d->m_MenuItems.append(menuItem);
-    emit menuItemAdded(menuItem);
-    d->refreshMenuItems();
+    Context *context = new Context(parent);
+    connect(context, SIGNAL(changed()), d.data(), SLOT(contextChanged()));
+    return context;
 }
+
+/*!
+   \internal
+   \brief widgetInsertAction Inserts an action, by priority, into a parent widget
+   \param action
+   \param parent
+ */
+inline void widgetInsertAction(QAction *action, MenuWidget *parent) {
+    Q_ASSERT(action);
+    Q_ASSERT(parent);
+
+    QList<QAction *> actions = parent->actions();
+    bool actionInserted = false;
+
+    for(int i=0; i < actions.count(); ++i) {
+        if(actions[i]->priority() > action->priority()) {
+            parent->insertAction(actions[i], action);
+            actionInserted = true;
+            break;
+        }
+    }
+
+    if(!actionInserted) {
+        parent->addAction(action);
+    }
+}
+
+/*!
+   \internal
+   \brief createMenu finds or creates a menu widget based on given parameters.
+   This is an internal use only helper function.
+   \param menu
+   \param parent
+   \return
+ */
+inline MenuWidget *createMenu(const Menu &menu, MenuWidget *parent)
+{
+    Q_ASSERT(parent);
+    Q_ASSERT(!menu.text().isEmpty());
+
+    // Locate the action
+    QAction *action = NULL;
+    foreach(QAction *childAction, parent->actions()) {
+        if(childAction->text() == menu.text()) {
+            action = childAction;
+        }
+    }
+
+    if(action) {
+        // If it's not a menu item, force it to be one
+        if(!action->menu()) {
+            action->setMenu(new QMenu(action->text(), parent));
+        }
+
+    } else {
+        // Doesn't already exist, create one and insert it by priority
+        action = (new QMenu(parent))->menuAction();
+        action->setText(menu.text());
+        action->setPriority((QAction::Priority)menu.priority());
+        widgetInsertAction(action, parent);
+
+    }
+
+    return action->menu();
+}
+
+
+/*!
+   \brief ActionManager::createMenuPath
+   \param path
+   \return
+ */
+MenuWidget *ActionManager::createMenuPath(const MenuPath &path)
+{
+    // Top widget is the menu bar
+    MenuWidget *parentWidget = (MenuWidget *)(CoreWindow::CoreWindow::instance().menuBar());
+
+    // Traverse or generate the path
+    foreach(Menu pathMenu, path) {
+        parentWidget = createMenu(pathMenu, parentWidget);
+    }
+
+    return parentWidget;
+}
+
+/*!
+   \brief ActionManager::createAction
+   \param path
+   \return
+ */
+QAction *ActionManager::createAction(const MenuPath &path)
+{
+    return createAction(NULL, path);
+}
+
+/*!
+   \brief ActionManager::createAction
+   \param context
+   \param path
+   \return
+ */
+QAction *ActionManager::createAction(Context *context, const MenuPath &path)
+{
+    QAction *action = new QAction(this);
+    registerAction(context, path, action);
+    return action;
+}
+
+/*!
+   \brief ActionManager::registerAction()
+   \param path
+   \param action
+ */
+void ActionManager::registerAction(const MenuPath &path, QAction *action)
+{
+    registerAction(NULL, path, action);
+}
+
+/*!
+   \brief ActionManager::registerAction
+   \param context
+   \param path
+   \param action
+ */
+void ActionManager::registerAction(Context *context, const MenuPath &path, QAction *action)
+{
+    Q_ASSERT(action);
+
+    MenuWidget *menuWidget = path.menu();
+    if(!menuWidget) {
+        menuWidget = (MenuWidget *)(CoreWindow::CoreWindow::instance().menuBar());
+    }
+
+    widgetInsertAction((QAction*)action, menuWidget);
+    d->m_Actions.insert(context, action);
+    connect(action, SIGNAL(destroyed(QObject*)), d.data(), SLOT(actionDestroyed(QObject*)));
+}
+
+/*!
+   \brief ActionManager::createShortcut
+   \param context
+   \return
+ */
+QShortcut *ActionManager::createShortcut(Context *context)
+{
+    QShortcut *shortcut = new QShortcut(NULL);
+    d->m_Shortcuts.insert(context, shortcut);
+    connect(shortcut, SIGNAL(destroyed(QObject*)), d.data(), SLOT(shortcutDestroyed(QObject*)));
+    return shortcut;
+}
+
 
 
 
 
 /***** PRIVATE IMPLEMENTATION *****/
 
-
+/*!
+   \internal
+   \brief ActionManagerPrivate::ActionManagerPrivate
+ */
 ActionManagerPrivate::ActionManagerPrivate() :
     q(NULL),
     m_Initialized(false)
@@ -124,58 +290,55 @@ ActionManagerPrivate::ActionManagerPrivate() :
 }
 
 /*!
-   \fn ActionManagerPrivate::refreshMenuItems()
    \internal
-   \brief This has not been implemented fully.
+   \brief ActionManagerPrivate::contextChanged
  */
-void ActionManagerPrivate::refreshMenuItems()
+void ActionManagerPrivate::contextChanged()
 {
-    QMenuBar *menuBar = CoreWindow::CoreWindow::instance().menuBar();
-
-    QList<MenuItem *> menuItems(m_MenuItems);
-    QList<MenuItem *> base;
-
-    // Merge all of the items in the list
-    while(!menuItems.isEmpty()) {
-        MenuItem *menuItem = menuItems.takeFirst();
-        bool newMenuItem = false;
-        foreach(MenuItem *merge, menuItems) {
-            if(menuItem->action()->text() == merge->action()->text()) {
-                if(newMenuItem) delete menuItem;
-                newMenuItem = true;
-                menuItem = menuItem->merge(merge);
-                menuItems.removeOne(merge);
-            }
-        }
-        base.append(menuItem);
+    Context *context = qobject_cast<Context *>(QObject::sender());
+    if(!context) {
+        return;
     }
 
-    // Remove and delete all actions
-    while(!menuBar->actions().isEmpty()) {
-        QAction *action = menuBar->actions().first();
-        menuBar->removeAction(action);
+    const bool enabled = context->isEnabled();
+    const bool visible = context->isVisible();
 
-        // Do I need to actually do this? or does the QAction handle the QMenu?
-        if(action->menu()) {
-            QMenu *menu = action->menu();
-            action->setMenu(NULL);
-            delete menu;
-        }
-
-        delete action;
+    foreach(QAction *action, m_Actions.values(context)) {
+        action->setEnabled(enabled);
+        action->setVisible(visible);
     }
 
-    // Add them by priority into the CoreWindow's MenuBar
-    qSort(base.begin(), base.end(), MenuItem::ascending);
-    MenuItem *menuItem = NULL;
-    while(!base.isEmpty()) {
-        menuItem = base.takeFirst();
-        menuBar->addAction(menuItem->generate());
+    foreach(QShortcut *shortcut, m_Shortcuts.values(context)) {
+        shortcut->setEnabled(enabled);
+    }
+
+}
+
+/*!
+   \internal
+   \brief ActionManagerPrivate::actionDestroyed
+   \param object
+ */
+void ActionManagerPrivate::actionDestroyed(QObject *object)
+{
+    Q_ASSERT(object);
+    if(QAction *action = qobject_cast<QAction *>(object)) {
+        m_Actions.remove(NULL, action);
     }
 }
 
+/*!
+   \internal
+   \brief ActionManagerPrivate::shortcutDestroyed
+   \param object
+ */
+void ActionManagerPrivate::shortcutDestroyed(QObject *object)
+{
+    Q_ASSERT(object);
+    if(QShortcut *shortcut = qobject_cast<QShortcut *>(object)) {
+        m_Shortcuts.remove(NULL, shortcut);
+    }
+}
 
-
-
-
-}}
+} // namespace ActionManager
+} // namespace Core

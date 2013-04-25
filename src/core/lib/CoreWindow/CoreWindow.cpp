@@ -451,24 +451,6 @@ void CoreWindow::addNotificationWidget(QWidget *notificationWidget)
 }
 
 
-QList<QAction*> CoreWindow::allActions()
-{
-    return allActions(menuBar()->actions());
-}
-
-QList<QAction*> CoreWindow::allActions(QList<QAction *> actions)
-{
-    QList<QAction *> retVal;
-    foreach(QAction *action, actions) {
-        retVal.append(action);
-        if(action->menu()) {
-            retVal.append(allActions(action->menu()->actions()));
-        }
-    }
-    return retVal;
-}
-
-
 /*!
    \fn CoreWindow::settingPageIcon()
    \internal

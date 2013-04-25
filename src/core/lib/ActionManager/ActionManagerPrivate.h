@@ -24,24 +24,30 @@
 #ifndef CORE_ACTIONMANAGER_ACTIONMANAGERPRIVATE_H
 #define CORE_ACTIONMANAGER_ACTIONMANAGERPRIVATE_H
 
-#include <QList>
+#include <QMultiMap>
 #include "ActionManager.h"
 
 namespace Core {
 namespace ActionManager {
 
-class ActionManagerPrivate
+class ActionManagerPrivate : QObject
 {
+    Q_OBJECT
     DECLARE_PUBLIC(ActionManager)
 
 public:
     explicit ActionManagerPrivate();
 
-    void refreshMenuItems();
+protected slots:
+    void contextChanged();
+    void actionDestroyed(QObject *object);
+    void shortcutDestroyed(QObject *object);
 
 private:
     bool m_Initialized;
-    QList<MenuItem *> m_MenuItems;
+
+    QMultiMap<Context *, QAction *> m_Actions;
+    QMultiMap<Context *, QShortcut *> m_Shortcuts;
 
 };
 

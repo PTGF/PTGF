@@ -24,9 +24,9 @@
 #include "WindowManagerPrivate.h"
 
 #include <QMenuBar>
-#include <QAction>
 
 #include <CoreWindow/CoreWindow.h>
+#include <ActionManager/ActionManager.h>
 #include <PluginManager/PluginManager.h>
 
 #include "IMainWindow.h"
@@ -56,11 +56,7 @@ WindowManager::WindowManager() :
 
 WindowManager::~WindowManager()
 {
-    if(d->m_AboutPage) {
-        delete d->m_AboutPage;
-    }
 }
-
 
 bool WindowManager::initialize()
 {
@@ -71,18 +67,15 @@ bool WindowManager::initialize()
     try {
 
         /*** Register our menu structure ***/
-        CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
-        foreach(QAction *action, coreWindow.menuBar()->actions()) {
-            if(action->text() == tr("Help")) {
-                Q_ASSERT(d->m_AboutPage);
-                d->m_AboutPage->setText(tr("About"));
-                d->m_AboutPage->setToolTip(tr("Displays the about dialog"));
-                d->m_AboutPage->setIcon(QIcon(":/CoreWindow/app.png"));
-                d->m_AboutPage->setIconVisibleInMenu(true);
-                connect(d->m_AboutPage, SIGNAL(triggered()), d.data(), SLOT(aboutDialog()));
-                action->menu()->addAction(d->m_AboutPage);
-            }
-        }
+
+        ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
+        ActionManager::MenuPath path("Help");
+        d->m_AboutPage = actionManager.createAction(NULL, path);
+        d->m_AboutPage->setText(tr("About"));
+        d->m_AboutPage->setToolTip(tr("Displays the about dialog"));
+        d->m_AboutPage->setIcon(QIcon(":/CoreWindow/app.png"));
+        d->m_AboutPage->setIconVisibleInMenu(true);
+        connect(d->m_AboutPage, SIGNAL(triggered()), d.data(), SLOT(aboutDialog()));
 
         /* Check the object pool for anything we should manage */
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
@@ -149,7 +142,6 @@ WindowManagerPrivate::WindowManagerPrivate() :
     m_Initialized(false),
     m_AboutPage(NULL)
 {
-    m_AboutPage = new QAction(q);
 }
 
 void WindowManagerPrivate::aboutDialog()

@@ -74,8 +74,6 @@ public:
     void addCentralWidget(QWidget *widget, int priority = 128, QString title = QString(), QIcon icon = QIcon());
     void removeCentralWidget(QWidget *widget);
 
-    QList<QAction*> allActions();
-
     /* BEGIN ISettingPageFactory */
     QIcon settingPageIcon();
     QString settingPageName();
@@ -95,8 +93,6 @@ protected:
     void initActions();
 
     void updateWindowTitle();
-
-    QList<QAction*> allActions(QList<QAction *> actions);
 
     void addNotificationWidget(QWidget *notificationWidget);
 
