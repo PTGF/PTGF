@@ -44,8 +44,6 @@
 #  include <QDebug>
 #endif
 
-//#include <typeinfo>
-//#include <QtDebug>
 
 namespace Core {
 namespace CoreWindow {

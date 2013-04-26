@@ -47,8 +47,9 @@ class ConsoleWidget;
 namespace Core {
 namespace NotificationManager {
 
-class NotificationManagerPrivate
+class NotificationManagerPrivate : public QObject
 {
+    Q_OBJECT
     DECLARE_PUBLIC(NotificationManager)
 
 public:
@@ -58,12 +59,15 @@ public:
     void writeToLogFile(const int &level, QString message);
 
     NotificationWidget *notify(const QString &text,
-                               NotificationWidget::Icon icon = NotificationWidget::NoIcon,
+                               NotificationWidget::Icon icon,
                                NotificationWidget::StandardButtons buttons = NotificationWidget::NoButton,
-                               const QObject *reciever = 0, const char *member = 0);
+                               const QObject *receiver = 0, const char *member = 0);
 
 protected:
     static void qMessageHandler(QtMsgType type, const char *message);
+
+protected slots:
+    void removeNotificationWidget();
 
 private:
     bool m_Initialized;
@@ -74,6 +78,8 @@ private:
     QTextStream m_StdError;
 
     ConsoleWidget *m_ConsoleWidget;
+
+    QList<NotificationWidget *> m_NotificationWidgets;
 };
 
 } // namespace NotificationManager

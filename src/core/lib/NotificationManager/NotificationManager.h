@@ -53,7 +53,7 @@ public:
     NotificationWidget *notify(const QString &text,
                                NotificationWidget::Icon icon = NotificationWidget::NoIcon,
                                NotificationWidget::StandardButtons buttons = NotificationWidget::NoButton,
-                               const QObject *reciever = 0, const char *member = 0);
+                               const QObject *receiver = 0, const char *member = 0);
 
 protected:
 

@@ -77,12 +77,12 @@ NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardB
    \param text
    \param icon
    \param buttons
-   \param reciever
+   \param receiver
    \param member
    \param parent
  */
 NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardButtons buttons,
-                                  const QObject *reciever, const char *member, QWidget *parent) :
+                                  const QObject *receiver, const char *member, QWidget *parent) :
     QFrame(parent),
     d(new NotificationWidgetPrivate)
 {
@@ -93,8 +93,8 @@ NotificationWidget::NotificationWidget(const QString &text, Icon icon, StandardB
     setText(text);
     setStandardButtons(buttons);
 
-    if(reciever && member) {
-        connect(this, SIGNAL(buttonClicked(StandardButton)), reciever, member);
+    if(receiver && member) {
+        connect(this, SIGNAL(buttonClicked(StandardButton)), receiver, member);
     }
 }
 
@@ -353,6 +353,7 @@ void NotificationWidget::timerEvent(QTimerEvent *event)
         close();
 
         event->accept();
+        return;
 
     } else if(event->timerId() == d->m_FadeoutTimerId) {
         // Animate the closing of the widget
@@ -365,6 +366,8 @@ void NotificationWidget::timerEvent(QTimerEvent *event)
             QFrame::close();
         }
         event->accept();
+        return;
+
     }
 
     QFrame::timerEvent(event);

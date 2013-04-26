@@ -103,7 +103,7 @@ public:
     explicit NotificationWidget(QWidget *parent = 0);
     NotificationWidget(const QString &text, Icon icon = NoIcon, StandardButtons buttons = NoButton, QWidget *parent = 0);
     NotificationWidget(const QString &text, Icon icon = NoIcon, StandardButtons buttons = NoButton,
-                       const QObject *reciever = NULL, const char *member = NULL, QWidget *parent = 0);
+                       const QObject *receiver = NULL, const char *member = NULL, QWidget *parent = 0);
     ~NotificationWidget();
 
     QString text() const;

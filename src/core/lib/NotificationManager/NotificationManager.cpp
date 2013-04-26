@@ -160,15 +160,22 @@ void NotificationManager::writeToLogFile(const int &level, QString message)
 /*!
    \fn NotificationManager::notify()
    \brief Notification of event displayed in CoreWindow
+
+   If an identical notification already exists, it will be returned. This means that the same
+   NotificationWidget can be returned under different calls to this function.  Do not take ownership,
+   or delete the widget manually, it will screw things up!
+
+   If the same widget is returned, and a timeout has been set, the timer will be restarted.
+
    \returns NotificationWidget, which is owned and destroyed by CoreWindow
    \todo better documentation
  */
 NotificationWidget *NotificationManager::notify(const QString &text,
                                                 NotificationWidget::Icon icon,
                                                 NotificationWidget::StandardButtons buttons,
-                                                const QObject *reciever, const char *member)
+                                                const QObject *receiver, const char *member)
 {
-    return d->notify(text, icon, buttons, reciever, member);
+    return d->notify(text, icon, buttons, receiver, member);
 }
 
 
@@ -253,19 +260,44 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
     }
 }
 
-NotificationWidget *NotificationManagerPrivate::notify(const QString &text,
-                                       NotificationWidget::Icon icon,
-                                       NotificationWidget::StandardButtons buttons,
-                                       const QObject *reciever, const char *member)
+void NotificationManagerPrivate::removeNotificationWidget()
 {
-#ifdef COREWINDOW_DEBUG
-    qDebug() << __FILE__ << __LINE__ << "\tCoreWindow::notify";
-#endif
+    if(NotificationWidget *nw = qobject_cast<NotificationWidget *>(sender())) {
+        m_NotificationWidgets.removeAll(nw);
+    }
+}
 
+NotificationWidget *NotificationManagerPrivate::notify(const QString &text,
+                                                       NotificationWidget::Icon icon,
+                                                       NotificationWidget::StandardButtons buttons,
+                                                       const QObject *receiver, const char *member)
+{
     CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
 
+    foreach(NotificationWidget *nw, m_NotificationWidgets) {
+        if( nw->text().compare(text, Qt::CaseInsensitive) == 0
+                && nw->icon() == icon
+                && nw->standardButtons() == buttons ) {
+
+            if(nw->timeoutInterval() > 0) {    // Reset the timer if necessary
+                nw->setTimeoutInterval(nw->timeoutInterval());
+            }
+
+            if(receiver && member) {
+                connect(nw, SIGNAL(buttonClicked(NotificationWidget::StandardButton)), receiver, member);
+            }
+
+            return nw;
+        }
+    }
+
+
     NotificationWidget *notificationWidget =
-            new NotificationWidget(text, icon, buttons, reciever, member, &coreWindow);
+            new NotificationWidget(text, icon, buttons, receiver, member, &coreWindow);
+
+    m_NotificationWidgets.append(notificationWidget);
+    connect(notificationWidget, SIGNAL(closing()), this, SLOT(removeNotificationWidget()));
+    connect(notificationWidget, SIGNAL(destroyed()), this, SLOT(removeNotificationWidget()));
 
     coreWindow.addNotificationWidget(notificationWidget);
     notificationWidget->setFocus();
