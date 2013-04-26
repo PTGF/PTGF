@@ -122,12 +122,18 @@ public:
     QPushButton *button(StandardButton button) const;
     QList<QAbstractButton *> buttons() const;
 
+    int timeoutInterval() const;
+    void setTimeoutInterval(const int &msec);
+
+    bool close();
+
 signals:
     void buttonClicked(StandardButton standardButton);
     void closing();
 
 protected:
     virtual void keyReleaseEvent(QKeyEvent *event);
+    virtual void timerEvent(QTimerEvent *event);
 
 protected slots:
     void on_buttonBox_clicked(QAbstractButton *button);

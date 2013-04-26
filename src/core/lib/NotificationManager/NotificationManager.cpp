@@ -40,15 +40,17 @@ namespace NotificationManager {
 
 /***** PUBLIC IMPLEMENTATION *****/
 
-/*! \class NotificationManager
-    \brief Manages notifications displayed in the CoreWindow and logged events
-    \todo better documentation
+/*!
+   \class NotificationManager
+   \brief Manages notifications displayed in the CoreWindow and logged events
+   \todo better documentation
  */
 
 
-/*! \fn NotificationManager::instance()
-    \brief Accessor to singleton instance
-    \todo better documentation
+/*!
+   \fn NotificationManager::instance()
+   \brief Accessor to singleton instance
+   \todo better documentation
  */
 NotificationManager &NotificationManager::instance()
 {
@@ -57,7 +59,9 @@ NotificationManager &NotificationManager::instance()
 }
 
 
-/*! \internal
+/*!
+   \internal
+   \brief NotificationManager::NotificationManager
  */
 NotificationManager::NotificationManager() :
     d(new NotificationManagerPrivate)
@@ -65,14 +69,19 @@ NotificationManager::NotificationManager() :
     d->q = this;
 }
 
-/*! \internal
+/*!
+   \internal
+   \brief NotificationManager::~NotificationManager
  */
 NotificationManager::~NotificationManager()
 {
 }
 
 
-/*! \internal
+/*!
+   \internal
+   \brief NotificationManager::initialize
+   \return
  */
 bool NotificationManager::initialize()
 {
@@ -120,7 +129,9 @@ bool NotificationManager::initialize()
     return d->m_Initialized = true;
 }
 
-/*! \internal
+/*!
+   \internal
+   \brief NotificationManager::shutdown
  */
 void NotificationManager::shutdown()
 {
@@ -136,19 +147,21 @@ void NotificationManager::shutdown()
 }
 
 
-/*! \fn NotificationManager::writeToLogFile()
-    \brief Writes message to log file
-    \todo better documentation
+/*!
+   \fn NotificationManager::writeToLogFile()
+   \brief Writes message to log file
+   \todo better documentation
  */
 void NotificationManager::writeToLogFile(const int &level, QString message)
 {
     d->writeToLogFile(level, message);
 }
 
-/*! \fn NotificationManager::notify()
-    \brief Notification of event displayed in CoreWindow
-    \returns NotificationWidget, which is owned and destroyed by CoreWindow
-    \todo better documentation
+/*!
+   \fn NotificationManager::notify()
+   \brief Notification of event displayed in CoreWindow
+   \returns NotificationWidget, which is owned and destroyed by CoreWindow
+   \todo better documentation
  */
 NotificationWidget *NotificationManager::notify(const QString &text,
                                                 NotificationWidget::Icon icon,
@@ -217,7 +230,7 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
     case QtWarningMsg:
         msg = q->tr("Warning: %1").arg(message);
         level = (int)QtWarningMsg;
-        q->notify(msg, NotificationWidget::Warning);
+        q->notify(msg, NotificationWidget::Warning)->setTimeoutInterval(5000);
         break;
     case QtCriticalMsg:
         msg = q->tr("Critical: %1").arg(message);

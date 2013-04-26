@@ -56,6 +56,11 @@ private:
     NotificationWidget::Icon m_Icon;
     QDialogButtonBox *m_ButtonBox;
     QToolButton *m_CloseButton;
+
+    int m_TimeoutInterval;
+    int m_TimeoutTimerId;
+
+    int m_FadeoutTimerId;
 };
 
 } // namespace CoreWindow
