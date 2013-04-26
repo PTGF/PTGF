@@ -31,6 +31,7 @@
 #include <QMovie>
 #include <QToolButton>
 #include <QKeyEvent>
+#include <QProgressBar>
 
 #include <QDebug>
 
@@ -337,6 +338,57 @@ void NotificationWidget::setTimeoutInterval(const int &msec)
     }
 }
 
+/*!
+   \fn NotificationWidget::progress
+   \brief This property holds the progress bar's current value.
+   \return
+ */
+int NotificationWidget::progress() const
+{
+    if(!d->m_ProgressBar) {
+        return -1;
+    }
+
+    return d->m_ProgressBar->value();
+
+}
+
+/*!
+   \fn NotificationWidget::setProgress
+   \brief Setting a progress value will add a progress bar to the notification widget.
+
+   Progress bar will be displayed on the left side of the widget.
+
+   Progress can be a value from 0 to 100.  Attempting to change the current value to above the maximum range
+   has no effect on the current value.  Setting the value to below the minimum will remove the progress bar.
+
+   \note To remove the progress bar, set the value to less than zero.
+
+   \param progress
+ */
+void NotificationWidget::setProgress(const int &progress)
+{
+    if(progress < 0) {
+        if(d->m_ProgressBar) {
+            d->m_Layout->removeWidget(d->m_ProgressBar);
+            d->m_ProgressBar->deleteLater();
+            d->m_ProgressBar = NULL;
+        }
+        return;
+    }
+
+    if(!d->m_ProgressBar) {
+        d->m_ProgressBar = new QProgressBar(this);
+        d->m_ProgressBar->setTextVisible(false);
+        d->m_ProgressBar->setMaximumSize(75, 15);
+        d->m_ProgressBar->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        d->m_Layout->insertWidget(0, d->m_ProgressBar);
+    }
+
+    d->m_ProgressBar->setValue(progress);
+}
+
+
 
 /*!
    \internal
@@ -402,11 +454,13 @@ void NotificationWidget::keyReleaseEvent(QKeyEvent *event)
 
 NotificationWidgetPrivate::NotificationWidgetPrivate() :
     q(NULL),
+    m_Layout(NULL),
     m_Label(NULL),
     m_IconLabel(NULL),
     m_Icon(NotificationWidget::NoIcon),
     m_ButtonBox(NULL),
     m_CloseButton(NULL),
+    m_ProgressBar(NULL),
     m_TimeoutInterval(0),
     m_TimeoutTimerId(-1),
     m_FadeoutTimerId(-1)
@@ -421,26 +475,27 @@ void NotificationWidgetPrivate::setupUi()
 
     q->setStyleSheet("QFrame { background-color: rgb(255,255,225); }");
 
-    QHBoxLayout *layout = new QHBoxLayout(q);
-    layout->setContentsMargins(9,0,9,0);
-    layout->setMargin(0);
-    q->setLayout(layout);
+    m_Layout = new QHBoxLayout(q);
+    m_Layout->setContentsMargins(9,0,9,0);
+    m_Layout->setMargin(0);
+    q->setLayout(m_Layout);
 
     m_IconLabel = new QLabel(q);
     m_IconLabel->setMaximumHeight(16);
     m_IconLabel->setMaximumWidth(16);
     m_IconLabel->setScaledContents(true);
-    layout->addWidget(m_IconLabel);
+    m_Layout->addWidget(m_IconLabel);
 
     m_Label = new QLabel(q);
     m_Label->setWordWrap(true);
-    layout->addWidget(m_Label);
+    m_Label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+    m_Layout->addWidget(m_Label);
 
     m_ButtonBox = new QDialogButtonBox(q);
     m_ButtonBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_ButtonBox->setMaximumHeight(16);
     q->connect(m_ButtonBox, SIGNAL(clicked(QAbstractButton*)), q, SLOT(on_buttonBox_clicked(QAbstractButton*)));
-    layout->addWidget(m_ButtonBox);
+    m_Layout->addWidget(m_ButtonBox);
 
     m_CloseButton = new QToolButton(q);
     m_CloseButton->setMaximumHeight(16);
@@ -448,7 +503,7 @@ void NotificationWidgetPrivate::setupUi()
     m_CloseButton->setAutoRaise(true);
     m_CloseButton->setIcon(QIcon(":/CoreWindow/notificationClose.svg"));
     q->connect(m_CloseButton, SIGNAL(clicked()), q, SLOT(on_closeButton_clicked()));
-    layout->addWidget(m_CloseButton);
+    m_Layout->addWidget(m_CloseButton);
 
     q->setFocusPolicy(Qt::StrongFocus);
     q->setFocus();

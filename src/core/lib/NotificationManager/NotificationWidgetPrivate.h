@@ -37,6 +37,9 @@
 #include "Global.h"
 #include "NotificationWidget.h"
 
+class QProgressBar;
+class QHBoxLayout;
+
 namespace Core {
 namespace NotificationManager {
 
@@ -51,11 +54,13 @@ protected:
     void setupUi();
 
 private:
+    QHBoxLayout *m_Layout;
     QLabel *m_Label;
     QLabel *m_IconLabel;
     NotificationWidget::Icon m_Icon;
     QDialogButtonBox *m_ButtonBox;
     QToolButton *m_CloseButton;
+    QProgressBar *m_ProgressBar;
 
     int m_TimeoutInterval;
     int m_TimeoutTimerId;

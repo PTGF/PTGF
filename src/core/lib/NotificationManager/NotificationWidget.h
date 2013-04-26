@@ -125,6 +125,9 @@ public:
     int timeoutInterval() const;
     void setTimeoutInterval(const int &msec);
 
+    int progress() const;
+    void setProgress(const int &progress);
+
     bool close();
 
 signals:
