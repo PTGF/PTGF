@@ -307,7 +307,8 @@ bool NotificationWidget::close()
 
 
 /*!
-   \brief NotificationWidget::timeoutInterval
+   \fn NotificationWidget::timeoutInterval
+   \brief  This property holds the timeout interval
    \return The interval value that was set for the timeout timer
    \sa setTimeoutInterval
  */

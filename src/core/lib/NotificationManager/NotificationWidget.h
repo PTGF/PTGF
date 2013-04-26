@@ -46,6 +46,8 @@ class NotificationWidget : public QFrame
     Q_PROPERTY(Icon icon READ icon WRITE setIcon)
     Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap)
     Q_PROPERTY(StandardButtons standardButtons READ standardButtons WRITE setStandardButtons)
+    Q_PROPERTY(int timeoutInterval READ timeoutInterval WRITE setTimeoutInterval)
+    Q_PROPERTY(int progress READ progress WRITE setProgress)
 
     DECLARE_PRIVATE(NotificationWidget)
 
