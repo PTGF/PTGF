@@ -38,7 +38,7 @@ namespace NotificationManager {
 
 class NotificationWidgetPrivate;
 
-class NotificationWidget : public QFrame
+class NOTIFICATIONMANAGER_EXPORT NotificationWidget : public QFrame
 {
     Q_OBJECT
 

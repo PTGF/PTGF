@@ -139,7 +139,7 @@ settingManagerHeaders.files = SettingManager/SettingManagerLibrary.h SettingMana
 INSTALLS += settingManagerHeaders
 
 actionManagerHeaders.path = /include/core/lib/ActionManager
-actionManagerHeaders.files = ActionManager/ActionManagerLibrary.h ActionManager/ActionManager.h
+actionManagerHeaders.files = ActionManager/ActionManagerLibrary.h ActionManager/ActionManager.h ActionManager/Context.h ActionManager/Menu.h
 INSTALLS += actionManagerHeaders
 
 prettyWidgetsHeaders.path = /include/core/lib/PrettyWidgets
