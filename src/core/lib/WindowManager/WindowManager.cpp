@@ -24,6 +24,7 @@
 #include "WindowManagerPrivate.h"
 
 #include <QMenuBar>
+#include <QDebug>
 
 #include <CoreWindow/CoreWindow.h>
 #include <ActionManager/ActionManager.h>
@@ -146,15 +147,14 @@ WindowManagerPrivate::WindowManagerPrivate() :
 
 void WindowManagerPrivate::aboutDialog()
 {
-//    try {
+    try {
         AboutDialog aboutDialog;
         aboutDialog.exec();
-//    } catch(QString err) {
-//        Core::CoreWindow::CoreWindow::instance().notify(tr("Failed to open about dialog: %1").arg(err), NotificationWidget::Critical);
-//    } catch(...) {
-//        using namespace Core::CoreWindow;
-//        Core::CoreWindow::CoreWindow::instance().notify(tr("Failed to open about dialog."), NotificationWidget::Critical);
-//    }
+    } catch(QString err) {
+        qCritical() << tr("Failed to open about dialog: %1").arg(err);
+    } catch(...) {
+        qCritical() << tr("Failed to open about dialog.");
+    }
 }
 
 void WindowManagerPrivate::pluginObjectRegistered(QObject *object)
