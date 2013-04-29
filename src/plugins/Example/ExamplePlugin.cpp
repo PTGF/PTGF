@@ -79,4 +79,6 @@ QList<Core::PluginManager::Dependency> ExamplePlugin::dependencies()
 } // namespace Example
 } // namespace Plugins
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN(Plugins::Example::ExamplePlugin)
+#endif

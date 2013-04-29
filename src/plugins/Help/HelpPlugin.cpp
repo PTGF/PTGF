@@ -1,5 +1,8 @@
 #include "HelpPlugin.h"
 
+#include <QHelpEngine>
+#include <QApplication>
+
 #include <PluginManager/PluginManager.h>
 #include <CoreWindow/CoreWindow.h>
 
@@ -119,4 +122,6 @@ Core::SettingManager::ISettingPage *HelpPlugin::createSettingPage()
 } // namespace Help
 } // namespace Plugins
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN(Plugins::Help::HelpPlugin)
+#endif

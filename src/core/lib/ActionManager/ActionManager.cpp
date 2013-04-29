@@ -27,9 +27,6 @@
 #include <QShortcut>
 #include <QMenu>
 
-#include <private/qshortcutmap_p.h>
-#include <private/qapplication_p.h>
-
 #include <CoreWindow/CoreWindow.h>
 
 #ifdef ACTIONMANAGER_DEBUG

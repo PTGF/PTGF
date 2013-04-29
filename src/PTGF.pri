@@ -29,6 +29,7 @@ defineTest(qtVer) {
         }
         greaterThan(QT_MINOR_VERSION, $$2) : return(true)
     }
+    greaterThan(QT_MAJOR_VERSION, $$1) : return(true)
     return(false)
 }
 !qtVer(4,6,0): error(This application requires at least Qt version 4.6.0)
@@ -37,7 +38,12 @@ defineTest(qtVer) {
 # QMAKE INFORMATION #
 #####################
 CONFIG -= debug_and_release
-QT += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += core gui widgets
+} else {
+    QT += core gui
+}
 
 APPLICATION_TARGET = PTGF
 
@@ -48,7 +54,7 @@ VER_MAJ      = 0
 VER_MIN      = 3
 VER_PAT      = 0
 VERSION      = $${VER_MAJ}.$${VER_MIN}.$${VER_PAT}
-DEFINES     += VER_MAJ VER_MIN VER_PAT VERSION
+DEFINES     += 'VER_MAJ=$${VER_MAJ}' 'VER_MIN=$${VER_MIN}' 'VER_PAT=$${VER_PAT}' 'VERSION=$${VERSION}'
 
 #################
 # INSTALL PATHS #

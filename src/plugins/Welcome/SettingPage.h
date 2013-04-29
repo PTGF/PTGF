@@ -24,8 +24,6 @@
 #ifndef WELCOMESETTINGPAGE_H
 #define WELCOMESETTINGPAGE_H
 
-#include <QtCore>
-#include <QtGui>
 #include <SettingManager/ISettingPage.h>
 
 namespace Plugins {

@@ -111,4 +111,6 @@ Core::SettingManager::ISettingPage *WelcomePlugin::createSettingPage()
 } // namespace Welcome
 } // namespace Plugins
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN(Plugins::Welcome::WelcomePlugin)
+#endif

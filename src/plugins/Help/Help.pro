@@ -37,8 +37,10 @@ FORMS            += Settings/SettingPage.ui
 
 RESOURCES        += Resources/HelpResources.qrc
 
-QT               +=
-
-CONFIG	         += help
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT     += help
+} else {
+    CONFIG += help
+}
 
 #debug: DEFINES   += HELP_DEBUG

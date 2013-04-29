@@ -1,5 +1,13 @@
 #include "HelpWidget.h"
 
+#include <QDesktopServices>
+#include <QVBoxLayout>
+#include <QHelpEngine>
+#include <QHelpContentWidget>
+#include <QHelpIndexWidget>
+#include <QHelpSearchQueryWidget>
+#include <QHelpSearchResultWidget>
+
 #include <CoreWindow/CoreWindow.h>
 
 #include "HelpBrowser.h"

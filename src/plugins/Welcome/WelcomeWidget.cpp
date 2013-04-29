@@ -24,6 +24,11 @@
 #include "WelcomeWidget.h"
 #include "ui_WelcomeWidget.h"
 
+#include <QDesktopServices>
+#include <QDateTime>
+#include <QScrollArea>
+#include <QCommandLinkButton>
+
 #include <PluginManager/PluginManager.h>
 #include <SettingManager/SettingManager.h>
 
@@ -31,7 +36,7 @@
 #include "RssReaderWidget.h"
 
 #ifdef QT_DEBUG
-    #include <QtDebug>
+    #include <QDebug>
 #endif
 
 namespace Plugins {

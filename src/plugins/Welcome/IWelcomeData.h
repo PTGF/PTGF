@@ -24,8 +24,9 @@
 #ifndef IWELCOMEDATA_H
 #define IWELCOMEDATA_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QObject>
+#include <QList>
+#include <QUrl>
 
 #include "WelcomeLibrary.h"
 
@@ -83,7 +84,12 @@ public:
 } // namespace Welcome
 } // namespace Plugins
 
+#if QT_VERSION >= 0x050000
+Q_DECLARE_INTERFACE(Plugins::Welcome::IWelcomeData, "org.krellinst.ptgf.IWelcomeData")
+#else
 #define IWELCOMEDATA_VERSION "org.krellinst.ptgf.IWelcomeData/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Plugins::Welcome::IWelcomeData, IWELCOMEDATA_VERSION)
+#endif
+
 
 #endif // IWELCOMEDATA_H

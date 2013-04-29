@@ -64,7 +64,11 @@ public:
                                const QObject *receiver = 0, const char *member = 0);
 
 protected:
+#if QT_VERSION >= 0x050000
+    static void qMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message);
+#else
     static void qMessageHandler(QtMsgType type, const char *message);
+#endif
 
 protected slots:
     void removeNotificationWidget();

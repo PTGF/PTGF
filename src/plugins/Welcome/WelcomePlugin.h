@@ -24,7 +24,6 @@
 #ifndef WELCOMEPLUGIN_H
 #define WELCOMEPLUGIN_H
 
-#include <QtCore>
 #include <PluginManager/IPlugin.h>
 #include <SettingManager/ISettingPageFactory.h>
 
@@ -37,6 +36,11 @@ class WelcomePlugin :
         public Core::SettingManager::ISettingPageFactory
 {
     Q_OBJECT
+
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.WelcomePlugin")
+#endif
+
     Q_INTERFACES(Core::PluginManager::IPlugin)
     Q_INTERFACES(Core::SettingManager::ISettingPageFactory)
 

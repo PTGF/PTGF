@@ -23,7 +23,12 @@
 
 #include "NotificationManagerPrivate.h"
 
-#include <QDesktopServices>
+#if QT_VERSION >= 0x050000
+#  include <QStandardPaths>
+#else
+#  include <QDesktopServices>
+#endif
+
 #include <QDockWidget>
 #include <QMenuBar>
 #include <QDateTime>
@@ -113,12 +118,21 @@ bool NotificationManager::initialize()
         actionManager.registerAction(path, dockWidget->toggleViewAction());
 
         // Create log file and register handler for qDebug() messages
+#if QT_VERSION >= 0x050000
+        d->m_LogFile.setFileName(QString("%1/%2.txt")
+                                 .arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation))
+                                 .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
+#else
         d->m_LogFile.setFileName(QString("%1/%2.txt")
                                  .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
                                  .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
+#endif
 
+#if QT_VERSION >= 0x050000
+        qInstallMessageHandler(d->qMessageHandler);
+#else
         qInstallMsgHandler(d->qMessageHandler);
-
+#endif
 
         Core::PluginManager::PluginManager::instance().addObject(this);
 
@@ -139,7 +153,11 @@ void NotificationManager::shutdown()
         return;
     }
 
+#if QT_VERSION >= 0x050000
+    qInstallMessageHandler(0);
+#else
     qInstallMsgHandler(0);
+#endif
 
     if(d->m_LogFile.isOpen()) {
         d->m_LogFile.close();
@@ -220,8 +238,16 @@ void NotificationManagerPrivate::writeToLogFile(const int &level, QString messag
     }
 }
 
+#if QT_VERSION >= 0x050000
+void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
+#else
 void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *message)
+#endif
 {
+#if QT_VERSION >= 0x050000
+    Q_UNUSED(context)
+#endif
+
     QString msg;
     int level = 0;
 

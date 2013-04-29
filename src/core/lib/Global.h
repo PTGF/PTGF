@@ -28,7 +28,8 @@
 #include <QScopedPointer>
 
 #ifndef STRINGIFY
-#define STRINGIFY(X) # X
+#define STRINGIFY2(X) #X
+#define STRINGIFY(X) STRINGIFY2(X)
 #endif
 
 #define DECLARE_PRIVATE(Class) \

@@ -24,16 +24,20 @@
 #ifndef EXAMPLEPLUGIN_H
 #define EXAMPLEPLUGIN_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QObject>
 #include <PluginManager/IPlugin.h>
 
 namespace Plugins {
 namespace Example {
 
 class ExamplePlugin : public QObject, public Core::PluginManager::IPlugin {
-Q_OBJECT
-Q_INTERFACES(Core::PluginManager::IPlugin)
+    Q_OBJECT
+
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.ExamplePlugin")
+#endif
+
+    Q_INTERFACES(Core::PluginManager::IPlugin)
 
 public:
     ExamplePlugin();

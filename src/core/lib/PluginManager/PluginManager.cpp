@@ -39,7 +39,7 @@
 #include "PluginWrapper.h"
 
 #ifdef PLUGINMANAGER_DEBUG
-  #include <QtDebug>
+  #include <QDebug>
 #endif
 
 namespace Core {

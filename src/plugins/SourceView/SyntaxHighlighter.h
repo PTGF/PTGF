@@ -24,8 +24,7 @@
 #ifndef SYNTAXHIGHLIGHTER_H
 #define SYNTAXHIGHLIGHTER_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QSyntaxHighlighter>
 
 namespace Plugins {
 namespace SourceView {

@@ -24,8 +24,6 @@
 #ifndef HELPSETTINGPAGE_H
 #define HELPSETTINGPAGE_H
 
-#include <QtCore>
-#include <QtGui>
 #include <SettingManager/ISettingPage.h>
 
 namespace Plugins {

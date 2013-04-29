@@ -1,7 +1,11 @@
 #include "HelpBrowser.h"
 
+#include <QHelpEngine>
+#include <QToolBar>
+#include <QAction>
+
 #ifdef QT_DEBUG
-    #include <QtDebug>
+    #include <QDebug>
 #endif
 
 namespace Plugins {

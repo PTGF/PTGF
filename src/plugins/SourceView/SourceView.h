@@ -24,8 +24,13 @@
 #ifndef SOURCEVIEW_H
 #define SOURCEVIEW_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QPlainTextEdit>
+#include <QSize>
+#include <QColor>
+
+class QPaintEvent;
+class QResizeEvent;
+class QEvent;
 
 #include "SourceViewLibrary.h"
 

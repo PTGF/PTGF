@@ -24,8 +24,7 @@
 #ifndef SOURCEVIEWPLUGINasdf_H
 #define SOURCEVIEWPLUGINasdf_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QObject>
 
 #include <PluginManager/IPlugin.h>
 
@@ -40,6 +39,11 @@ class SourceViewPlugin :
         public Plugins::SourceView::ISourceViewFactory
 {
     Q_OBJECT
+
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.SourceViewPlugin")
+#endif
+
     Q_INTERFACES(Core::PluginManager::IPlugin)
     Q_INTERFACES(Plugins::SourceView::ISourceViewFactory)
 

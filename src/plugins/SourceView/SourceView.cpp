@@ -23,8 +23,15 @@
 
 #include "SourceView.h"
 
+
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QEvent>
+#include <QPainter>
+#include <QToolTip>
+
 #ifdef QT_DEBUG
-#include <QtDebug>
+#include <QDebug>
 #endif
 
 #include "SyntaxHighlighter.h"

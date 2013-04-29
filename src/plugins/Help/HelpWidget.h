@@ -1,9 +1,10 @@
 #ifndef HELPWIDGET_H
 #define HELPWIDGET_H
 
-#include <QtCore>
-#include <QtGui>
-#include <QtHelp>
+#include <QSplitter>
+#include <QTabWidget>
+#include <QUrl>
+class QHelpEngine;
 
 namespace Plugins {
 namespace Help {

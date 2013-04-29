@@ -129,4 +129,6 @@ SourceView *SourceViewPlugin::sourceViewWidget(const QString &text)
 } // namespace SourceView
 } // namespace Plugins
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN(Plugins::SourceView::SourceViewPlugin)
+#endif

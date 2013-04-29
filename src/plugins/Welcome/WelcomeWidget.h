@@ -24,8 +24,9 @@
 #ifndef WELCOMEWIDGET_H
 #define WELCOMEWIDGET_H
 
-#include <QtCore>
-#include <QtGui>
+#include <QWidget>
+#include <QSignalMapper>
+#include <QUrl>
 
 namespace Plugins {
 namespace Welcome {

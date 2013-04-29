@@ -47,7 +47,12 @@ public:
 } // namespace SettingManager
 } // namespace Core
 
+
+#if QT_VERSION >= 0x050000
+Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPageFactory, "org.krellinst.ptgf.ISettingPageFactory")
+#else
 #define ISETTINGPAGEFACTORY_VERSION "org.krellinst.ptgf.ISettingPageFactory/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Core::SettingManager::ISettingPageFactory, ISETTINGPAGEFACTORY_VERSION)
+#endif
 
 #endif // CORE_SETTINGMANAGER_ISETTINGPAGEFACTORY_H

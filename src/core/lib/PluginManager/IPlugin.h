@@ -61,7 +61,12 @@ public:
 } // namespace PluginManager
 } // namespace Core
 
+
+#if QT_VERSION >= 0x050000
+Q_DECLARE_INTERFACE(Core::PluginManager::IPlugin, "org.krellinst.ptgf.IPlugin")
+#else
 #define IPLUGIN_VERSION "org.krellinst.ptgf.IPlugin/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
 Q_DECLARE_INTERFACE(Core::PluginManager::IPlugin, IPLUGIN_VERSION)
+#endif
 
 #endif // CORE_PLUGINMANAGER_IPLUGIN_H

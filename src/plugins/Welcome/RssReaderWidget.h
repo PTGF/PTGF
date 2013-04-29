@@ -24,9 +24,13 @@
 #ifndef RSSREADERWIDGET_H
 #define RSSREADERWIDGET_H
 
-#include <QtCore>
-#include <QtGui>
-#include <QtNetwork>
+
+#include <QWidget>
+#include <QSignalMapper>
+#include <QUrl>
+#include <QSslError>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 
 namespace Plugins {
@@ -57,7 +61,6 @@ private:
     QList<QNetworkReply *> m_Replies;
 
     QSignalMapper m_UrlMapper;
-
 
 };
 

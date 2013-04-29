@@ -1,9 +1,9 @@
 #ifndef HELPPLUGIN_H
 #define HELPPLUGIN_H
 
-#include <QtCore>
-#include <QtGui>
-#include <QtHelp>
+#include <QObject>
+class QHelpEngine;
+
 #include <PluginManager/IPlugin.h>
 #include <SettingManager/ISettingPageFactory.h>
 
@@ -16,6 +16,11 @@ class HelpPlugin :
         public Core::SettingManager::ISettingPageFactory
 {
     Q_OBJECT
+
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.HelpPlugin")
+#endif
+
     Q_INTERFACES(Core::PluginManager::IPlugin)
     Q_INTERFACES(Core::SettingManager::ISettingPageFactory)
 

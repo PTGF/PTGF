@@ -33,7 +33,7 @@
 #include "ISettingPageFactory.h"
 
 #ifdef QT_DEBUG
-    #include <QtDebug>
+    #include <QDebug>
 #endif
 
 namespace Core {
