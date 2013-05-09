@@ -24,6 +24,9 @@
 #include "PluginSettingPage.h"
 #include "ui_PluginSettingPage.h"
 
+#include <QDebug>
+#include <QFileDialog>
+
 #include <SettingManager/SettingManager.h>
 #include "PluginManagerPrivate.h"
 
@@ -189,6 +192,16 @@ void PluginSettingPage::buildTree(QList<PluginWrapper *> plugins)
         m_Plugins.append(item);
     }
 }
+
+
+void PluginSettingPage::on_btnPluginPath_clicked()
+{
+    QString filePath = QFileDialog::getExistingDirectory(this, tr("Use Plugin Path"), qApp->applicationDirPath());
+    if(!filePath.isEmpty()) {
+        ui->txtPluginPath->setText(filePath);
+    }
+}
+
 
 } // namespace PluginManager
 } // namespace Core

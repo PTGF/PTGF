@@ -70,6 +70,9 @@ protected:
     void buildTree(QList<PluginWrapper *> plugins);
     QList<QTreeWidgetItem *> m_Plugins;
 
+protected slots:
+    void on_btnPluginPath_clicked();
+
 private:
     Ui::PluginSettingPage *ui;
 
