@@ -119,7 +119,7 @@ void CoreSettingPage::on_cmbStyle_currentIndexChanged(QString style)
 void CoreSettingPage::on_btnStylesheet_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
-                                                    "Open Stylesheet",
+                                                    tr("Open Stylesheet"),
                                                     QApplication::instance()->applicationDirPath(),
                                                     tr("Stylesheets (*.css)"));
     if(!filePath.isEmpty()) {
