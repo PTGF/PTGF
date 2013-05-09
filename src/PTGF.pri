@@ -22,14 +22,14 @@ PTGF_PRI_INCLUDED = 1
 # QT INFORMATION #
 ##################
 defineTest(qtVer) {
-    isEqual(QT_MAJOR_VERSION, $$1) {
-        isEqual(QT_MINOR_VERSION, $$2) {
-            isEqual(QT_PATCH_VERSION, $$3) : return(true)
-            greaterThan(QT_PATCH_VERSION, $$3) : return(true)
-        }
-        greaterThan(QT_MINOR_VERSION, $$2) : return(true)
-    }
     greaterThan(QT_MAJOR_VERSION, $$1) : return(true)
+    isEqual(QT_MAJOR_VERSION, $$1) {
+        greaterThan(QT_MINOR_VERSION, $$2) : return(true)
+        isEqual(QT_MINOR_VERSION, $$2) {
+            greaterThan(QT_PATCH_VERSION, $$3) : return(true)
+            isEqual(QT_PATCH_VERSION, $$3) : return(true)
+        }
+    }
     return(false)
 }
 !qtVer(4,6,0): error(This application requires at least Qt version 4.6.0)
