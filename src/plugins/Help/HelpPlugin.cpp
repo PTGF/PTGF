@@ -2,6 +2,7 @@
 
 #include <QHelpEngine>
 #include <QApplication>
+#include <QDebug>
 
 #include <PluginManager/PluginManager.h>
 #include <CoreWindow/CoreWindow.h>
@@ -35,7 +36,7 @@ HelpPlugin::HelpPlugin(QObject *parent) :
     QString helpNamespace = "org.krellinst.ptgf";
     if(!m_HelpEngine->registeredDocumentations().contains(helpNamespace) &&
             !m_HelpEngine->registerDocumentation(helpFile)) {
-        qWarning(QString("Registration of help file, \"%1\", failed: %2").arg(helpFile).arg(m_HelpEngine->error()).toLatin1());
+        qWarning() << tr("Registration of help file, \"%1\", failed: %2").arg(helpFile).arg(m_HelpEngine->error());
     }
 #endif
 }
