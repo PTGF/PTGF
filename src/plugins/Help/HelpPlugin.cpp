@@ -18,7 +18,7 @@ HelpPlugin::HelpPlugin(QObject *parent) :
     m_Name = "Help";
     m_Version = QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT);
 
-# ifdef WIN32
+# ifdef Q_OS_WIN
     m_HelpEngine = new QHelpEngine(QString("%1/ptgf/PTGF.qhc").arg(QApplication::instance()->applicationDirPath()));
 # else
     m_HelpEngine = new QHelpEngine(QString("%1/../share/ptgf/PTGF.qhc").arg(QApplication::instance()->applicationDirPath()));
@@ -27,7 +27,7 @@ HelpPlugin::HelpPlugin(QObject *parent) :
     m_HelpEngine->setAutoSaveFilter(false);
 
 #ifdef QT_DEBUG
-# ifdef WIN32
+# ifdef Q_OS_WIN
     QString helpFile = QString("%1/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());
 # else
     QString helpFile = QString("%1/../share/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());

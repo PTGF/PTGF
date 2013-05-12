@@ -35,7 +35,7 @@
 namespace Core {
 namespace PluginManager {
 
-#ifdef WIN32
+#ifdef Q_OS_WIN
     static const QString m_PathSep = ";";
 #else
     static const QString m_PathSep = ":";

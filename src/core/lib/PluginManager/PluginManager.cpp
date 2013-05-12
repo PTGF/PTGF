@@ -80,7 +80,7 @@ namespace PluginManager {
     \brief Emitted immediately after the object is removed from the object pool. */
 
 
-#ifdef WIN32
+#ifdef Q_OS_WIN
     static const QString m_PathSep = ";";
 #else
     static const QString m_PathSep = ":";
@@ -331,7 +331,7 @@ void PluginManagerPrivate::readSettings()
     // If we came up empty-handed, default to a basic location based on the OS
     if(pluginPaths.isEmpty()) {
         QDir pluginPath(QApplication::applicationDirPath());
-#ifdef WIN32
+#ifdef Q_OS_WIN
         pluginPaths << QDir::toNativeSeparators(pluginPath.absolutePath());
 #else
         if(pluginPath.cd("../lib")) {

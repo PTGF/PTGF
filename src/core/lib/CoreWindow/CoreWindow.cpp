@@ -192,7 +192,7 @@ void CoreWindow::readSettings()
 
 
     //FIXME: This should not be hard coded here
-#ifdef WIN32
+#ifdef Q_OS_WIN
     QString filePath = QString("%1/ptgf/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
 #else
     QString filePath = QString("%1/../share/ptgf/StyleSheet.css").arg(QApplication::instance()->applicationDirPath());
