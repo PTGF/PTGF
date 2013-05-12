@@ -33,7 +33,7 @@
 namespace Core {
 namespace PluginManager {
 
-struct Dependency {
+struct PLUGINMANAGER_EXPORT Dependency {
     QString name;
     QString version;
 
