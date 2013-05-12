@@ -18,7 +18,7 @@ class HelpPlugin :
     Q_OBJECT
 
 #if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA("org.krellinst.ptgf.HelpPlugin")
+    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.HelpPlugin")
 #endif
 
     Q_INTERFACES(Core::PluginManager::IPlugin)

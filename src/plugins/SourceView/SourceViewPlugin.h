@@ -41,7 +41,7 @@ class SourceViewPlugin :
     Q_OBJECT
 
 #if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA("org.krellinst.ptgf.SourceViewPlugin")
+    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.SourceViewPlugin")
 #endif
 
     Q_INTERFACES(Core::PluginManager::IPlugin)
