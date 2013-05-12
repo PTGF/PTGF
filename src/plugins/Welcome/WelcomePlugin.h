@@ -38,7 +38,7 @@ class WelcomePlugin :
     Q_OBJECT
 
 #if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.WelcomePlugin")
+    Q_PLUGIN_METADATA("org.krellinst.ptgf.WelcomePlugin")
 #endif
 
     Q_INTERFACES(Core::PluginManager::IPlugin)

@@ -34,7 +34,7 @@ class ExamplePlugin : public QObject, public Core::PluginManager::IPlugin {
     Q_OBJECT
 
 #if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.ExamplePlugin")
+    Q_PLUGIN_METADATA("org.krellinst.ptgf.ExamplePlugin")
 #endif
 
     Q_INTERFACES(Core::PluginManager::IPlugin)
