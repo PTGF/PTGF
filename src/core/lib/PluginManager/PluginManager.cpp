@@ -380,6 +380,17 @@ void PluginManagerPrivate::loadPlugins(QString pluginPath)
 
     QDir pluginDir(pluginPath);
     foreach (QString fileName, pluginDir.entryList(QDir::Files)) {
+
+#ifdef Q_OS_WIN
+        if(!fileName.endsWith(".dll", Qt::CaseInsensitive)) {
+            continue;
+        }
+#else
+        if(!fileName.endsWith(".so", Qt::CaseInsensitive)) {
+            continue;
+        }
+#endif
+
         QString filePath = pluginDir.absoluteFilePath(fileName);
 
         if(QFile::exists(filePath)) {
