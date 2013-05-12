@@ -33,6 +33,7 @@
 #include <QMenuBar>
 #include <QDateTime>
 #include <QDebug>
+#include <QDir>
 
 #include <CoreWindow/CoreWindow.h>
 #include <PluginManager/PluginManager.h>
@@ -114,20 +115,37 @@ bool NotificationManager::initialize()
         coreWindow.addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
 
         ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
-        ActionManager::MenuPath path("Window");
-        actionManager.registerAction(path, dockWidget->toggleViewAction());
+        ActionManager::MenuPath menuPath("Window");
+        actionManager.registerAction(menuPath, dockWidget->toggleViewAction());
 
+
+
+        //
         // Create log file and register handler for qDebug() messages
+        //
+
+        QDir path;
 #if QT_VERSION >= 0x050000
-        d->m_LogFile.setFileName(QString("%1/%2.txt")
-                                 .arg(QStandardPaths::writableLocation(QStandardPaths::DataLocation))
-                                 .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
+        path.setPath(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
 #else
-        d->m_LogFile.setFileName(QString("%1/%2.txt")
-                                 .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
-                                 .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
+        path.setPath(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
 #endif
 
+        // Create the logfile path if need be
+        if(!path.exists()) {
+            if(!path.mkpath(path.path())) {
+                qCritical() << tr("Unable to create path for log files at: \"%1\"").arg(path.path());
+                return false;
+            }
+        }
+
+        // Set the logfile name
+        d->m_LogFile.setFileName(QString("%1/%2.txt")
+                                 .arg(path.path())
+                                 .arg(QDateTime::currentDateTime().toUTC().toString(QString("yyyyMMddhhmmsszzz"))));
+
+
+        // Register with the debugging system
 #if QT_VERSION >= 0x050000
         qInstallMessageHandler(d->qMessageHandler);
 #else
@@ -219,23 +237,28 @@ NotificationManagerPrivate::~NotificationManagerPrivate()
 void NotificationManagerPrivate::writeToLogFile(const int &level, QString message)
 {
     if(!m_LogFile.isOpen()) {
-        m_LogFile.open(QIODevice::Append | QIODevice::Text);
+        if(!m_LogFile.open(QIODevice::Append | QIODevice::Text)) {
+            QString logFileFailMsg = tr("Failed to open log file: %1").arg(m_LogFile.fileName());
+            q->notify(logFileFailMsg, NotificationWidget::Critical);
+            m_StdError << Q_FUNC_INFO << logFileFailMsg;
+        }
+
         m_LogFileStream.setDevice(&m_LogFile);
     }
 
     QDateTime currentTime = QDateTime::currentDateTime().toUTC();
 
+    QString outputString = QString("%1 - %2")
+            .arg(currentTime.toString("yyyy-MM-dd hh:mm:ss.zzz"))
+            .arg(message);
+
     if(m_LogFile.isOpen()) {
-        QString outputString = QString("%1 - %2")
-                .arg(currentTime.toString("yyyy-MM-dd hh:mm:ss.zzz"))
-                .arg(message);
-
         m_LogFileStream << outputString << endl;
-
-        m_StdError << outputString << endl;
-
-        m_ConsoleWidget->messageEvent(level, outputString);
     }
+
+    m_ConsoleWidget->messageEvent(level, outputString);
+    m_StdError << outputString << endl;
+
 }
 
 #if QT_VERSION >= 0x050000
@@ -256,14 +279,13 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
 
     switch (type) {
     case QtDebugMsg:
-
         msg = q->tr("Debug: %1").arg(message);
         level = (int)QtDebugMsg;
         break;
     case QtWarningMsg:
         msg = q->tr("Warning: %1").arg(message);
         level = (int)QtWarningMsg;
-        q->notify(msg, NotificationWidget::Warning)->setTimeoutInterval(5000);
+        q->notify(msg, NotificationWidget::Warning)->setTimeoutInterval(10 * 1000);
         break;
     case QtCriticalMsg:
         msg = q->tr("Critical: %1").arg(message);
