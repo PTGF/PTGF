@@ -60,11 +60,6 @@ signals:
 } // namespace Core
 
 
-#if QT_VERSION >= 0x050000
 Q_DECLARE_INTERFACE(Core::WindowManager::IMainWindow, "org.krellinst.ptgf.IMainWindow")
-#else
-#define IMAINWINDOW_VERSION "org.krellinst.ptgf.IMainWindow/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
-Q_DECLARE_INTERFACE(Core::WindowManager::IMainWindow, IMAINWINDOW_VERSION)
-#endif
 
 #endif // CORE_WINDOWMANAGER_IMAINWINDOW_H

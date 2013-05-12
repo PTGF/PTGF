@@ -42,11 +42,6 @@ public:
 } // namespace Plugins
 
 
-#if QT_VERSION >= 0x050000
 Q_DECLARE_INTERFACE(Plugins::SourceView::ISourceViewFactory, "org.krellinst.ptgf.ISourceViewFactory")
-#else
-#define ISOURCEVIEWFACTORY_VERSION "org.krellinst.ptgf.ISourceViewFactory/" STRINGIFY(VER_MAJ) "." STRINGIFY(VER_MIN)
-Q_DECLARE_INTERFACE(Plugins::SourceView::ISourceViewFactory, ISOURCEVIEWFACTORY_VERSION)
-#endif
 
 #endif // ISOURCEVIEWFACTORY_H
