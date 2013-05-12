@@ -30,9 +30,7 @@
 #include <QDesktopServices>
 #include <QDateTime>
 
-#ifdef QT_DEBUG
-#  include <QDebug>
-#endif
+#include <QDebug>
 
 namespace Plugins {
 namespace Welcome {
