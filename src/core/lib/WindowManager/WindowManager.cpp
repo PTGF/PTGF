@@ -52,7 +52,10 @@ WindowManager::WindowManager() :
     d(new WindowManagerPrivate)
 {
     d->q = this;
+
+#ifndef QT_DEBUG
     AboutDialog::splash();
+#endif
 }
 
 WindowManager::~WindowManager()
