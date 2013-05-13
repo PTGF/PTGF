@@ -30,6 +30,7 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QApplication>
+#include <QDebug>
 
 #include <ActionManager/ActionManager.h>
 #include <SettingManager/SettingManager.h>
@@ -38,9 +39,6 @@
 #include "PluginSettingPage.h"
 #include "PluginWrapper.h"
 
-#ifdef PLUGINMANAGER_DEBUG
-  #include <QDebug>
-#endif
 
 namespace Core {
 namespace PluginManager {
@@ -380,28 +378,13 @@ void PluginManagerPrivate::loadPlugins(QString pluginPath)
 
     QDir pluginDir(pluginPath);
     foreach (QString fileName, pluginDir.entryList(QDir::Files)) {
-
-#ifdef Q_OS_WIN
-        if(!fileName.endsWith(".dll", Qt::CaseInsensitive)) {
-            continue;
-        }
-#else
-        if(!fileName.endsWith(".so", Qt::CaseInsensitive)) {
-            continue;
-        }
-#endif
-
         QString filePath = pluginDir.absoluteFilePath(fileName);
 
-        if(QFile::exists(filePath)) {
-            loadPlugin(filePath);
-
-#ifdef PLUGINMANAGER_DEBUG
-        } else {
-            qWarning() << __FILE__ << __LINE__ << "Ignoring nonexistent plugin file path (which _should_ exist): " << filePath;
-#endif
-
+        if(!(QFile::exists(filePath) && QLibrary::isLibrary(filePath))) {
+            continue;
         }
+
+        loadPlugin(filePath);
     }
 
     initializePlugins();
@@ -426,6 +409,13 @@ void PluginManagerPrivate::loadPlugin(QString filePath)
     QObject *object = pluginLoader.instance();
 
     if(!object) {
+        QString error = pluginLoader.errorString();
+        if(!error.contains("Plugin verification data mismatch") &&
+                !error.contains("is not a valid Qt plugin")) {
+            //! \todo need to show that the plugin failed in the plugin list
+            qCritical() << error;
+        }
+
 #ifdef PLUGINMANAGER_DEBUG
         qDebug() << __FILE__ << __LINE__ << "Not an object (check your $LD_LIBRARY_PATH, it may be failing to load linked libraries):" << filePath;
 #endif
@@ -438,6 +428,8 @@ void PluginManagerPrivate::loadPlugin(QString filePath)
 
     IPlugin *plugin = qobject_cast<IPlugin *>(object);
     if(!plugin) {
+        //! \todo need to show that the plugin failed in the plugin list
+
 #ifdef PLUGINMANAGER_DEBUG
         qDebug() << __FILE__ << __LINE__ << "Not an IPlugin object (is everything defined?):" << filePath;
 #endif
