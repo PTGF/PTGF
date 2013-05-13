@@ -271,7 +271,7 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
     Q_UNUSED(context)
 #endif
 
-    QString msg;
+    QString msg = QString(message);
     int level = 0;
 
     // Static member function requires that we get the singleton pointer directly
@@ -279,22 +279,22 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
 
     switch (type) {
     case QtDebugMsg:
-        msg = q->tr("Debug: %1").arg(message);
         level = (int)QtDebugMsg;
+        msg.prepend(q->tr("Debug: "));
         break;
     case QtWarningMsg:
-        msg = q->tr("Warning: %1").arg(message);
-        level = (int)QtWarningMsg;
         q->notify(msg, NotificationWidget::Warning)->setTimeoutInterval(10 * 1000);
+        level = (int)QtWarningMsg;
+        msg.prepend(q->tr("Warning: "));
         break;
     case QtCriticalMsg:
-        msg = q->tr("Critical: %1").arg(message);
-        level = (int)QtCriticalMsg;
         q->notify(msg, NotificationWidget::Critical);
+        level = (int)QtCriticalMsg;
+        msg.prepend(q->tr("Critical: "));
         break;
     case QtFatalMsg:
-        msg = q->tr("Fatal: %1").arg(message);
         level = (int)QtFatalMsg;
+        msg.prepend(q->tr("Fatal: "));
         break;
     default:
         msg = q->tr("Unknown: %1").arg(message);
