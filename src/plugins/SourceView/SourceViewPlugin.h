@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef SOURCEVIEWPLUGINasdf_H
-#define SOURCEVIEWPLUGINasdf_H
+#ifndef PLUGINS_SOURCEVIEW_SOURCEVIEWPLUGIN_H
+#define PLUGINS_SOURCEVIEW_SOURCEVIEWPLUGIN_H
 
 #include <QObject>
 
@@ -71,4 +71,4 @@ protected:
 } // namespace SourceView
 } // namespace Plugins
 
-#endif // SOURCEVIEWPLUGIN_H
+#endif // PLUGINS_SOURCEVIEW_SOURCEVIEWPLUGIN_H

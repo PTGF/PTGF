@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef SYNTAXHIGHLIGHTER_H
-#define SYNTAXHIGHLIGHTER_H
+#ifndef PLUGINS_SOURCEVIEW_SYNTAXHIGHLIGHTER_H
+#define PLUGINS_SOURCEVIEW_SYNTAXHIGHLIGHTER_H
 
 #include <QSyntaxHighlighter>
 
@@ -56,4 +56,4 @@ private:
 } // namespace SourceView
 } // namespace Plugins
 
-#endif // SYNTAXHIGHLIGHTER_H
+#endif // PLUGINS_SOURCEVIEW_SYNTAXHIGHLIGHTER_H

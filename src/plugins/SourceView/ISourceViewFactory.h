@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ISOURCEVIEWFACTORY_H
-#define ISOURCEVIEWFACTORY_H
+#ifndef PLUGINS_SOURCEVIEW_ISOURCEVIEWFACTORY_H
+#define PLUGINS_SOURCEVIEW_ISOURCEVIEWFACTORY_H
 
 #include "SourceViewLibrary.h"
 #include <QtPlugin>
@@ -44,4 +44,4 @@ public:
 
 Q_DECLARE_INTERFACE(Plugins::SourceView::ISourceViewFactory, "org.krellinst.ptgf.ISourceViewFactory")
 
-#endif // ISOURCEVIEWFACTORY_H
+#endif // PLUGINS_SOURCEVIEW_ISOURCEVIEWFACTORY_H
