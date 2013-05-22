@@ -39,6 +39,21 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 
+###
+### Until we solve the issue with QSqlDatabase being destructed before writing settings to disk,
+### we'll have to keep this section of code disabled
+###
+#greaterThan(QT_MAJOR_VERSION, 4) {
+#    qtHaveModule(sql) {
+#        QT += sql
+#    } else {
+        DEFINES += NO_SQL_MODULE
+#    }
+#} else {
+#    QT += sql
+#}
+
+
 HEADERS +=  Global.h \
             ActionManager/ActionManager.h \
             ActionManager/ActionManagerLibrary.h \

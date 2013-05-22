@@ -31,6 +31,12 @@
 #include <QXmlStreamWriter>
 #endif
 
+#ifndef NO_SQL_MODULE
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#endif
+
 #include <QDebug>
 
 #include <ActionManager/ActionManager.h>
@@ -148,6 +154,11 @@ void SettingManager::setFormatType(const FormatTypes &type)
         break;
 #endif
 
+#ifndef NO_SQLITE_MODULE
+    case FormatType_Sqlite:
+        d->m_Settings = new QSettings(d->m_SqliteFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName(), this);
+        break;
+#endif
 
     }
 
@@ -252,6 +263,10 @@ SettingManagerPrivate::SettingManagerPrivate() :
 
 #ifndef NO_XML_MODULE
     m_XmlFormat = QSettings::registerFormat(QString("xml"), readXmlFile, writeXmlFile, Qt::CaseSensitive);
+#endif
+
+#ifndef NO_SQLITE_MODULE
+    m_SqliteFormat = QSettings::registerFormat("sqlite", readSqliteFile, writeSqliteFile, Qt::CaseSensitive);
 #endif
 
 }
@@ -571,6 +586,108 @@ bool SettingManagerPrivate::writeXmlFile(QIODevice &device, const QSettings::Set
     return true;
 }
 #endif
+
+
+#ifndef NO_SQLITE_MODULE
+bool SettingManagerPrivate::readSqliteFile(QIODevice &device, QSettings::SettingsMap &map)
+{
+    if(!QSqlDatabase::isDriverAvailable("QSQLITE")) {
+        qCritical() << Q_FUNC_INFO << "SQLite driver is not available, please try another method of settings persistence";
+        return false;
+    }
+
+    // Open the database
+    device.close();    // Can't get there from here
+    QString fileName = SettingManager::instance().d->m_Settings->fileName();
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", fileName);
+    if(!db.open()) {
+        qCritical() << tr("Couldn't open SQLite database file: %1").arg(db.lastError().text());
+        return false;
+    }
+
+    // Ensure that the Settings table exists
+    if(!db.tables().contains("Settings")) {
+        qCritical() << tr("Settings table doesn't exist");
+        return false;
+    }
+
+    // Read all settings from table into memory
+    QSqlQuery q("SELECT * FROM 'Settings'", db);
+    if(!q.exec()) {
+        qCritical() << tr("Couldn't get values from Settings table: %1").arg(db.lastError().text());
+        return false;
+    }
+
+    // Transfer data into the settings map
+    while(q.next()) {
+        QString key = q.value(0).toString();
+        QVariant value = stringToVariant(q.value(1).toString());
+
+        if(!key.isEmpty() && value.isValid()) {
+            map[key] = value;
+        }
+    }
+
+    q.finish();
+
+    // Close the datasbase, and return
+    db.close();
+    return true;
+}
+
+bool SettingManagerPrivate::writeSqliteFile(QIODevice &device, const QSettings::SettingsMap &map)
+{
+
+    if(!QSqlDatabase::isDriverAvailable("QSQLITE")) {
+        qCritical() << Q_FUNC_INFO << "SQLite driver is not available, please try another method of settings persistence";
+        return false;
+    }
+
+    // Prepare the data to be saved
+    QStringList replaceKeys, replaceValues;
+    foreach(QString key, map.keys()) {
+        replaceKeys << key;
+        replaceValues << variantToString(map.value(key));
+    }
+
+
+    // Open the database
+    device.close();    // Can't get there from here
+    QString fileName = SettingManager::instance().d->m_Settings->fileName();
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", fileName);
+    if(!db.open()) {
+        qCritical() << tr("Couldn't open SQLite database file: %1").arg(db.lastError().text());
+        return false;
+    }
+
+    // Ensure that the Settings table exists
+    QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS Settings ( key TEXT, value TEXT )", db);
+    if(!createQuery.exec()) {
+        qCritical() << tr("Couldn't create Settings table: %1").arg(db.lastError().text());
+        db.close();
+        return false;
+    }
+    createQuery.finish();
+
+    // Do the batch query for data previously prepared
+    QSqlQuery replaceQuery(db);
+    replaceQuery.prepare("INSERT OR REPLACE Settings VALUES (?, ?)");
+    replaceQuery.addBindValue(replaceKeys);
+    replaceQuery.addBindValue(replaceValues);
+    if(!replaceQuery.execBatch()) {
+        qCritical() << tr("Couldn't update Settings table: %1").arg(db.lastError().text());
+        db.close();
+        return false;
+    }
+    replaceQuery.finish();
+
+    // Close the database, and return
+    db.close();
+    return true;
+}
+#endif
+
+
 
 
 } // namespace SettingManager

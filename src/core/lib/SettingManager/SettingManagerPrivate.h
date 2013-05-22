@@ -62,6 +62,10 @@ protected:
 #endif
 
 
+#ifndef NO_SQLITE_MODULE
+    static bool readSqliteFile(QIODevice &device, QSettings::SettingsMap &map);
+    static bool writeSqliteFile(QIODevice &device, const QSettings::SettingsMap &map);
+#endif
 
 
 protected slots:
@@ -78,6 +82,9 @@ private:
     QSettings::Format m_XmlFormat;
 #endif
 
+#ifndef NO_SQLITE_MODULE
+    QSettings::Format m_SqliteFormat;
+#endif
 
 };
 
