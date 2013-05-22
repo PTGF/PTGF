@@ -154,7 +154,7 @@ void SettingManager::setFormatType(const FormatTypes &type)
         break;
 #endif
 
-#ifndef NO_SQLITE_MODULE
+#ifndef NO_SQL_MODULE
     case FormatType_Sqlite:
         d->m_Settings = new QSettings(d->m_SqliteFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName(), this);
         break;
@@ -265,7 +265,7 @@ SettingManagerPrivate::SettingManagerPrivate() :
     m_XmlFormat = QSettings::registerFormat(QString("xml"), readXmlFile, writeXmlFile, Qt::CaseSensitive);
 #endif
 
-#ifndef NO_SQLITE_MODULE
+#ifndef NO_SQL_MODULE
     m_SqliteFormat = QSettings::registerFormat("sqlite", readSqliteFile, writeSqliteFile, Qt::CaseSensitive);
 #endif
 
@@ -588,7 +588,7 @@ bool SettingManagerPrivate::writeXmlFile(QIODevice &device, const QSettings::Set
 #endif
 
 
-#ifndef NO_SQLITE_MODULE
+#ifndef NO_SQL_MODULE
 bool SettingManagerPrivate::readSqliteFile(QIODevice &device, QSettings::SettingsMap &map)
 {
     if(!QSqlDatabase::isDriverAvailable("QSQLITE")) {

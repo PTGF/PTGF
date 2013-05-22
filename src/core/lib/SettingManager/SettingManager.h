@@ -48,7 +48,7 @@ public:
        FormatType_Xml,        /*! Outputs to XML formatted text file */
 #endif
 
-#ifndef NO_SQLITE_MODULE
+#ifndef NO_SQL_MODULE
        FormatType_Sqlite,      /*! Outputs to binary SQLite file */
 #endif
         FormatType_Native,     /*! Uses system's native format (i.e. Windows registry) */
