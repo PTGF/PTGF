@@ -42,11 +42,24 @@ class SETTINGMANAGER_EXPORT SettingManager : public QObject
     DECLARE_PRIVATE(SettingManager)
 
 public:
+    enum FormatTypes {
+
+#ifndef NO_XML_MODULE
+       FormatType_Xml,        /*! Outputs to XML formatted text file */
+#endif
+
+        FormatType_Native,     /*! Uses system's native format (i.e. Windows registry) */
+        FormatType_Ini         /*! Outputs to INI formatted text files */
+    };
+
     static SettingManager &instance();
     ~SettingManager();
 
     bool initialize();
     void shutdown();
+
+    FormatTypes formatType() const;
+    void setFormatType(const FormatTypes &type);
 
     void setValue(const QString &key, const QVariant &value);
     QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;

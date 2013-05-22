@@ -56,14 +56,29 @@ protected:
     void registerPageFactory(ISettingPageFactory *page);
     void deregisterPageFactory(ISettingPageFactory *page);
 
+#ifndef NO_XML_MODULE
+    static bool readXmlFile(QIODevice &device, QSettings::SettingsMap &map);
+    static bool writeXmlFile(QIODevice &device, const QSettings::SettingsMap &map);
+#endif
+
+
+
+
 protected slots:
     void pluginObjectRegistered(QObject *object);
     void pluginObjectDeregistered(QObject *object);
 
 private:
     bool m_Initialized;
-    QSettings m_Settings;
+    QSettings *m_Settings;
     QList<ISettingPageFactory *> m_Pages;
+    SettingManager::FormatTypes m_FormatType;
+
+#ifndef NO_XML_MODULE
+    QSettings::Format m_XmlFormat;
+#endif
+
+
 };
 
 } // namespace SettingManager

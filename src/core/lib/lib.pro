@@ -27,6 +27,18 @@ win32:target.path = /
 else:target.path  = /lib
 INSTALLS         += target
 
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    qtHaveModule(xml) {
+        QT += xml
+    } else {
+        DEFINES += NO_XML_MODULE
+    }
+} else {
+    QT += xml
+}
+
+
 HEADERS +=  Global.h \
             ActionManager/ActionManager.h \
             ActionManager/ActionManagerLibrary.h \

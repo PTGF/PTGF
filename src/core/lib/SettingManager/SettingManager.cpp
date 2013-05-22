@@ -23,7 +23,15 @@
 
 #include "SettingManagerPrivate.h"
 
+#include <QApplication>
 #include <QMenuBar>
+
+#ifndef NO_XML_MODULE
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
+#endif
+
+#include <QDebug>
 
 #include <ActionManager/ActionManager.h>
 #include <CoreWindow/CoreWindow.h>
@@ -32,9 +40,6 @@
 #include "SettingDialog.h"
 #include "ISettingPageFactory.h"
 
-#ifdef QT_DEBUG
-    #include <QDebug>
-#endif
 
 namespace Core {
 namespace SettingManager {
@@ -79,7 +84,7 @@ SettingManager::SettingManager(QObject *parent) :
  */
 SettingManager::~SettingManager()
 {
-    d->m_Settings.sync();
+    d->m_Settings->sync();
 }
 
 bool SettingManager::initialize()
@@ -89,7 +94,6 @@ bool SettingManager::initialize()
     }
 
     try {
-
 
         ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
         ActionManager::MenuPath path("Tools");
@@ -122,6 +126,34 @@ void SettingManager::shutdown()
     // ...
 }
 
+
+SettingManager::FormatTypes SettingManager::formatType() const
+{
+    return d->m_FormatType;
+}
+void SettingManager::setFormatType(const FormatTypes &type)
+{
+    d->m_FormatType = type;
+
+    switch(d->m_FormatType) {
+    case FormatType_Native:
+        d->m_Settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName(), this);
+        break;
+    case FormatType_Ini:
+        d->m_Settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName(), this);
+        break;
+#ifndef NO_XML_MODULE
+    case FormatType_Xml:
+        d->m_Settings = new QSettings(d->m_XmlFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName(), this);
+        break;
+#endif
+
+
+    }
+
+}
+
+
 /*!
    \fn SettingManager::setValue()
    \brief Sets the value of setting key to value. If the key already exists, the previous value is overwritten.
@@ -130,7 +162,7 @@ void SettingManager::shutdown()
  */
 void SettingManager::setValue(const QString &key, const QVariant &value)
 {
-    d->m_Settings.setValue(key, value);
+    d->m_Settings->setValue(key, value);
 }
 
 /*!
@@ -141,7 +173,7 @@ void SettingManager::setValue(const QString &key, const QVariant &value)
  */
 QVariant SettingManager::value(const QString &key, const QVariant &defaultValue) const
 {
-    return d->m_Settings.value(key, defaultValue);
+    return d->m_Settings->value(key, defaultValue);
 }
 
 /*!
@@ -150,7 +182,7 @@ QVariant SettingManager::value(const QString &key, const QVariant &defaultValue)
  */
 void SettingManager::remove(const QString &key)
 {
-    d->m_Settings.remove(key);
+    d->m_Settings->remove(key);
 }
 
 /*!
@@ -159,7 +191,7 @@ void SettingManager::remove(const QString &key)
  */
 bool SettingManager::contains(const QString &key) const
 {
-    return d->m_Settings.contains(key);
+    return d->m_Settings->contains(key);
 }
 
 /*!
@@ -171,7 +203,7 @@ bool SettingManager::contains(const QString &key) const
  */
 void SettingManager::beginGroup(const QString &prefix)
 {
-    d->m_Settings.beginGroup(prefix);
+    d->m_Settings->beginGroup(prefix);
 }
 
 /*!
@@ -182,7 +214,7 @@ void SettingManager::beginGroup(const QString &prefix)
  */
 void SettingManager::endGroup()
 {
-    d->m_Settings.endGroup();
+    d->m_Settings->endGroup();
 }
 
 /*!
@@ -194,7 +226,7 @@ void SettingManager::endGroup()
  */
 QString SettingManager::group() const
 {
-    return d->m_Settings.group();
+    return d->m_Settings->group();
 }
 
 
@@ -214,8 +246,14 @@ void SettingManager::settingDialog()
 SettingManagerPrivate::SettingManagerPrivate() :
     QObject(NULL),
     q(NULL),
-    m_Initialized(false)
+    m_Initialized(false),
+    m_Settings(new QSettings())
 {
+
+#ifndef NO_XML_MODULE
+    m_XmlFormat = QSettings::registerFormat(QString("xml"), readXmlFile, writeXmlFile, Qt::CaseSensitive);
+#endif
+
 }
 
 void SettingManagerPrivate::registerPageFactory(ISettingPageFactory *page)
@@ -241,6 +279,298 @@ void SettingManagerPrivate::pluginObjectDeregistered(QObject *object)
     ISettingPageFactory *settingPageFactory = qobject_cast<ISettingPageFactory *>(object);
     if(settingPageFactory) deregisterPageFactory(settingPageFactory);
 }
+
+
+
+static inline QString variantToString(const QVariant &v)
+{
+    QString result;
+
+    switch (v.type()) {
+        case QVariant::Invalid:
+            result = QLatin1String("@Invalid()");
+            break;
+
+        case QVariant::ByteArray: {
+            QByteArray a = v.toByteArray();
+            result = QLatin1String("@ByteArray(");
+
+            for(int i = 0; i < a.size(); ++i) {
+                unsigned char value = (unsigned char)a.at(i);
+                if(value < 16) { result += "0"; }
+                result += QString::number(value, 16);
+            }
+
+            result += QLatin1Char(')');
+            break;
+        }
+
+        case QVariant::String:
+        case QVariant::LongLong:
+        case QVariant::ULongLong:
+        case QVariant::Int:
+        case QVariant::UInt:
+        case QVariant::Bool:
+        case QVariant::Double:
+        case QVariant::KeySequence: {
+            result = v.toString();
+            if (result.startsWith(QLatin1Char('@')))
+                result.prepend(QLatin1Char('@'));
+            break;
+        }
+
+        case QVariant::Rect: {
+            QRect r = qvariant_cast<QRect>(v);
+            result += QLatin1String("@Rect(");
+            result += QString::number(r.x());
+            result += QLatin1Char(' ');
+            result += QString::number(r.y());
+            result += QLatin1Char(' ');
+            result += QString::number(r.width());
+            result += QLatin1Char(' ');
+            result += QString::number(r.height());
+            result += QLatin1Char(')');
+            break;
+        }
+
+        case QVariant::Size: {
+            QSize s = qvariant_cast<QSize>(v);
+            result += QLatin1String("@Size(");
+            result += QString::number(s.width());
+            result += QLatin1Char(' ');
+            result += QString::number(s.height());
+            result += QLatin1Char(')');
+            break;
+        }
+
+        case QVariant::Point: {
+            QPoint p = qvariant_cast<QPoint>(v);
+            result += QLatin1String("@Point(");
+            result += QString::number(p.x());
+            result += QLatin1Char(' ');
+            result += QString::number(p.y());
+            result += QLatin1Char(')');
+            break;
+        }
+
+        default: {
+            QByteArray a;
+            {
+                QDataStream s(&a, QIODevice::WriteOnly);
+                s.setVersion(QDataStream::Qt_4_0);
+                s << v;
+            }
+
+            result = QLatin1String("@Variant(");
+
+            for(int i = 0; i < a.size(); ++i) {
+                unsigned char value = (unsigned char)a.at(i);
+                if(value < 16) { result += "0"; }
+                result += QString::number(value, 16);
+            }
+
+            result += QLatin1Char(')');
+
+            break;
+        }
+
+    }
+
+    return result;
+}
+
+static inline QStringList splitArgs(const QString &s, int idx)
+{
+    int l = s.length();
+    Q_ASSERT(l > 0);
+    Q_ASSERT(s.at(idx) == QLatin1Char('('));
+    Q_ASSERT(s.at(l - 1) == QLatin1Char(')'));
+
+    QStringList result;
+    QString item;
+
+    for (++idx; idx < l; ++idx) {
+        QChar c = s.at(idx);
+        if (c == QLatin1Char(')')) {
+            Q_ASSERT(idx == l - 1);
+            result.append(item);
+        } else if (c == QLatin1Char(' ')) {
+            result.append(item);
+            item.clear();
+        } else {
+            item.append(c);
+        }
+    }
+
+    return result;
+}
+
+static inline QVariant stringToVariant(const QString &s)
+{
+    if (s.startsWith(QLatin1Char('@'))) {
+        if (s.endsWith(QLatin1Char(')'))) {
+            if (s.startsWith(QLatin1String("@ByteArray("))) {
+                QByteArray result;
+
+                QByteArray a(s.toLatin1().mid(11,s.size() -12));
+                bool okay;
+                for(int i = 0; i < a.count(); i += 2) {
+                    result.append((unsigned char)a.mid(i,2).toInt(&okay, 16));
+                }
+
+                return QVariant(result);
+            } else if (s.startsWith(QLatin1String("@Variant("))) {
+
+                QByteArray str = s.toLatin1().mid(9,s.size() -10);
+
+                QByteArray a;
+                bool okay;
+                for(int i = 0; i < str.count(); i += 2) {
+                    a.append((unsigned char)str.mid(i,2).toInt(&okay, 16));
+                }
+
+                QDataStream stream(&a, QIODevice::ReadWrite);
+                stream.setVersion(QDataStream::Qt_4_0);
+
+                QVariant result;
+                stream >> result;
+
+                return result;
+            } else if (s.startsWith(QLatin1String("@Rect("))) {
+                QStringList args = splitArgs(s, 5);
+                if (args.size() == 4)
+                    return QVariant(QRect(args[0].toInt(), args[1].toInt(), args[2].toInt(), args[3].toInt()));
+            } else if (s.startsWith(QLatin1String("@Size("))) {
+                QStringList args = splitArgs(s, 5);
+                if (args.size() == 2)
+                    return QVariant(QSize(args[0].toInt(), args[1].toInt()));
+            } else if (s.startsWith(QLatin1String("@Point("))) {
+                QStringList args = splitArgs(s, 6);
+                if (args.size() == 2)
+                    return QVariant(QPoint(args[0].toInt(), args[1].toInt()));
+            } else if (s == QLatin1String("@Invalid()")) {
+                return QVariant();
+            }
+        }
+        if (s.startsWith(QLatin1String("@@")))
+            return QVariant(s.mid(1));
+    }
+
+    return QVariant(s);
+}
+
+
+
+
+
+
+
+#ifndef NO_XML_MODULE
+bool SettingManagerPrivate::readXmlFile(QIODevice &device, QSettings::SettingsMap &map)
+{
+    QXmlStreamReader reader(&device);
+    QStringList elementStack;
+
+    while(!reader.atEnd() && !reader.hasError()) {
+        reader.readNext();
+        if(reader.isStartElement() && reader.name() != "Settings") {
+            elementStack << reader.name().toString();        // Push
+        } else if(reader.isEndElement()) {
+            if(!elementStack.isEmpty()) {
+                elementStack.removeLast();                   // Pop
+            }
+        } else if(reader.isCharacters() && !reader.isWhitespace()) {
+            map[elementStack.join("/")] = stringToVariant(reader.text().toString());
+        }
+    }
+
+    if(reader.hasError()) {
+        qCritical() << tr("An error occured while reading settings from file: \"%1\"").arg(reader.errorString());
+        return false;
+    }
+
+    return true;
+}
+
+struct KeyPath {
+    KeyPath() {}
+    KeyPath(QString name) : name(name) {}
+    KeyPath(QString name, QVariant value) : name(name), value(value) {}
+
+    QString name;
+    QVariant value;
+    QList<KeyPath *> children;
+};
+
+static inline void writeElement(KeyPath *root, QXmlStreamWriter *writer)
+{
+    if(root->children.isEmpty()) {
+        writer->writeStartElement(root->name);
+        writer->writeCharacters(variantToString(root->value));
+        writer->writeEndElement();
+        return;
+    }
+
+    writer->writeStartElement(root->name);
+    foreach(KeyPath *child, root->children) {
+        writeElement(child, writer);
+    }
+    writer->writeEndElement();
+}
+
+bool SettingManagerPrivate::writeXmlFile(QIODevice &device, const QSettings::SettingsMap &map)
+{
+
+    KeyPath *root = new KeyPath();
+    foreach(QString key, map.keys()) {
+        KeyPath *current = root;
+        QVariant value = map.value(key);
+
+        QStringList keyPath = key.split('/');
+        for(int i = 0; i < keyPath.count(); ++i) {
+            QString name = keyPath.at(i);
+
+            if(name == keyPath.last()) {
+                current->children << new KeyPath(name, value);
+
+            } else {
+                bool found = false;
+
+                foreach(KeyPath *child, current->children) {
+                    if(child->name == name) {
+                        current = child;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(!found) {
+                    KeyPath *child = new KeyPath(name);
+                    current->children.append(child);
+                    current = child;
+                }
+
+            }
+        }
+    }
+
+
+    QXmlStreamWriter writer(&device);
+    writer.setAutoFormatting(true);
+
+    writer.writeStartDocument();
+    writer.writeStartElement("Settings");
+
+    foreach(KeyPath *child, root->children) {
+        writeElement(child, &writer);
+    }
+
+    writer.writeEndElement();
+    writer.writeEndDocument();
+
+    return true;
+}
+#endif
 
 
 } // namespace SettingManager
