@@ -44,7 +44,6 @@ class WINDOWMANAGER_EXPORT WindowManager : public QObject
 
 public:
     static WindowManager &instance();
-    explicit WindowManager();
     ~WindowManager();
 
     bool initialize();
@@ -52,6 +51,10 @@ public:
 
     QList<IMainWindow *> mainWindows();
     QList<QWidget *> aboutWidgets();
+
+private:
+    explicit WindowManager();
+
 };
 
 } // namespace WindowManager
