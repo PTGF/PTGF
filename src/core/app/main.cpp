@@ -59,8 +59,8 @@
 
  */
 
-
 #include <QApplication>
+#include <QDebug>
 
 #include <NotificationManager/NotificationManager.h>
 #include <SettingManager/SettingManager.h>
@@ -68,12 +68,8 @@
 #include <CoreWindow/CoreWindow.h>
 #include <ActionManager/ActionManager.h>
 #include <WindowManager/WindowManager.h>
+#include <ViewManager/ViewManager.h>
 
-#ifdef MAIN_DEBUG
-#  include <QDebug>
-#endif
-
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -102,6 +98,7 @@ int main(int argc, char *argv[])
     PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
     WindowManager::WindowManager &windowManager = WindowManager::WindowManager::instance();
     ActionManager::ActionManager &actionManager = ActionManager::ActionManager::instance();
+    ViewManager::ViewManager &viewManager = ViewManager::ViewManager::instance();
 
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tInitializing the singleton classes";
@@ -115,6 +112,7 @@ int main(int argc, char *argv[])
     pluginManager.initialize();
     actionManager.initialize();
     windowManager.initialize();
+    viewManager.initialize();
 
 
 #ifdef MAIN_DEBUG
@@ -123,6 +121,7 @@ int main(int argc, char *argv[])
 
     pluginManager.loadPlugins();
 
+
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tShowing the CoreWindow";
 #endif
@@ -130,9 +129,12 @@ int main(int argc, char *argv[])
     coreWindow.show();
     retval = a.exec();
 
+
 #ifdef MAIN_DEBUG
     qDebug() << __FILE__ << __LINE__ << "\tShutting down singleton classes";
 #endif
+
+    viewManager.shutdown();
     actionManager.shutdown();
     windowManager.shutdown();
     pluginManager.shutdown();

@@ -85,6 +85,10 @@ HEADERS +=  Global.h \
             SettingManager/SettingManager.h \
             SettingManager/SettingManagerPrivate.h \
             SettingManager/SettingManagerLibrary.h \
+            ViewManager/IViewFactory.h \
+            ViewManager/ViewManager.h \
+            ViewManager/ViewManagerLibrary.h \
+            ViewManager/ViewManagerPrivate.h \
             WindowManager/AboutDialog.h \
             WindowManager/AboutWidget.h \
             WindowManager/IMainWindow.h \
@@ -110,6 +114,8 @@ SOURCES +=  Global.cpp \
             SettingManager/ISettingPageFactory.cpp \
             SettingManager/SettingDialog.cpp \
             SettingManager/SettingManager.cpp \
+            ViewManager/IViewFactory.cpp \
+            ViewManager/ViewManager.cpp \
             WindowManager/AboutDialog.cpp \
             WindowManager/AboutWidget.cpp \
             WindowManager/IMainWindow.cpp \
@@ -126,18 +132,21 @@ LIBS    +=
 
 RESOURCES += Resources/Core.qrc
 
-DEFINES          += COREWINDOW_LIBRARY \
+DEFINES          += ACTIONMANAGER_LIBRARY \
+                    COREWINDOW_LIBRARY \
+                    NOTIFICATIONMANAGER_LIBRARY \
                     PLUGINMANAGER_LIBRARY \
                     SETTINGMANAGER_LIBRARY \
-                    ACTIONMANAGER_LIBRARY \
-                    WINDOWMANAGER_LIBRARY \
-                    NOTIFICATIONMANAGER_LIBRARY
+                    VIEWMANAGER_LIBRARY \
+                    WINDOWMANAGER_LIBRARY
 
-#debug:DEFINES    += COREWINDOW_DEBUG
-#debug:DEFINES    += WINDOWMANAGER_DEBUG
 #debug:DEFINES    += ACTIONMANAGER_DEBUG
+#debug:DEFINES    += COREWINDOW_DEBUG
+#debug:DEFINES    += NOTIFICATIONMANAGER_DEBUG
 #debug:DEFINES    += PLUGINMANAGER_DEBUG
 #debug:DEFINES    += SETTINGMANAGER_DEBUG
+#debug:DEFINES    += VIEWMANAGER_DEBUG
+#debug:DEFINES    += WINDOWMANAGER_DEBUG
 
 OTHER_FILES += CoreWindow/StyleSheet.css
 win32: styleSheet.path = /ptgf/
@@ -149,26 +158,30 @@ coreHeaders.path = /include/core/lib
 coreHeaders.files = Global.h
 INSTALLS += coreHeaders
 
+actionManagerHeaders.path = /include/core/lib/ActionManager
+actionManagerHeaders.files = ActionManager/ActionManagerLibrary.h ActionManager/ActionManager.h ActionManager/Context.h ActionManager/Menu.h
+INSTALLS += actionManagerHeaders
+
 notificationManagerHeaders.path = /include/core/lib/NotificationManager
 notificationManagerHeaders.files = NotificationManager/NotificationManagerLibrary.h NotificationManager/NotificationManager.h NotificationManager/NotificationWidget.h
 INSTALLS += notificationManagerHeaders
-
-windowManagerHeaders.path = /include/core/lib/WindowManager
-windowManagerHeaders.files = WindowManager/WindowManagerLibrary.h WindowManager/WindowManager.h WindowManager/IMainWindow.h
-INSTALLS += windowManagerHeaders
 
 pluginManagerHeaders.path = /include/core/lib/PluginManager
 pluginManagerHeaders.files = PluginManager/PluginManagerLibrary.h PluginManager/PluginManager.h PluginManager/IPlugin.h
 INSTALLS += pluginManagerHeaders
 
+prettyWidgetsHeaders.path = /include/core/lib/PrettyWidgets
+prettyWidgetsHeaders.files = PrettyWidgets/TabWidget.h PrettyWidgets/ConsoleWidget.h
+INSTALLS += prettyWidgetsHeaders
+
 settingManagerHeaders.path = /include/core/lib/SettingManager
 settingManagerHeaders.files = SettingManager/SettingManagerLibrary.h SettingManager/SettingManager.h SettingManager/ISettingPage.h SettingManager/ISettingPageFactory.h
 INSTALLS += settingManagerHeaders
 
-actionManagerHeaders.path = /include/core/lib/ActionManager
-actionManagerHeaders.files = ActionManager/ActionManagerLibrary.h ActionManager/ActionManager.h ActionManager/Context.h ActionManager/Menu.h
-INSTALLS += actionManagerHeaders
+viewManagerHeaders.path = /include/core/lib/ViewManager
+viewManagerHeaders.files = ViewManager/ViewManagerLibrary.h ViewManager/ViewManager.h VieManager/IViewFactory.h
+INSTALLS += viewManagerHeaders
 
-prettyWidgetsHeaders.path = /include/core/lib/PrettyWidgets
-prettyWidgetsHeaders.files = PrettyWidgets/TabWidget.h PrettyWidgets/ConsoleWidget.h
-INSTALLS += prettyWidgetsHeaders
+windowManagerHeaders.path = /include/core/lib/WindowManager
+windowManagerHeaders.files = WindowManager/WindowManagerLibrary.h WindowManager/WindowManager.h WindowManager/IMainWindow.h
+INSTALLS += windowManagerHeaders
