@@ -99,6 +99,17 @@ void ViewManager::shutdown()
     // ...
 }
 
+/*!
+   \fn ViewManager::viewNames
+
+   \brief Returns a list of names of views that can handle the supplied model.
+
+   A NULL model will return all names.
+
+   \param model
+   \return
+   \sa viewWidget
+ */
 QStringList ViewManager::viewNames(QAbstractItemModel *model)
 {
     QStringList nameList;
@@ -114,13 +125,54 @@ QStringList ViewManager::viewNames(QAbstractItemModel *model)
     return nameList;
 }
 
+/*!
+   \fn ViewManager::viewWidget
+
+   \brief Creates the specified view using the supplied model, and returns it.
+
+   You should not create a view from it's constructor directly, but rather from its associated IViewFactory
+   through the ViewManager::viewWidget method.  For example:
+
+   \code
+   // Grab the instance of the ViewManager
+   Core::ViewManager::ViewManager &viewManager = Core::ViewManager::ViewManager::instance();
+
+   // Create your own data model
+   QAbstractItemModel *model = new DataModel(data);
+
+   // Check to see if this view can handle your model
+   if(viewManager.viewNames(model).contains("A View Name")) {
+
+       // Create the view using the model, and display it to the user
+       QAbstractItemView *view = viewManager.viewWidget("A View Name", model);
+       this->layout()->insertWidget(view);
+
+   }
+   \endcode
+
+   If the creation should fail for some reason, a NULL pointer will be returned.  Failure can occur when: a name was
+   not specified; a named view doesn't exist; a named view cannot handle the specified model.  A NULL model will not
+   be checked, and will always return a view if it exists.
+
+   The returned object does not have a parent, and should be immediately reparented, or deconstruction should be
+   handled manually.
+
+   \param name
+   \param model
+   \return
+   \sa viewNames IViewFactory
+ */
 QAbstractItemView *ViewManager::viewWidget(QString name, QAbstractItemModel *model)
 {
-    if(name.isEmpty() || model == NULL) {
+    if(name.isEmpty()) {
         return NULL;
     }
 
     IViewFactory *viewPlugin = d->m_viewFactories.value(name, NULL);
+
+    if(model != NULL && !viewPlugin->viewHandles(model)) {
+        return NULL;
+    }
 
     return viewPlugin->viewWidget(model);
 }
