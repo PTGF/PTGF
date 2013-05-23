@@ -63,6 +63,7 @@ public:
     inline MenuPath() { }
     inline explicit MenuPath(const Menu &menu) { append(menu); }
     inline MenuPath(const QString &str) { append(Menu(str)); }
+    inline MenuPath(const QString &str, const int &priority) { append(Menu(str, priority)); }
     inline MenuPath(const MenuPath &l) : QList<Menu>(l) { }
     inline MenuPath(const QList<Menu> &l) : QList<Menu>(l) { }
 
