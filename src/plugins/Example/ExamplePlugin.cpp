@@ -24,6 +24,12 @@
 
 #include "ExamplePlugin.h"
 
+#include <QMessageBox>
+#include <QDebug>
+
+#include <ActionManager/ActionManager.h>
+#include <ViewManager/ViewManager.h>
+
 namespace Plugins {
 namespace Example {
 
@@ -54,6 +60,15 @@ bool ExamplePlugin::initialize(QStringList &args, QString *err)
     Q_UNUSED(args)
     Q_UNUSED(err)
 
+#ifdef QT_DEBUG
+    Core::ActionManager::ActionManager &actionManager = Core::ActionManager::ActionManager::instance();
+    Core::ActionManager::MenuPath menuPath("Example", 16);
+
+    QAction *action = actionManager.createAction(menuPath);
+    action->setText("Display List of Views");
+    connect(action, SIGNAL(triggered()), this, SLOT(exampleMenuItem_Triggered()));
+#endif
+
     return true;
 }
 
@@ -75,6 +90,14 @@ QList<Core::PluginManager::Dependency> ExamplePlugin::dependencies()
 {
     return m_Dependencies;
 }
+
+#ifdef QT_DEBUG
+void ExamplePlugin::exampleMenuItem_Triggered()
+{
+    Core::ViewManager::ViewManager &viewManager = Core::ViewManager::ViewManager::instance();
+    QMessageBox::information(NULL, tr("List of available views"), viewManager.viewNames().join("; "));
+}
+#endif
 
 } // namespace Example
 } // namespace Plugins

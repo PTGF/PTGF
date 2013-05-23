@@ -55,6 +55,11 @@ protected:
     QString m_Version;
     QList<Core::PluginManager::Dependency> m_Dependencies;
 
+protected slots:
+#ifdef QT_DEBUG
+    void exampleMenuItem_Triggered();
+#endif
+
 };
 
 } // namespace Example
