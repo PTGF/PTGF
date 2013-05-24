@@ -189,7 +189,6 @@ ViewManagerPrivate::ViewManagerPrivate() :
 
 void ViewManagerPrivate::registerViewFactory(IViewFactory *viewFactory)
 {
-    qDebug() << Q_FUNC_INFO << tr("Registering view: %1").arg(viewFactory->viewName());
     if(!m_viewFactories.contains(viewFactory->viewName())) {
         m_viewFactories.insert(viewFactory->viewName(), viewFactory);
     }
