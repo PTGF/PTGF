@@ -20,7 +20,8 @@ TEMPLATE = subdirs
 SUBDIRS  = Example \
            Welcome \
            Help \
-           SourceView
+           SourceView \
+           PlotView
 
 Help.subdir                  = Help
 
@@ -30,4 +31,6 @@ Welcome.depends              = Help
 Example.subdir               = Example
 
 SourceView.subdir            = SourceView
+
+PlotView.subdir              = PlotView
 
