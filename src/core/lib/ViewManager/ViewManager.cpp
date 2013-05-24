@@ -23,11 +23,11 @@
 
 #include "ViewManagerPrivate.h"
 
+#include <QAbstractItemView>
 #include <QDebug>
 
 #include <PluginManager/PluginManager.h>
 
-#include "AbstractView.h"
 #include "IViewFactory.h"
 
 namespace Core {
@@ -162,7 +162,7 @@ QStringList ViewManager::viewNames(QAbstractItemModel *model)
    \return
    \sa viewNames IViewFactory
  */
-AbstractView *ViewManager::viewWidget(QString name, QAbstractItemModel *model)
+QAbstractItemView *ViewManager::viewWidget(QString name, QAbstractItemModel *model)
 {
     if(name.isEmpty()) {
         return NULL;

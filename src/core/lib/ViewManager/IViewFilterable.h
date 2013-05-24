@@ -1,5 +1,5 @@
 /*!
-   \file IViewFactory.h
+   \file IViewFilterable.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,29 +21,29 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CORE_VIEWMANAGER_IVIEWFACTORY_H
-#define CORE_VIEWMANAGER_IVIEWFACTORY_H
+
+#ifndef CORE_VIEWMANAGER_IVIEWFILTERABLE_H
+#define CORE_VIEWMANAGER_IVIEWFILTERABLE_H
 
 #include <QObject>
-class QAbstractItemView;
-class QAbstractItemModel;
 
 #include "ViewManagerLibrary.h"
 
 namespace Core {
 namespace ViewManager {
 
-class VIEWMANAGER_EXPORT IViewFactory
+class VIEWMANAGER_EXPORT IViewFilterable
 {
 public:
-    virtual QString viewName() = 0;
-    virtual bool viewHandles(QAbstractItemModel *model) = 0;
-    virtual QAbstractItemView *viewWidget(QAbstractItemModel *model) = 0;
+    virtual QString viewFilter() const = 0;
+    virtual void setViewFilter(const QString &regex) = 0;
+    virtual int viewFilterColumn() const = 0;
+    virtual void setViewFilterColumn(int column = 0) = 0;
 };
 
 } // namespace ViewManager
 } // namespace Core
 
-Q_DECLARE_INTERFACE(Core::ViewManager::IViewFactory, "org.krellinst.ptgf.IViewFactory")
+Q_DECLARE_INTERFACE(Core::ViewManager::IViewFilterable, "org.krellinst.ptgf.IViewFilterable")
 
-#endif // CORE_VIEWMANAGER_IVIEWFACTORY_H
+#endif // CORE_VIEWMANAGER_IVIEWFILTERABLE_H

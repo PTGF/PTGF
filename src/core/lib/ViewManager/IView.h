@@ -1,5 +1,5 @@
 /*!
-   \file AbstractView.cpp
+   \file IView.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,33 +21,28 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "AbstractView.h"
+#ifndef CORE_VIEWMANAGER_IVIEW_H
+#define CORE_VIEWMANAGER_IVIEW_H
+
+#include <QObject>
+
+#include "ViewManagerLibrary.h"
 
 namespace Core {
 namespace ViewManager {
 
-
-AbstractView::AbstractView(QWidget *parent) :
-    QAbstractItemView(parent)
+class VIEWMANAGER_EXPORT IView
 {
-}
+public:
+    virtual bool hasLegend() = 0;
+    virtual bool legendVisible() = 0;
+    virtual void setLegendVisible(bool visible) = 0;
 
-
-bool AbstractView::hasLegend()
-{
-    return false;
-}
-
-bool AbstractView::legendVisible()
-{
-    return false;
-}
-
-void AbstractView::setLegendVisible(bool visible)
-{
-    Q_UNUSED(visible)
-}
-
+};
 
 } // namespace ViewManager
 } // namespace Core
+
+Q_DECLARE_INTERFACE(Core::ViewManager::IView, "org.krellinst.ptgf.IView")
+
+#endif // CORE_VIEWMANAGER_IVIEW_H

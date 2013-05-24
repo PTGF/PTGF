@@ -85,8 +85,9 @@ HEADERS +=  Global.h \
             SettingManager/SettingManager.h \
             SettingManager/SettingManagerPrivate.h \
             SettingManager/SettingManagerLibrary.h \
-            ViewManager/AbstractView.h \
+            ViewManager/IView.h \
             ViewManager/IViewFactory.h \
+            ViewManager/IViewFilterable.h \
             ViewManager/ViewManager.h \
             ViewManager/ViewManagerLibrary.h \
             ViewManager/ViewManagerPrivate.h \
@@ -115,8 +116,9 @@ SOURCES +=  Global.cpp \
             SettingManager/ISettingPageFactory.cpp \
             SettingManager/SettingDialog.cpp \
             SettingManager/SettingManager.cpp \
-            ViewManager/AbstractView.cpp \
+            ViewManager/IView.cpp \
             ViewManager/IViewFactory.cpp \
+            ViewManager/IViewFilterable.cpp \
             ViewManager/ViewManager.cpp \
             WindowManager/AboutDialog.cpp \
             WindowManager/AboutWidget.cpp \
@@ -181,7 +183,7 @@ settingManagerHeaders.files = SettingManager/SettingManagerLibrary.h SettingMana
 INSTALLS += settingManagerHeaders
 
 viewManagerHeaders.path = /include/core/lib/ViewManager
-viewManagerHeaders.files = ViewManager/ViewManagerLibrary.h ViewManager/ViewManager.h VieManager/IViewFactory.h
+viewManagerHeaders.files = ViewManager/ViewManagerLibrary.h ViewManager/ViewManager.h ViewManager/IView.h ViewManager/IViewFactory.h ViewManager/IViewFilterable.h
 INSTALLS += viewManagerHeaders
 
 windowManagerHeaders.path = /include/core/lib/WindowManager

@@ -25,14 +25,14 @@
 #define CORE_VIEWMANAGER_VIEWMANAGER_H
 
 #include <QObject>
+class QAbstractItemView;
+class QAbstractItemModel;
 
 #include "ViewManagerLibrary.h"
-#include "AbstractView.h"
 
 namespace Core {
 namespace ViewManager {
 
-class AbstractView;
 class ViewManagerPrivate;
 
 class VIEWMANAGER_EXPORT ViewManager : public QObject
@@ -49,7 +49,7 @@ public:
     void shutdown();
 
     QStringList viewNames(QAbstractItemModel *model = NULL);
-    AbstractView *viewWidget(QString name, QAbstractItemModel *model);
+    QAbstractItemView *viewWidget(QString name, QAbstractItemModel *model);
 
 private:
     explicit ViewManager();
