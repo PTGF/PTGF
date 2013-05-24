@@ -29,6 +29,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QStandardItemModel>
+#include <QAbstractItemView>
 #endif
 
 #include <QDebug>
@@ -128,7 +129,7 @@ void ExamplePlugin::exampleMenuItem_Triggered()
     }
 
 
-    Core::ViewManager::AbstractView *view = viewManager.viewWidget("PlotView", model);
+    QAbstractItemView *view = viewManager.viewWidget("PlotView", model);
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setMargin(0);
