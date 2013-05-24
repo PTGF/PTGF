@@ -25,7 +25,6 @@
 #define CORE_VIEWMANAGER_IVIEWFACTORY_H
 
 #include <QObject>
-class QAbstractItemView;
 class QAbstractItemModel;
 
 #include "ViewManagerLibrary.h"
@@ -33,12 +32,14 @@ class QAbstractItemModel;
 namespace Core {
 namespace ViewManager {
 
+class AbstractView;
+
 class VIEWMANAGER_EXPORT IViewFactory
 {
 public:
     virtual QString viewName() = 0;
     virtual bool viewHandles(QAbstractItemModel *model) = 0;
-    virtual QAbstractItemView *viewWidget(QAbstractItemModel *model) = 0;
+    virtual AbstractView *viewWidget(QAbstractItemModel *model) = 0;
 };
 
 } // namespace ViewManager

@@ -1,5 +1,5 @@
 /*!
-   \file ViewManager.h
+   \file AbstractView.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,42 +21,33 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CORE_VIEWMANAGER_VIEWMANAGER_H
-#define CORE_VIEWMANAGER_VIEWMANAGER_H
-
-#include <QObject>
-
-#include "ViewManagerLibrary.h"
 #include "AbstractView.h"
 
 namespace Core {
 namespace ViewManager {
 
-class AbstractView;
-class ViewManagerPrivate;
 
-class VIEWMANAGER_EXPORT ViewManager : public QObject
+AbstractView::AbstractView(QWidget *parent) :
+    QAbstractItemView(parent)
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(ViewManager)
-    DECLARE_PRIVATE(ViewManager)
+}
 
-public:
-    static ViewManager &instance();
-    ~ViewManager();
 
-    bool initialize();
-    void shutdown();
+bool AbstractView::hasLegend()
+{
+    return false;
+}
 
-    QStringList viewNames(QAbstractItemModel *model = NULL);
-    AbstractView *viewWidget(QString name, QAbstractItemModel *model);
+bool AbstractView::legendVisible()
+{
+    return false;
+}
 
-private:
-    explicit ViewManager();
+void AbstractView::setLegendVisible(bool visible)
+{
+    Q_UNUSED(visible)
+}
 
-};
 
 } // namespace ViewManager
 } // namespace Core
-
-#endif // CORE_VIEWMANAGER_VIEWMANAGER_H

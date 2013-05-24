@@ -85,6 +85,7 @@ HEADERS +=  Global.h \
             SettingManager/SettingManager.h \
             SettingManager/SettingManagerPrivate.h \
             SettingManager/SettingManagerLibrary.h \
+            ViewManager/AbstractView.h \
             ViewManager/IViewFactory.h \
             ViewManager/ViewManager.h \
             ViewManager/ViewManagerLibrary.h \
@@ -114,6 +115,7 @@ SOURCES +=  Global.cpp \
             SettingManager/ISettingPageFactory.cpp \
             SettingManager/SettingDialog.cpp \
             SettingManager/SettingManager.cpp \
+            ViewManager/AbstractView.cpp \
             ViewManager/IViewFactory.cpp \
             ViewManager/ViewManager.cpp \
             WindowManager/AboutDialog.cpp \
