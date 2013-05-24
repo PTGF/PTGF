@@ -24,7 +24,13 @@
 
 #include "ExamplePlugin.h"
 
-#include <QMessageBox>
+#ifdef QT_DEBUG
+#include <QTime>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QStandardItemModel>
+#endif
+
 #include <QDebug>
 
 #include <ActionManager/ActionManager.h>
@@ -95,7 +101,43 @@ QList<Core::PluginManager::Dependency> ExamplePlugin::dependencies()
 void ExamplePlugin::exampleMenuItem_Triggered()
 {
     Core::ViewManager::ViewManager &viewManager = Core::ViewManager::ViewManager::instance();
-    QMessageBox::information(NULL, tr("List of available views"), viewManager.viewNames().join("; "));
+
+    const int maxColumns = 5;
+    const int maxRows = 100;
+
+    // Create a model
+    QStandardItemModel *model = new QStandardItemModel(this);
+    for(int row = 0; row < maxRows; ++row) {
+        model->setHeaderData(row, Qt::Vertical, row * 10);
+    }
+
+    for(int column = 0; column < maxColumns; ++column) {
+        QStandardItem *headerItem = new QStandardItem(tr("Column %1").arg(column));
+        model->setHorizontalHeaderItem(column, headerItem);
+
+        for(int row = 0; row < maxRows; ++row) {
+            QStandardItem *item = new QStandardItem();
+            item->setData(qrand(), Qt::DisplayRole);
+            model->setItem(row, column, item);
+        }
+    }
+
+    // Check for the PlotView plugin, and ensure it can show our model
+    if(!viewManager.viewNames(model).contains("PlotView")) {
+        return;
+    }
+
+
+    Core::ViewManager::AbstractView *view = viewManager.viewWidget("PlotView", model);
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setMargin(0);
+    layout->addWidget(view);
+
+    QDialog *dlg = new QDialog();
+    dlg->resize(800, 480);
+    dlg->setLayout(layout);
+    dlg->show();
 }
 #endif
 
