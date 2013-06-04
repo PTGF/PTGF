@@ -103,11 +103,13 @@ void ExamplePlugin::exampleMenuItem_Triggered()
 {
     Core::ViewManager::ViewManager &viewManager = Core::ViewManager::ViewManager::instance();
 
+    qDebug() << Q_FUNC_INFO << viewManager.viewNames();
+
     const int maxColumns = 5;
     const int maxRows = 100;
 
     // Create a model
-    QStandardItemModel *model = new QStandardItemModel(this);
+    QStandardItemModel *model = new QStandardItemModel();
     for(int row = 0; row < maxRows; ++row) {
         model->setHeaderData(row, Qt::Vertical, row * 10);
     }
@@ -130,12 +132,14 @@ void ExamplePlugin::exampleMenuItem_Triggered()
 
 
     QAbstractItemView *view = viewManager.viewWidget("PlotView", model);
+    model->setParent(view);
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setMargin(0);
     layout->addWidget(view);
 
     QDialog *dlg = new QDialog();
+    dlg->setAttribute(Qt::WA_DeleteOnClose, true);
     dlg->resize(800, 480);
     dlg->setLayout(layout);
     dlg->show();
