@@ -15,23 +15,27 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-TEMPLATE = subdirs
+include(../plugins.pri)
 
-SUBDIRS  = Example \
-           Welcome \
-           Help \
-           SourceView \
-           PlotView \
-           TableView
+CONFIG(debug, debug|release) {
+    TARGET           = TableViewD
+} else {
+    TARGET           = TableView
+}
 
-Help.subdir                  = Help
+SOURCES           += TableViewPlugin.cpp \
+                     TableView.cpp \
+                     Delegate.cpp
 
-Welcome.subdir               = Welcome
-Welcome.depends              = Help
+HEADERS           += TableViewPlugin.h \
+                     TableView.h \
+                     Delegate.h \
+    TableViewLibrary.h
 
-Example.subdir               = Example
+#debug: DEFINES    += PLOTVIEW_DEBUG
 
-SourceView.subdir            = SourceView
+DEFINES      += TABLEVIEW_LIBRARY
 
-PlotView.subdir              = PlotView
-
+tableViewHeaders.path = /include/plugins/TableView
+tableViewHeaders.files = TableViewLibrary.h TableView.h Delegate.h
+INSTALLS += tableViewHeaders

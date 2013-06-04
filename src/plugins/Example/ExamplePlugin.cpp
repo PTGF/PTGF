@@ -126,12 +126,12 @@ void ExamplePlugin::exampleMenuItem_Triggered()
     }
 
     // Check for the PlotView plugin, and ensure it can show our model
-    if(!viewManager.viewNames(model).contains("PlotView")) {
+    if(!viewManager.viewNames(model).contains("Table View")) {
         return;
     }
 
 
-    QAbstractItemView *view = viewManager.viewWidget("PlotView", model);
+    QAbstractItemView *view = viewManager.viewWidget("Table View", model);
     model->setParent(view);
 
     QVBoxLayout *layout = new QVBoxLayout();
