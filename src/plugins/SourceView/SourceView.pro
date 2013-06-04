@@ -17,8 +17,6 @@
 
 include(../plugins.pri)
 
-QT                 += gui
-
 CONFIG(debug, debug|release) {
   TARGET            = SourceViewD
 } else {
