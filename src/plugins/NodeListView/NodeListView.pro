@@ -15,26 +15,22 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-TEMPLATE = subdirs
+include(../plugins.pri)
 
-SUBDIRS  = Example \
-           Welcome \
-           Help \
-           SourceView \
-           PlotView \
-           TableView \
-           NodeListView
+CONFIG(debug, debug|release) {
+  TARGET              = NodeListViewD
+} else {
+  TARGET              = NodeListView
+}
 
-Help.subdir                  = Help
+SOURCES              += NodeListViewPlugin.cpp \
+                        NodeListView.cpp
+HEADERS              += NodeListViewPlugin.h \
+                        NodeListView.h \
+                        NodeListViewLibrary.h
 
-Welcome.subdir               = Welcome
-Welcome.depends              = Help
+DEFINES              += NODELISTVIEW_LIBRARY
 
-Example.subdir               = Example
-
-SourceView.subdir            = SourceView
-
-PlotView.subdir              = PlotView
-
-NodeListView.subdir          = NodeListView
-
+nodeListViewPluginHeaders.path = /include/plugins/NodeListView
+nodeListViewPluginHeaders.files = NodeListViewLibrary.h NodeListView.h
+INSTALLS += nodeListViewPluginHeaders
