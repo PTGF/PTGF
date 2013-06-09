@@ -78,9 +78,8 @@ void TableView::setModel(QAbstractItemModel *model)
     QSortFilterProxyModel *proxyModel = qobject_cast<QSortFilterProxyModel *>(QTableView::model());
     proxyModel->setSourceModel(model);
 
-    for(int i = 0; i < proxyModel->columnCount(); i++) {
-        resizeColumnToContents(i);
-    }
+    resizeColumnsToContents();
+    resizeRowsToContents();
 }
 
 /*! \fn TableView::selectionChanged()
@@ -102,6 +101,23 @@ void TableView::selectionChanged(const QItemSelection &selected, const QItemSele
 
     QTableView::selectionChanged(selected, deselected);
 }
+
+
+bool TableView::hasLegend()
+{
+    return false;
+}
+
+bool TableView::legendVisible()
+{
+    return false;
+}
+
+void TableView::setLegendVisible(bool visible)
+{
+    Q_UNUSED(visible)
+}
+
 
 QString TableView::viewFilter() const
 {

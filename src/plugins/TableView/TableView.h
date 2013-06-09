@@ -27,6 +27,7 @@
 #include <QTableView>
 #include <QSortFilterProxyModel>
 
+#include <ViewManager/IView.h>
 #include <ViewManager/IViewFilterable.h>
 
 #include "TableViewLibrary.h"
@@ -35,9 +36,10 @@
 namespace Plugins {
 namespace TableView {
 
-class TABLEVIEW_EXPORT TableView : public QTableView, public Core::ViewManager::IViewFilterable
+class TABLEVIEW_EXPORT TableView : public QTableView, public Core::ViewManager::IViewFilterable, public Core::ViewManager::IView
 {
     Q_OBJECT
+    Q_INTERFACES(Core::ViewManager::IView)
     Q_INTERFACES(Core::ViewManager::IViewFilterable)
 
 public:
@@ -47,10 +49,14 @@ public:
     QAbstractItemModel *model() const;
     void setModel(QAbstractItemModel *model);
 
-    QString viewFilter() const;
-    void setViewFilter(const QString &regex);
-    int viewFilterColumn() const;
-    void setViewFilterColumn(int column = 0);
+    virtual bool hasLegend();
+    virtual bool legendVisible();
+    virtual void setLegendVisible(bool visible);
+
+    virtual QString viewFilter() const;
+    virtual void setViewFilter(const QString &regex);
+    virtual int viewFilterColumn() const;
+    virtual void setViewFilterColumn(int column = 0);
 
 protected slots:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);

@@ -88,6 +88,11 @@ void Delegate::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
     QStyledItemDelegate::paint(painter, option, index);
 }
 
+QSize Delegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    return QStyledItemDelegate::sizeHint(option, index);
+}
+
 
 /*! \fn Delegate::selected()
     \brief Keeps track of selected items, and notifies the view of any size changes.
