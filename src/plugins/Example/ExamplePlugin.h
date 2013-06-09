@@ -30,7 +30,8 @@
 namespace Plugins {
 namespace Example {
 
-class ExamplePlugin : public QObject, public Core::PluginManager::IPlugin {
+class ExamplePlugin : public QObject, public Core::PluginManager::IPlugin
+{
     Q_OBJECT
 
 #if QT_VERSION >= 0x050000
