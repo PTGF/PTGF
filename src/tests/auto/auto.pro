@@ -15,10 +15,29 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-include(PTGF.pri)
+include(../../PTGF.pri)
 
-TEMPLATE = subdirs
-CONFIG  += ordered
-SUBDIRS  = core plugins tests
+QT       += testlib
+TEMPLATE  = app
 
-OTHER_FILES += Doxyfile fileheader.txt
+CONFIG(debug, debug|release) {
+  TARGET = $${APPLICATION_TARGET}AutoTestsD
+} else {
+  TARGET = $${APPLICATION_TARGET}AutoTests
+}
+
+
+SOURCES  += auto.cpp \
+            TestActionManager.cpp \
+    TestPluginManager.cpp
+
+HEADERS += TestActionManager.h \
+    TestPluginManager.h
+
+
+LIBS    += -L$$quote($${BUILD_PATH}/core/lib/$${DIR_POSTFIX}) -lCore$${LIB_POSTFIX}
+
+win32:target.path = /
+else:target.path  = /bin
+
+INSTALLS += target
