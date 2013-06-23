@@ -1,5 +1,5 @@
 /*!
-   \file NodeListView.h
+   \file TestNodeListView.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,36 +21,29 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PLUGINS_NODELISTVIEW_NODELISTVIEW_H
-#define PLUGINS_NODELISTVIEW_NODELISTVIEW_H
+#ifndef TESTNODELISTVIEW_H
+#define TESTNODELISTVIEW_H
 
-#include <QTreeView>
+#include <QObject>
 
-#include "NodeListViewLibrary.h"
-
-namespace Plugins {
-namespace NodeListView {
-
-class NODELISTVIEW_EXPORT NodeListView : public QTreeView
+class TestNodeListView : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(NodeListView)
-
 public:
-    explicit NodeListView(QWidget *parent = 0);
+    explicit TestNodeListView(QObject *parent = 0);
 
-//    QStringList expand(const QStringList &nodeList) const;
-//    QStringList expand(const QString &nodeList) const;
-//    QStringList fold(const QStringList &nodeList) const;
-//    QStringList fold(const QString &nodeList) const;
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
 
-signals:
+    void testHostRange();
 
-public slots:
+    void testHostRangeSequentialMerge_data();
+    void testHostRangeSequentialMerge();
+
+    void testHostRangeRandomMerge_data();
+    void testHostRangeRandomMerge();
 
 };
 
-} // namespace NodeListView
-} // namespace Plugins
-
-#endif // PLUGINS_NODELISTVIEW_NODELISTVIEW_H
+#endif // TESTNODELISTVIEW_H

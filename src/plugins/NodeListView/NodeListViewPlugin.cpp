@@ -24,9 +24,14 @@
 
 #include "NodeListViewPlugin.h"
 
+#include <QTime>
+#include <QtGlobal>
+#include <QDebug>
+
 #include <PluginManager/PluginManager.h>
 
 #include "NodeListView.h"
+#include "HostRange.h"
 
 namespace Plugins {
 namespace NodeListView {

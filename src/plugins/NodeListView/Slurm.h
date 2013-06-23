@@ -1,5 +1,5 @@
 /*!
-   \file NodeListView.h
+   \file Slurm.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,28 +21,23 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PLUGINS_NODELISTVIEW_NODELISTVIEW_H
-#define PLUGINS_NODELISTVIEW_NODELISTVIEW_H
+#ifndef PLUGINS_NODELISTVIEW_SLURM_H
+#define PLUGINS_NODELISTVIEW_SLURM_H
 
-#include <QTreeView>
-
-#include "NodeListViewLibrary.h"
+#include <QObject>
 
 namespace Plugins {
 namespace NodeListView {
 
-class NODELISTVIEW_EXPORT NodeListView : public QTreeView
+class Slurm : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(NodeListView)
-
 public:
-    explicit NodeListView(QWidget *parent = 0);
+    explicit Slurm(QObject *parent = 0);
 
-//    QStringList expand(const QStringList &nodeList) const;
-//    QStringList expand(const QString &nodeList) const;
-//    QStringList fold(const QStringList &nodeList) const;
-//    QStringList fold(const QString &nodeList) const;
+//    static QString allNodes();
+//    static QString allocations();
+//    static QString currentAllocation();
 
 signals:
 
@@ -53,4 +48,4 @@ public slots:
 } // namespace NodeListView
 } // namespace Plugins
 
-#endif // PLUGINS_NODELISTVIEW_NODELISTVIEW_H
+#endif // PLUGINS_NODELISTVIEW_SLURM_H

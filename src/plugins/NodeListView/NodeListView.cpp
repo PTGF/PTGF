@@ -23,6 +23,8 @@
 
 #include "NodeListView.h"
 
+#include <QDebug>
+
 namespace Plugins {
 namespace NodeListView {
 
@@ -38,10 +40,20 @@ namespace NodeListView {
  */
 
 
+
+
+
+
+
+
+
+
 NodeListView::NodeListView(QWidget *parent) :
     QTreeView(parent)
 {
 }
+
+
 
 } // namespace NodeListView
 } // namespace Plugins

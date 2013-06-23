@@ -29,13 +29,16 @@ CONFIG(debug, debug|release) {
 
 SOURCES  += auto.cpp \
             TestActionManager.cpp \
-    TestPluginManager.cpp
+    TestPluginManager.cpp \
+    TestNodeListView.cpp
 
 HEADERS += TestActionManager.h \
-    TestPluginManager.h
+    TestPluginManager.h \
+    TestNodeListView.h
 
 
 LIBS    += -L$$quote($${BUILD_PATH}/core/lib/$${DIR_POSTFIX}) -lCore$${LIB_POSTFIX}
+LIBS    += -L$$quote($${BUILD_PATH}/plugins/NodeListView/$${DIR_POSTFIX}) -lNodeListView$${LIB_POSTFIX}
 
 win32:target.path = /
 else:target.path  = /bin

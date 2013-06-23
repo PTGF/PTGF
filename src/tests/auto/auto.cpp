@@ -31,6 +31,9 @@
 //#include "TestViewManager.h"
 //#include "TestWindowManager.h"
 
+#include "TestNodeListView.h"
+
+
 #define RUNTEST(t) t t##instance; QTest::qExec(&t##instance)
 
 
@@ -44,6 +47,8 @@ int main(int argc, char **argv)
 //    RUNTEST(TestSettingManager);
 //    RUNTEST(TestViewManager);
 //    RUNTEST(TestWindowManager);
+
+    RUNTEST(TestNodeListView);
 
     return 0;
 }
