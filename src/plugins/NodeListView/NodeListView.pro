@@ -43,5 +43,5 @@ HEADERS              += NodeListViewPlugin.h \
 DEFINES              += NODELISTVIEW_LIBRARY
 
 nodeListViewPluginHeaders.path = /include/plugins/NodeListView
-nodeListViewPluginHeaders.files = NodeListViewLibrary.h NodeListView.h NodeRange.h Range.h
+nodeListViewPluginHeaders.files = NodeListViewLibrary.h NodeListView.h NodeRange.h Range.h Slurm.h
 INSTALLS += nodeListViewPluginHeaders

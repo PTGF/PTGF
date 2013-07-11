@@ -35,6 +35,7 @@
 #include <QDebug>
 
 #include "NodeRange.h"
+#include "Slurm.h"
 
 namespace Plugins {
 namespace NodeListView {
@@ -84,7 +85,7 @@ NodeListView::NodeListView(QWidget *parent) :
 
 
     // Try to get the nodelist from the Slurm environment variable
-    QString slurmNodeList(getenv("SLURM_NODELIST"));
+    QString slurmNodeList = Slurm::nodeList();
     if(!slurmNodeList.isEmpty()) {
         setNodes(slurmNodeList);
     }
@@ -247,7 +248,7 @@ void NodeListView::resizeSearchTextBox()
 
     static const int min = 20;
     static const int max = 100;
-    static const int interval = qMax(sizeIncrement().height(), 1);
+    static const int interval = qMax(sizeIncrement().height(), 2);
     int index = qBound(min, d->m_txtSearch->height(), max);
     bool direction = d->m_PreviousLineCount > d->m_txtSearch->document()->lineCount();
 

@@ -23,12 +23,15 @@
 
 #include "TestNodeListView.h"
 
+#include <stdlib.h>
+
 #include <QTest>
 #include <QStringList>
 #include <QDebug>
 
 #include <NodeListView/Range.h>
 #include <NodeListView/NodeRange.h>
+#include <NodeListView/Slurm.h>
 using namespace Plugins::NodeListView;
 
 TestNodeListView::TestNodeListView(QObject *parent) :
@@ -42,6 +45,21 @@ void TestNodeListView::initTestCase()
 
 void TestNodeListView::cleanupTestCase()
 {
+}
+
+void TestNodeListView::testSlurm()
+{
+    QString nodeList = QString("node[000-123,125,127-128]");
+    setenv("SLURM_JOB_NODELIST", nodeList.toLocal8Bit().data(), 1);
+    QCOMPARE(Slurm::nodeList(), nodeList);
+
+    quint64 nodeCount = 127;
+    setenv("SLURM_JOB_NUM_NODES", (QString("%1").arg(nodeCount)).toLocal8Bit().data(), 1);
+    QCOMPARE(Slurm::nodeCount(), nodeCount);
+
+    int cpuCount = 64;
+    setenv("SLURM_JOB_CPUS_PER_NODE", (QString("%1(x%2)").arg(cpuCount).arg(nodeCount)).toLocal8Bit().data(), 1);
+    QCOMPARE(Slurm::cpusPerNode(), cpuCount);
 }
 
 void TestNodeListView::testRange()

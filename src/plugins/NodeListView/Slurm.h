@@ -35,9 +35,9 @@ class Slurm : public QObject
 public:
     explicit Slurm(QObject *parent = 0);
 
-//    static QString allNodes();
-//    static QString allocations();
-//    static QString currentAllocation();
+    static QString nodeList();
+    static quint64 nodeCount();
+    static int cpusPerNode();
 
 signals:
 

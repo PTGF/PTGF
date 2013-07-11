@@ -36,6 +36,8 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testSlurm();
+
     void testRange();
 
     void testNodeRange();
