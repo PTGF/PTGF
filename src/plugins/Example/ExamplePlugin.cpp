@@ -142,12 +142,15 @@ void ExamplePlugin::exampleMenuItem_Triggered()
 
     Plugins::NodeListView::NodeListView *view = new Plugins::NodeListView::NodeListView();
 
-    QStringList nodes;
-    for(int i = 1; i < 10; ++i) {
-        quint64 rand = qrand() % 10000;
-        nodes << QString("node[%1-%2]").arg(rand, 4, 10, QChar('0')).arg(rand + (qrand() % 50), 4, 10, QChar('0'));
+    QString slurmNodeList(getenv("SLURM_NODELIST"));
+    if(slurmNodeList.isEmpty()) {
+        QStringList nodes;
+        for(int i = 1; i < 10; ++i) {
+            quint64 rand = qrand() % 10000;
+            nodes << QString("node[%1-%2]").arg(rand, 4, 10, QChar('0')).arg(rand + (qrand() % 50), 4, 10, QChar('0'));
+        }
+        view->setNodes(nodes.join(","));
     }
-    view->setNodes(nodes.join(","));
 
 #endif
 

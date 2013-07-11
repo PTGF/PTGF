@@ -81,6 +81,14 @@ NodeListView::NodeListView(QWidget *parent) :
     baseLayout->addWidget(d->m_TreeView, 100);
 
     this->setLayout(baseLayout);
+
+
+    // Try to get the nodelist from the Slurm environment variable
+    QString slurmNodeList(getenv("SLURM_NODELIST"));
+    if(!slurmNodeList.isEmpty()) {
+        setNodes(slurmNodeList);
+    }
+
 }
 
 NodeListView::~NodeListView()
