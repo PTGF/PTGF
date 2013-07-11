@@ -1,5 +1,5 @@
 /*!
-   \file auto.cpp
+   \file NodeListViewPrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,35 +21,45 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <QApplication>
-#include <QTest>
+#ifndef PLUGINS_NODELISTVIEW_NODELISTVIEWPRIVATE_H
+#define PLUGINS_NODELISTVIEW_NODELISTVIEWPRIVATE_H
 
-#include "TestPluginManager.h"
-#include "TestActionManager.h"
-//#include "TestNotificationManager.h"
-//#include "TestSettingManager.h"
-//#include "TestViewManager.h"
-//#include "TestWindowManager.h"
+#include "NodeListView.h"
 
-#include "TestNodeListView.h"
+#include "Node.h"
 
+class QTreeView;
+class QPlainTextEdit;
+class QLabel;
+class QStandardItem;
 
-#define RUNTEST(t) t t##instance; QTest::qExec(&t##instance)
+namespace Plugins {
+namespace NodeListView {
 
-
-int main(int argc, char **argv)
+class NODELISTVIEW_EXPORT NodeListViewPrivate
 {
-    QApplication app(argc, argv);
+    DECLARE_PUBLIC(NodeListView)
+    Q_DISABLE_COPY(NodeListViewPrivate)
 
-//    RUNTEST(TestPluginManager);
-    RUNTEST(TestActionManager);
-//    RUNTEST(TestNotificationManager);
-//    RUNTEST(TestSettingManager);
-//    RUNTEST(TestViewManager);
-//    RUNTEST(TestWindowManager);
+public:
+    NodeListViewPrivate();
+    ~NodeListViewPrivate();
 
-    RUNTEST(TestNodeListView);
+    QStringList splitNodeList(const QString &nodes);
+    QList<NodeRange*> mergedNodeList(const QString &nodeList);
 
-    return 0;
-}
 
+    QTreeView *m_TreeView;
+    QPlainTextEdit *m_txtSearch;
+    QLabel *m_lblNodeCount;
+
+    int m_PreviousLineCount;
+
+    bool m_SelectionChanging;
+    bool m_SelectingNodes;
+};
+
+} // namespace NodeListView
+} // namespace Plugins
+
+#endif // PLUGINS_NODELISTVIEW_NODELISTVIEWPRIVATE_H

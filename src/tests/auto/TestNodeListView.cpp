@@ -27,7 +27,8 @@
 #include <QStringList>
 #include <QDebug>
 
-#include <NodeListView/HostRange.h>
+#include <NodeListView/Range.h>
+#include <NodeListView/NodeRange.h>
 using namespace Plugins::NodeListView;
 
 TestNodeListView::TestNodeListView(QObject *parent) :
@@ -43,82 +44,120 @@ void TestNodeListView::cleanupTestCase()
 {
 }
 
-void TestNodeListView::testHostRange()
+void TestNodeListView::testRange()
 {
-        HostRange hostRange("node010");
-        QCOMPARE(hostRange.count(), (quint64)1);
-        QCOMPARE(hostRange.toString(), QString("node010"));
+    quint64 lower = 0, upper = 0;
+    Range range;
 
-        QCOMPARE(hostRange.merge("node012"), true);
-        QCOMPARE(hostRange.count(), (quint64)2);
-        QCOMPARE(hostRange.toString(), QString("node[010,012]"));
+    // Check helper function that assigns both range value simultaneously
+    lower = 10;
+    upper = 9999999;
+    range.setValue(lower, upper);
+    QCOMPARE(range.lower(), lower);
+    QCOMPARE(range.upper(), upper);
 
-        QCOMPARE(hostRange.merge("node[001-005]"), true);
-        QCOMPARE(hostRange.count(), (quint64)7);
-        QCOMPARE(hostRange.toString(), QString("node[001-005,010,012]"));
+    // Check individual range value assignments
+    lower = 5;
+    upper = 9999;
+    range.setLower(lower);
+    QCOMPARE(range.lower(), lower);
+    range.setUpper(upper);
+    QCOMPARE(range.upper(), upper);
 
-        QCOMPARE(hostRange.merge("node[006-010]"), true);
-        QCOMPARE(hostRange.count(), (quint64)11);
-        QCOMPARE(hostRange.toString(), QString("node[001-010,012]"));
+    // Check that setting the lower or upper in an odd way automatically assigns the proper value
+    range.setLower(upper);
+    QCOMPARE(range.lower(), upper);
+    QCOMPARE(range.upper(), upper);
+    range.setUpper(lower);
+    QCOMPARE(range.lower(), lower);
+    QCOMPARE(range.upper(), upper);
 
-        QCOMPARE(hostRange.merge("node[012-015]"), true);
-        QCOMPARE(hostRange.count(), (quint64)14);
-        QCOMPARE(hostRange.toString(), QString("node[001-010,012-015]"));
+    // Check manually assigned widths
+    int width = 7;
+    QCOMPARE(range.toString(width), QString("%1-%2").arg(lower, width, 10, QLatin1Char('0')).arg(upper, width, 10, QLatin1Char('0')));
 
-        QCOMPARE(hostRange.merge("node[003-007]"), true);
-        QCOMPARE(hostRange.count(), (quint64)14);
-        QCOMPARE(hostRange.toString(), QString("node[001-010,012-015]"));
+    // Check that auto width discovery matches upper range number's width
+    width = 4;
+    QCOMPARE(range.toString(-1), QString("%1-%2").arg(lower, width, 10, QLatin1Char('0')).arg(upper, width, 10, QLatin1Char('0')));
+}
 
-        QCOMPARE(hostRange.merge("node[100-125]"), true);
-        QCOMPARE(hostRange.count(), (quint64)40);
-        QCOMPARE(hostRange.toString(), QString("node[001-010,012-015,100-125]"));
 
-        QCOMPARE(hostRange.merge("node[013-098]"), true);
-        QCOMPARE(hostRange.count(), (quint64)123);
-        QCOMPARE(hostRange.toString(), QString("node[001-010,012-098,100-125]"));
+void TestNodeListView::testNodeRange()
+{
+        NodeRange nodeRange("node010");
+        QCOMPARE(nodeRange.count(), (quint64)1);
+        QCOMPARE(nodeRange.toString(), QString("node010"));
+
+        QCOMPARE(nodeRange.merge("node012"), true);
+        QCOMPARE(nodeRange.count(), (quint64)2);
+        QCOMPARE(nodeRange.toString(), QString("node[010,012]"));
+
+        QCOMPARE(nodeRange.merge("node[001-005]"), true);
+        QCOMPARE(nodeRange.count(), (quint64)7);
+        QCOMPARE(nodeRange.toString(), QString("node[001-005,010,012]"));
+
+        QCOMPARE(nodeRange.merge("node[006-010]"), true);
+        QCOMPARE(nodeRange.count(), (quint64)11);
+        QCOMPARE(nodeRange.toString(), QString("node[001-010,012]"));
+
+        QCOMPARE(nodeRange.merge("node[012-015]"), true);
+        QCOMPARE(nodeRange.count(), (quint64)14);
+        QCOMPARE(nodeRange.toString(), QString("node[001-010,012-015]"));
+
+        QCOMPARE(nodeRange.merge("node[003-007]"), true);
+        QCOMPARE(nodeRange.count(), (quint64)14);
+        QCOMPARE(nodeRange.toString(), QString("node[001-010,012-015]"));
+
+        QCOMPARE(nodeRange.merge("node[100-125]"), true);
+        QCOMPARE(nodeRange.count(), (quint64)40);
+        QCOMPARE(nodeRange.toString(), QString("node[001-010,012-015,100-125]"));
+
+        QCOMPARE(nodeRange.merge("node[013-098]"), true);
+        QCOMPARE(nodeRange.count(), (quint64)123);
+        QCOMPARE(nodeRange.toString(), QString("node[001-010,012-098,100-125]"));
     }
 
-void TestNodeListView::testHostRangeSequentialMerge_data()
+void TestNodeListView::testNodeRangeSequentialMerge_data()
 {
     QTest::addColumn<int>("count");
-    QTest::newRow("10 hosts") << 10;
-    QTest::newRow("100 hosts") << 100;
-    QTest::newRow("1000 hosts") << 1000;
-    QTest::newRow("10000 hosts") << 10000;
-    QTest::newRow("100000 hosts") << 100000;
+    QTest::newRow("10 nodes") << 10;
+    QTest::newRow("100 nodes") << 100;
+    QTest::newRow("1000 nodes") << 1000;
+    QTest::newRow("10000 nodes") << 10000;
+    QTest::newRow("100000 nodes") << 100000;
 }
-void TestNodeListView::testHostRangeSequentialMerge()
+void TestNodeListView::testNodeRangeSequentialMerge()
 {
-    HostRange hostRange("node0");
+    NodeRange nodeRange("node0");
     QFETCH(int, count);
 
     QBENCHMARK {
         for(int i=1; i < count; ++i) {
-            QVERIFY(hostRange.merge(QString("node%1").arg(i)));
+            QVERIFY(nodeRange.merge(QString("node%1").arg(i)));
         }
     }
 
-    QCOMPARE(hostRange.count(), (quint64)count);
+    QCOMPARE(nodeRange.count(), (quint64)count);
 
     const QString countString = QString("%1").arg((quint64)count-1);
-    QCOMPARE(hostRange.toString(),
+    QCOMPARE(nodeRange.toString(),
              QString("node[%1-%2]").arg((quint64)0,       countString.count(), 10, QChar('0')).
                                     arg((quint64)count-1, countString.count(), 10, QChar('0')));
 
-    QCOMPARE(hostRange.expanded(500).count(), qMin(500, (int)hostRange.count()));
+    QCOMPARE(nodeRange.expanded(500).count(), qMin(500, (int)nodeRange.count()));
 }
 
-void TestNodeListView::testHostRangeRandomMerge_data()
+void TestNodeListView::testNodeRangeRandomMerge_data()
 {
     QTest::addColumn<int>("count");
-    QTest::newRow("10 hosts") << 10;
-    QTest::newRow("100 hosts") << 100;
-    QTest::newRow("1000 hosts") << 1000;
-    QTest::newRow("10000 hosts") << 10000;
+    QTest::newRow("10 nodes") << 10;
+    QTest::newRow("100 nodes") << 100;
+    QTest::newRow("1000 nodes") << 1000;
+    QTest::newRow("10000 nodes") << 10000;
 }
-void TestNodeListView::testHostRangeRandomMerge()
+void TestNodeListView::testNodeRangeRandomMerge()
 {
-    HostRange hostRange("node0");
+    NodeRange nodeRange("node0");
     QFETCH(int, count);
 
     const QString countString = QString("%1").arg(count);
@@ -128,17 +167,17 @@ void TestNodeListView::testHostRangeRandomMerge()
     QBENCHMARK {
         for(int i=1; i < count; ++i) {
             quint64 rand = qrand() % (count * 10 * magnitude);
-            QString newHost = QString("node[%1-%2]")
+            QString newNode = QString("node[%1-%2]")
                     .arg(rand,                            countString.count() + magnitude, 10, QChar('0'))
                     .arg(rand + (qrand() % maxRangeSize), countString.count() + magnitude, 10, QChar('0'));
-            QVERIFY(hostRange.merge(newHost));
+            QVERIFY(nodeRange.merge(newNode));
         }
     }
 
-    QVERIFY(hostRange.count() <= (quint64)(count * 10 * magnitude + maxRangeSize));
-    QVERIFY(hostRange.count() >= (quint64)count);
+    QVERIFY(nodeRange.count() <= (quint64)(count * 10 * magnitude + maxRangeSize));
+    QVERIFY(nodeRange.count() >= (quint64)count);
 
-    QCOMPARE(hostRange.toString().mid(0,4), QString("node"));
+    QCOMPARE(nodeRange.toString().mid(0,4), QString("node"));
 
-    QCOMPARE(hostRange.expanded(500).count(), qMin(500, (int)hostRange.count()));
+    QCOMPARE(nodeRange.expanded(500).count(), qMin(500, (int)nodeRange.count()));
 }

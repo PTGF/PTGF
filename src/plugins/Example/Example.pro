@@ -25,3 +25,5 @@ CONFIG(debug, debug|release) {
 
 SOURCES           += ExamplePlugin.cpp
 HEADERS           += ExamplePlugin.h
+
+LIBS    += -L$$quote($${BUILD_PATH}/plugins/NodeListView/$${DIR_POSTFIX}) -lNodeListView$${LIB_POSTFIX}

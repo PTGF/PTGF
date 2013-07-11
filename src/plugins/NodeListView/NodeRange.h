@@ -1,5 +1,5 @@
 /*!
-   \file auto.cpp
+   \file NodeRange.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,35 +21,46 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <QApplication>
-#include <QTest>
+#ifndef PLUGINS_NODELISTVIEW_NODERANGE_H
+#define PLUGINS_NODELISTVIEW_NODERANGE_H
 
-#include "TestPluginManager.h"
-#include "TestActionManager.h"
-//#include "TestNotificationManager.h"
-//#include "TestSettingManager.h"
-//#include "TestViewManager.h"
-//#include "TestWindowManager.h"
+#include "NodeListViewLibrary.h"
 
-#include "TestNodeListView.h"
+#include <QString>
+#include <QList>
 
+#include "Node.h"
 
-#define RUNTEST(t) t t##instance; QTest::qExec(&t##instance)
+namespace Plugins {
+namespace NodeListView {
 
+class NodeRangePrivate;
 
-int main(int argc, char **argv)
+class NODELISTVIEW_EXPORT NodeRange : public Node
 {
-    QApplication app(argc, argv);
+    DECLARE_PRIVATE(NodeRange)
 
-//    RUNTEST(TestPluginManager);
-    RUNTEST(TestActionManager);
-//    RUNTEST(TestNotificationManager);
-//    RUNTEST(TestSettingManager);
-//    RUNTEST(TestViewManager);
-//    RUNTEST(TestWindowManager);
+public:
+    NodeRange(const QString &nodeName);
+    ~NodeRange();
 
-    RUNTEST(TestNodeListView);
+    virtual QString number() const;
+    virtual void setNumber(const QString &number);
 
-    return 0;
-}
+    QStringList expanded(const int &truncateAt = 10000) const;
 
+    QStringList semiExpanded() const;
+
+    bool merge(const NodeRange &other);
+    bool merge(const QString &nodeName);
+
+    quint64 count() const;
+
+    QString toShortString() const;
+};
+
+
+} // namespace NodeListView
+} // namespace Plugins
+
+#endif // PLUGINS_NODELISTVIEW_NODERANGE_H

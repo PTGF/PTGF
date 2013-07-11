@@ -1,5 +1,5 @@
 /*!
-   \file auto.cpp
+   \file NodeRangePrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,35 +21,35 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <QApplication>
-#include <QTest>
+#ifndef PLUGINS_NODELISTVIEW_NODERANGEPRIVATE_H
+#define PLUGINS_NODELISTVIEW_NODERANGEPRIVATE_H
 
-#include "TestPluginManager.h"
-#include "TestActionManager.h"
-//#include "TestNotificationManager.h"
-//#include "TestSettingManager.h"
-//#include "TestViewManager.h"
-//#include "TestWindowManager.h"
+#include "NodeRange.h"
+#include "NodePrivate.h"
+#include "Range.h"
 
-#include "TestNodeListView.h"
+namespace Plugins {
+namespace NodeListView {
 
-
-#define RUNTEST(t) t t##instance; QTest::qExec(&t##instance)
-
-
-int main(int argc, char **argv)
+class NodeRangePrivate : public NodePrivate
 {
-    QApplication app(argc, argv);
+    DECLARE_PUBLIC(NodeRange)
 
-//    RUNTEST(TestPluginManager);
-    RUNTEST(TestActionManager);
-//    RUNTEST(TestNotificationManager);
-//    RUNTEST(TestSettingManager);
-//    RUNTEST(TestViewManager);
-//    RUNTEST(TestWindowManager);
+public:
+    NodeRangePrivate();
+    ~NodeRangePrivate();
 
-    RUNTEST(TestNodeListView);
+    QList<Range *> ranges() const;
+    bool mergeRange(const QString &range);
 
-    return 0;
-}
+private:
+    QList<Range *> m_Ranges;
+    int m_RangeWidth;
+    bool m_Initialized;
+};
 
+
+} // namespace NodeListView
+} // namespace Plugins
+
+#endif // PLUGINS_NODELISTVIEW_NODERANGEPRIVATE_H

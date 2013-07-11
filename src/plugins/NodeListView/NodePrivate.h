@@ -1,5 +1,5 @@
 /*!
-   \file HostRange.h
+   \file NodePrivate.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,53 +21,37 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PLUGINS_NODELISTVIEW_HOSTRANGE_H
-#define PLUGINS_NODELISTVIEW_HOSTRANGE_H
+#ifndef PLUGINS_NODELISTVIEW_NODEPRIVATE_H
+#define PLUGINS_NODELISTVIEW_NODEPRIVATE_H
 
-#include "NodeListViewLibrary.h"
+#include "Node.h"
+
 #include <QString>
-#include <QList>
-
-#include "Range.h"
 
 namespace Plugins {
 namespace NodeListView {
 
-class NODELISTVIEW_EXPORT HostRange {
+class NodePrivate
+{
+    DECLARE_PUBLIC(Node)
+
 public:
-    HostRange(const QString &hostName);
-    ~HostRange();
+    NodePrivate();
+    ~NodePrivate() {}
 
-    QString prefix() const;
-    void setPrefix(const QString &prefix);
-
-    QString suffix() const;
-    void setSuffix(const QString &suffix);
-
-    QString range() const;
-
-    QString toString() const;
-
-    QStringList expanded(const int &truncateAt = 10000) const;
-
-    bool merge(const HostRange &other);
-    bool merge(const QString &hostName);
-
-    quint64 count() const;
-
-protected:
-    QList<Range *> ranges() const;
-    bool mergeRange(const QString &range);
+    void fromString(const QString &nodeName);
 
 private:
     QString m_Prefix;
-    QList<Range*> m_Ranges;
+    quint64 m_Value;
     QString m_Suffix;
-    int m_RangeWidth;
 };
 
 
 } // namespace NodeListView
 } // namespace Plugins
 
-#endif // PLUGINS_NODELISTVIEW_HOSTRANGE_H
+
+
+
+#endif // PLUGINS_NODELISTVIEW_NODEPRIVATE_H

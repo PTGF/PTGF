@@ -24,29 +24,37 @@
 #ifndef PLUGINS_NODELISTVIEW_NODELISTVIEW_H
 #define PLUGINS_NODELISTVIEW_NODELISTVIEW_H
 
-#include <QTreeView>
+#include <QWidget>
+class QItemSelection;
 
 #include "NodeListViewLibrary.h"
 
 namespace Plugins {
 namespace NodeListView {
 
-class NODELISTVIEW_EXPORT NodeListView : public QTreeView
+class NodeRange;
+class NodeListViewPrivate;
+
+class NODELISTVIEW_EXPORT NodeListView : public QWidget
 {
     Q_OBJECT
+    DECLARE_PRIVATE(NodeListView)
     Q_DISABLE_COPY(NodeListView)
 
 public:
     explicit NodeListView(QWidget *parent = 0);
+    ~NodeListView();
 
-//    QStringList expand(const QStringList &nodeList) const;
-//    QStringList expand(const QString &nodeList) const;
-//    QStringList fold(const QStringList &nodeList) const;
-//    QStringList fold(const QString &nodeList) const;
+    QString nodes() const;
+    void setNodes(const QString &nodes);
 
-signals:
+protected:
+    void resizeEvent(QResizeEvent *event);
 
-public slots:
+protected slots:
+    void selectNodes();
+    void resizeSearchTextBox();
+    void selectionChanged();
 
 };
 

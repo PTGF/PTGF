@@ -31,7 +31,7 @@
 #include <PluginManager/PluginManager.h>
 
 #include "NodeListView.h"
-#include "HostRange.h"
+#include "NodeRange.h"
 
 namespace Plugins {
 namespace NodeListView {
@@ -51,31 +51,6 @@ NodeListViewPlugin::NodeListViewPlugin()
 {
     m_Name = "NodeListView";
     m_Version = QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT);
-}
-
-QString NodeListViewPlugin::viewName()
-{
-    return tr("Node List View");
-}
-
-bool NodeListViewPlugin::viewHandles(QAbstractItemModel *model)
-{
-    Q_UNUSED(model)
-
-    //! \todo
-    return true;
-}
-
-QAbstractItemView *NodeListViewPlugin::viewWidget(QAbstractItemModel *model)
-{
-    /* Check to see if we should even try to handle this model */
-    if(!viewHandles(model)) {
-        return NULL;
-    }
-
-    NodeListView *view = new NodeListView();
-    view->setModel(model);
-    return view;
 }
 
 

@@ -34,8 +34,7 @@ namespace NodeListView {
 
 class NodeListViewPlugin :
         public QObject,
-        public Core::PluginManager::IPlugin,
-        public Core::ViewManager::IViewFactory
+        public Core::PluginManager::IPlugin
 {
     Q_OBJECT
 
@@ -44,15 +43,9 @@ class NodeListViewPlugin :
 #endif
 
     Q_INTERFACES(Core::PluginManager::IPlugin)
-    Q_INTERFACES(Core::ViewManager::IViewFactory)
 
 public:
     NodeListViewPlugin();
-
-    /* IViewFactory Interface */
-    QString viewName();
-    bool viewHandles(QAbstractItemModel *model);
-    QAbstractItemView *viewWidget(QAbstractItemModel *model);
 
     /* IPlugin Interface */
     ~NodeListViewPlugin();

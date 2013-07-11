@@ -1,5 +1,5 @@
 /*!
-   \file auto.cpp
+   \file Node.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,35 +21,46 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <QApplication>
-#include <QTest>
+#ifndef PLUGINS_NODELISTVIEW_NODE_H
+#define PLUGINS_NODELISTVIEW_NODE_H
 
-#include "TestPluginManager.h"
-#include "TestActionManager.h"
-//#include "TestNotificationManager.h"
-//#include "TestSettingManager.h"
-//#include "TestViewManager.h"
-//#include "TestWindowManager.h"
+#include "NodeListViewLibrary.h"
 
-#include "TestNodeListView.h"
+#include <QString>
 
+namespace Plugins {
+namespace NodeListView {
 
-#define RUNTEST(t) t t##instance; QTest::qExec(&t##instance)
+class NodePrivate;
 
-
-int main(int argc, char **argv)
+class NODELISTVIEW_EXPORT Node
 {
-    QApplication app(argc, argv);
+    DECLARE_PRIVATE(Node)
 
-//    RUNTEST(TestPluginManager);
-    RUNTEST(TestActionManager);
-//    RUNTEST(TestNotificationManager);
-//    RUNTEST(TestSettingManager);
-//    RUNTEST(TestViewManager);
-//    RUNTEST(TestWindowManager);
+public:
+    Node();
+    Node(const QString &nodeName);
+    Node(const QString &prefix, const QString &number, const QString &suffix = QString());
+    Node(const QString &prefix, const quint64 &value, const QString &suffix = QString());
 
-    RUNTEST(TestNodeListView);
+    ~Node();
 
-    return 0;
-}
 
+    virtual QString prefix() const;
+    virtual void setPrefix(const QString &prefix);
+
+    virtual quint64 value() const;
+
+    virtual QString number() const;
+    virtual void setNumber(const QString &number);
+
+    virtual QString suffix() const;
+    virtual void setSuffix(const QString &suffix);
+
+    virtual QString toString() const;
+};
+
+} // namespace NodeListView
+} // namespace Plugins
+
+#endif // PLUGINS_NODELISTVIEW_NODE_H

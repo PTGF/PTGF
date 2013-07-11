@@ -32,8 +32,10 @@ namespace NodeListView {
 class NODELISTVIEW_EXPORT Range {
 public:
     Range(const quint64 &lower = 0, const quint64 &upper = 0);
+    ~Range();
 
     void setValue(const quint64 &lower, const quint64 &upper);
+    void setValue(const quint64 &value);
 
     quint64 lower() const;
     void setLower(const quint64 &lower);
@@ -41,9 +43,9 @@ public:
     quint64 upper() const;
     void setUpper(const quint64 &upper);
 
-    QString toString(int width = 0) const;
+    QString toString(int width = -1) const;
 
-    bool merge(const Range &other);
+    inline bool merge(const Range &other) { return merge(other.lower(), other.upper()); }
     bool merge(const quint64 &lower, const quint64 &upper);
 
     inline quint64 count() const { return m_Upper - m_Lower + 1; }

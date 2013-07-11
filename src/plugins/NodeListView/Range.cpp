@@ -39,6 +39,11 @@ Range::Range(const quint64 &lower, const quint64 &upper)
     setValue(lower, upper);
 }
 
+Range::~Range()
+{
+}
+
+
 /*!
    \brief Convenience function to allow setting both lower and upper values simultaeneously
    \param lower
@@ -53,6 +58,12 @@ void Range::setValue(const quint64 &lower, const quint64 &upper)
         m_Lower = lower;
         m_Upper = upper;
     }
+}
+
+void Range::setValue(const quint64 &value)
+{
+    m_Upper = value;
+    m_Lower = value;
 }
 
 
@@ -106,6 +117,10 @@ void Range::setUpper(const quint64 &upper)
  */
 QString Range::toString(int width) const
 {
+    if(width == -1) {
+        width = QString("%1").arg(qMax(lower(), upper())).length();
+    }
+
     QString retval;
     if(m_Lower != m_Upper) {
         retval = QString("%1-%2").arg(m_Lower, width, 10, QChar('0')).arg(m_Upper, width, 10, QChar('0'));
@@ -114,16 +129,6 @@ QString Range::toString(int width) const
     }
 
     return retval;
-}
-
-/*!
-   \brief Merges another Range into this if possible
-   \param other
-   \return true if successful; false otherwise
- */
-bool Range::merge(const Range &other)
-{
-    return merge(other.lower(), other.upper());
 }
 
 /*!

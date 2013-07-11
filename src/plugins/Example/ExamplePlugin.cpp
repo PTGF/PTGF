@@ -37,6 +37,9 @@
 #include <ActionManager/ActionManager.h>
 #include <ViewManager/ViewManager.h>
 
+#include <NodeListView/NodeListView.h>
+#include <NodeListView/NodeRange.h>
+
 namespace Plugins {
 namespace Example {
 
@@ -101,6 +104,7 @@ QList<Core::PluginManager::Dependency> ExamplePlugin::dependencies()
 #ifdef QT_DEBUG
 void ExamplePlugin::exampleMenuItem_Triggered()
 {
+#if 0
     Core::ViewManager::ViewManager &viewManager = Core::ViewManager::ViewManager::instance();
 
     qDebug() << Q_FUNC_INFO << viewManager.viewNames();
@@ -133,6 +137,19 @@ void ExamplePlugin::exampleMenuItem_Triggered()
 
     QAbstractItemView *view = viewManager.viewWidget("Table View", model);
     model->setParent(view);
+
+#else
+
+    Plugins::NodeListView::NodeListView *view = new Plugins::NodeListView::NodeListView();
+
+    QStringList nodes;
+    for(int i = 1; i < 10; ++i) {
+        quint64 rand = qrand() % 10000;
+        nodes << QString("node[%1-%2]").arg(rand, 4, 10, QChar('0')).arg(rand + (qrand() % 50), 4, 10, QChar('0'));
+    }
+    view->setNodes(nodes.join(","));
+
+#endif
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setMargin(0);

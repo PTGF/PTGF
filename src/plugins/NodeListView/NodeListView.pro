@@ -26,17 +26,22 @@ CONFIG(debug, debug|release) {
 SOURCES              += NodeListViewPlugin.cpp \
                         NodeListView.cpp \
                         Slurm.cpp \
-                        HostRange.cpp \
-                        Range.cpp
+                        Range.cpp \
+    Node.cpp \
+    NodeRange.cpp
 HEADERS              += NodeListViewPlugin.h \
                         NodeListView.h \
                         NodeListViewLibrary.h \
                         Slurm.h \
-                        HostRange.h \
-                        Range.h
+                        Range.h \
+    NodeListViewPrivate.h \
+    Node.h \
+    NodePrivate.h \
+    NodeRange.h \
+    NodeRangePrivate.h
 
 DEFINES              += NODELISTVIEW_LIBRARY
 
 nodeListViewPluginHeaders.path = /include/plugins/NodeListView
-nodeListViewPluginHeaders.files = NodeListViewLibrary.h NodeListView.h HostRange.h Range.h
+nodeListViewPluginHeaders.files = NodeListViewLibrary.h NodeListView.h NodeRange.h Range.h
 INSTALLS += nodeListViewPluginHeaders

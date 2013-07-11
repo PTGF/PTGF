@@ -1,5 +1,5 @@
 /*!
-   \file HostRange.cpp
+   \file NodeRange.cpp
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,8 +21,9 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "HostRange.h"
+#include "NodeRangePrivate.h"
 
+#include <QString>
 #include <QStringList>
 #include <QDebug>
 
@@ -30,67 +31,32 @@ namespace Plugins {
 namespace NodeListView {
 
 /*!
-   \brief Creates a HostRange object from the given hostName string
-   \param hostName
+   \brief Creates a NodeRange object from the given nodeName string
+   \param nodeName
  */
-HostRange::HostRange(const QString &hostName) :
-    m_RangeWidth(0)
+NodeRange::NodeRange(const QString &nodeName) :
+    Node(),
+    d(new NodeRangePrivate)
 {
-    merge(hostName);
+    d->q = this;
+
+    merge(nodeName);
 }
 
-HostRange::~HostRange()
+NodeRange::~NodeRange()
 {
-    qDeleteAll(m_Ranges);
 }
 
-
-/*!
-   \brief Property holds the prefix of the HostRange
- */
-QString HostRange::prefix() const
-{
-    return m_Prefix;
-}
-/*!
-   \brief Property holds the prefix of the HostRange
-   \param prefix
- */
-void HostRange::setPrefix(const QString &prefix)
-{
-    m_Prefix = prefix;
-}
-
-/*!
-   \brief Property holds the suffix of the HostRange
- */
-QString HostRange::suffix() const
-{
-    return m_Suffix;
-}
-/*!
-   \brief Property holds the suffix of the HostRange
-   \param suffix
- */
-void HostRange::setSuffix(const QString &suffix)
-{
-    m_Suffix = suffix;
-}
-
-QList<Range*> HostRange::ranges() const
-{
-    return m_Ranges;
-}
 
 /*!
    \brief Returns a folded-range string representing the Range
    \return
  */
-QString HostRange::range() const
+QString NodeRange::number() const
 {
     QStringList rangeList;
-    foreach(Range *range, m_Ranges) {
-        rangeList << range->toString(m_RangeWidth);
+    foreach(Range *range, d->m_Ranges) {
+        rangeList << range->toString(d->m_RangeWidth);
     }
 
     if(rangeList.count() <= 0) {
@@ -104,55 +70,21 @@ QString HostRange::range() const
     return QString("[%1]").arg(rangeList.join(","));
 }
 
-/*!
-   \brief Merges another HostRange into the Ranges
-   \param other
-   \return returns true if successful; false otherwise
- */
-bool HostRange::merge(const HostRange &other)
+void NodeRange::setNumber(const QString &number)
 {
-    if(m_Prefix != other.prefix() || m_Suffix != other.suffix()) {
-        return false;
-    }
-
-    foreach(Range *otherRange, other.ranges()) {
-        bool merged = false;
-        foreach(Range *range, m_Ranges) {
-            if(range->merge(*otherRange)) {
-                merged = true;
-                break;
-            }
-        }
-        if(!merged) {
-            m_Ranges.append(otherRange);
-        }
-    }
-    return true;
-}
-/*!
-   \brief Returns a range-folded string representing the entire HostRange
-   \return
- */
-QString HostRange::toString() const
-{
-    return QString("%1%2%3").arg(prefix()).arg(range()).arg(suffix());
+    d->m_Ranges.clear();
+    d->mergeRange(number);
 }
 
-/*!
-   \brief Returns a full list of expanded nodes
-   Returns a truncated list if the host count excedes truncateAt
-   \param truncateAt
-   \return
- */
-QStringList HostRange::expanded(const int &truncateAt) const
+QStringList NodeRange::expanded(const int &truncateAt) const
 {
     QStringList expandedList;
 
     int count = 0;
 
-    foreach(Range *range, m_Ranges) {
+    foreach(Range *range, d->m_Ranges) {
         for(quint64 i = range->lower(); i <= range->upper(); ++i) {
-            expandedList << QString("%1%2%3").arg(m_Prefix).arg(i, m_RangeWidth, 10, QChar('0')).arg(m_Suffix);
+            expandedList << QString("%1%2%3").arg(prefix()).arg(i, d->m_RangeWidth, 10, QChar('0')).arg(suffix());
 
             if(++count >= truncateAt) {
                 return expandedList;
@@ -161,38 +93,77 @@ QStringList HostRange::expanded(const int &truncateAt) const
     }
 
     return expandedList;
+
 }
 
 
+QStringList NodeRange::semiExpanded() const
+{
+    QStringList expandedList;
+
+    foreach(Range *range, d->m_Ranges) {
+        expandedList << QString("%1[%2]%3").arg(prefix()).arg(range->toString(d->m_RangeWidth)).arg(suffix());
+    }
+
+    return expandedList;
+}
+
+
+
 /*!
-   \brief Merges a string representation of a hostname into the HostRange
-   \param hostName
+   \brief Merges another NodeRange into the Ranges
+   \param other
+   \return returns true if successful; false otherwise
+ */
+bool NodeRange::merge(const NodeRange &other)
+{
+    if(prefix() != other.prefix() || suffix() != other.suffix()) {
+        return false;
+    }
+
+    foreach(Range *otherRange, other.d->ranges()) {
+        bool merged = false;
+        foreach(Range *range, d->m_Ranges) {
+            if(range->merge(*otherRange)) {
+                merged = true;
+                break;
+            }
+        }
+        if(!merged) {
+            d->m_Ranges.append(otherRange);
+        }
+    }
+    return true;
+}
+
+/*!
+   \brief Merges a string representation of a nodename into the NodeRange
+   \param nodeName
    \return true if successful; false otherwise
  */
-bool HostRange::merge(const QString &hostName)
+bool NodeRange::merge(const QString &nodeName)
 {
-    QString prefix, suffix, ranges = "";
-    prefix.reserve(hostName.size());
+    QString prefix = "", suffix = "", ranges = "";
+    prefix.reserve(nodeName.size());
 
     //TODO: Deal with IP addresses
 
     bool error = false;
-    QString::const_iterator i = hostName.constBegin();
+    QString::const_iterator i = nodeName.constBegin();
 
     // Parse Prefix
-    while(i != hostName.constEnd() && !i->isNumber() && (*i) != '[') {
+    while(i < nodeName.constEnd() && !i->isNumber() && (*i) != '[') {
         prefix.append((*i));
         ++i;
     }
 
-    if(i != hostName.constEnd()) {
+    if(i < nodeName.constEnd()) {
         // Parse Numeric Range(s)
         if((*i) == '[') {
-            if(++i != hostName.constEnd()) {
+            if(++i < nodeName.constEnd()) {
                 while((*i) != ']') {
                     ranges.append((*i));
-                    if(++i == hostName.constEnd()) {
-                        qCritical() << "Unexpected format in hostname" << hostName;
+                    if(++i >= nodeName.constEnd()) {
                         error = true;
                         break;
                     }
@@ -200,61 +171,103 @@ bool HostRange::merge(const QString &hostName)
                 ++i;
             }
 
-            // Parse Single Number
+        // Parse Single Number
         } else if(i->isNumber()) {
             QString number;
             do {
                 number.append((*i));
                 ++i;
-            } while(i != hostName.constEnd() && i->isNumber());
+            } while(i < nodeName.constEnd() && i->isNumber());
             ranges = number;
         } else {
-            qCritical() << "Unknown character found in hostname" << hostName;
+            qCritical() << "Unknown character found in nodename" << nodeName;
             error = true;
         }
     }
 
     // Parse Suffix
-    while(i != hostName.constEnd() && !i->isNumber()) {
+    while(i < nodeName.constEnd()) {
         suffix.append((*i));
         ++i;
     }
 
     if(error) { return false; }
 
-    if(m_Prefix.isNull() && m_Ranges.isEmpty() && m_Suffix.isNull()) {
-        m_Prefix = prefix;
-        m_Suffix = suffix;
-    } else if(m_Prefix != prefix || m_Suffix != suffix) {
+    if(!d->m_Initialized) {
+        setPrefix(prefix);
+        setSuffix(suffix);
+        d->m_Initialized = true;
+    } else if(this->prefix() != prefix || this->suffix() != suffix) {
         return false;
     }
 
     foreach(QString range, ranges.split(',')) {
-        mergeRange(range);
+        d->mergeRange(range);
     }
 
     return true;
 }
 
 /*!
-   \brief Returns the number of hosts in the range set
+   \brief Returns the number of nodes in the range set
    \return
  */
-quint64 HostRange::count() const
+quint64 NodeRange::count() const
 {
     quint64 count = 0;
-    foreach(Range *range, m_Ranges) {
+    foreach(Range *range, d->m_Ranges) {
         count += range->count();
     }
     return count;
 }
 
 /*!
-   \brief Merges a string representation of a value range into this host's range set
+   \brief Returns a brief list of nodes that is more user friendly than long lists
+   \return
+ */
+QString NodeRange::toShortString() const
+{
+    QString rangeList;
+    if(d->m_Ranges.count() > 2) {
+        rangeList = "[";
+        rangeList.append(d->m_Ranges.first()->toString(d->m_RangeWidth));
+        rangeList.append(",...,");
+        rangeList.append(d->m_Ranges.last()->toString(d->m_RangeWidth));
+        rangeList.append("]");
+    } else {
+        rangeList = number();
+    }
+
+    rangeList.append(QString(":%1").arg(count()));
+
+    return QString("%1%2%3").arg(prefix()).arg(rangeList).arg(suffix());
+}
+
+
+
+
+
+
+NodeRangePrivate::NodeRangePrivate() :
+    m_RangeWidth(0),
+    m_Initialized(false)
+{
+
+}
+
+NodeRangePrivate::~NodeRangePrivate()
+{
+    qDeleteAll(m_Ranges);
+}
+
+
+/*!
+   \internal
+   \brief Merges a string representation of a value range into this node's range set
    \param rangeString
    \return true if successful; false otherwise
  */
-bool HostRange::mergeRange(const QString &rangeString) {
+bool NodeRangePrivate::mergeRange(const QString &rangeString) {
     quint64 lower, upper;
     bool lowerOkay = false;
     bool upperOkay = false;
@@ -343,6 +356,16 @@ bool HostRange::mergeRange(const QString &rangeString) {
     // If we get here, simply append it
     m_Ranges.append(new Range(lower, upper));
     return true;
+}
+
+/*!
+   \internal
+   \brief NodeRangePrivate::ranges
+   \return
+ */
+QList<Range*> NodeRangePrivate::ranges() const
+{
+    return m_Ranges;
 }
 
 } // namespace NodeListView

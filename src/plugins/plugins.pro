@@ -31,6 +31,7 @@ Welcome.subdir               = Welcome
 Welcome.depends              = Help
 
 Example.subdir               = Example
+Example.depends              = NodeListView
 
 SourceView.subdir            = SourceView
 

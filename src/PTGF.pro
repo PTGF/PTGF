@@ -22,3 +22,11 @@ CONFIG  += ordered
 SUBDIRS  = core plugins tests
 
 OTHER_FILES += Doxyfile fileheader.txt
+
+core.subdir = core
+
+plugins.subdir = plugins
+plugins.depends = core
+
+tests.subdir = tests
+tests.depends = plugins

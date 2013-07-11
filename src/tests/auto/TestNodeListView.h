@@ -36,13 +36,15 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testHostRange();
+    void testRange();
 
-    void testHostRangeSequentialMerge_data();
-    void testHostRangeSequentialMerge();
+    void testNodeRange();
 
-    void testHostRangeRandomMerge_data();
-    void testHostRangeRandomMerge();
+    void testNodeRangeSequentialMerge_data();
+    void testNodeRangeSequentialMerge();
+
+    void testNodeRangeRandomMerge_data();
+    void testNodeRangeRandomMerge();
 
 };
 
