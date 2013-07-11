@@ -48,7 +48,6 @@ TableViewPlugin::TableViewPlugin(QObject *parent) : QObject(parent)
 {
     m_Name = "TableView";
     m_Version = QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT);
-    m_Dependencies.append( Core::PluginManager::Dependency("OpenSpeedShop", QString("^%1\\.%2.*$").arg(VER_MAJ).arg(VER_MIN)) );
 }
 
 TableViewPlugin::~TableViewPlugin()

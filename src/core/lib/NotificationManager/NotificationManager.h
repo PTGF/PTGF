@@ -55,8 +55,6 @@ public:
                                NotificationWidget::StandardButtons buttons = NotificationWidget::NoButton,
                                const QObject *receiver = 0, const char *member = 0);
 
-protected:
-
 };
 
 } // namespace NotificationManager
