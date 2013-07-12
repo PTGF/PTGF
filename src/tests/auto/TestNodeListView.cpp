@@ -32,6 +32,7 @@
 #include <NodeListView/Range.h>
 #include <NodeListView/NodeRange.h>
 #include <NodeListView/Slurm.h>
+#include <NodeListView/NodeListView.h>
 using namespace Plugins::NodeListView;
 
 TestNodeListView::TestNodeListView(QObject *parent) :
@@ -46,6 +47,62 @@ void TestNodeListView::initTestCase()
 void TestNodeListView::cleanupTestCase()
 {
 }
+
+void TestNodeListView::testNodeListView_data()
+{
+    QTest::addColumn<QString>("nodeList");
+    QTest::addColumn<QString>("nodeSearch");
+    QTest::addColumn<QString>("nodeSelection");
+    QTest::addColumn<bool>("nodeSearchIsValid");
+
+
+    QTest::newRow("Single node") << "nodes[000-999]" << "nodes005" << "nodes005" << true;
+    QTest::newRow("Single node low") << "nodes[000-999]" << "nodes000" << "nodes000" << true;
+    QTest::newRow("Single node high") << "nodes[000-999]" << "nodes999" << "nodes999" << true;
+    QTest::newRow("Single node outside") << "nodes[000-999]" << "nodes1000" << "" << false;
+
+    QTest::newRow("Single range") << "nodes[000-999]" << "nodes[005-010]" << "nodes[005-010]" << true;
+    QTest::newRow("Single range low") << "nodes[000-999]" << "nodes[000-100]" << "nodes[000-100]" << true;
+    QTest::newRow("Single range high") << "nodes[000-999]" << "nodes[900-999]" << "nodes[900-999]" << true;
+    QTest::newRow("Single range outside") << "nodes[000-899]" << "nodes[850-999]" << "nodes[850-899]" << false;
+
+    QTest::newRow("Multi range") << "nodes[000-999]" << "nodes[005-010,123,256-310]" << "nodes[005-010,123,256-310]" << true;
+    QTest::newRow("Multi range low/high") << "nodes[000-999]" << "nodes[000-100,123,256-310,900-999]" << "nodes[000-100,123,256-310,900-999]" << true;
+    QTest::newRow("Multi range outside") << "nodes[000-899]" << "nodes[005-010,123,256-310,850-999]" << "nodes[005-010,123,256-310,850-899]" << false;
+
+
+    QTest::newRow("Suffix multi range 0") << "nodes[000-999]ib" << "nodes[005-010,123,256-310]ib" << "nodes[005-010,123,256-310]ib" << true;
+    QTest::newRow("Suffix multi range 1") << "nodes[000-999],nodes[000-999]ib" << "nodes[005-010,123,256-310]ib" << "nodes[005-010,123,256-310]ib" << true;
+    QTest::newRow("Suffix multi range 2") << "nodes[000-999],nodes[000-999]ib" << "nodes[005-010],nodes[123,256-310]ib" << "nodes[005-010],nodes[123,256-310]ib" << true;
+
+
+    QTest::newRow("Malformed range") << "nodes[000-999]" << "nodes[005-010,123,256-310" << "" << false;
+
+    QTest::newRow("Search with spaces") << "nodes[000-999]" << " nodes[ 005-010, 123 , 256 - 310 ]  " << "nodes[005-010,123,256-310]" << true;
+    QTest::newRow("Search multi range suffix with spaces") << "nodes[000-999],nodes[000-999]ib"
+                                        << " nodes[ 005-010, 123 , 256 - 310 ] , nodes[ 015-018, 128 , 360 - 720 ]ib  "
+                                        << "nodes[005-010,123,256-310],nodes[015-018,128,360-720]ib"
+                                        << true;
+
+}
+
+void TestNodeListView::testNodeListView()
+{
+    NodeListView view;
+
+    QFETCH(QString, nodeList);
+    QFETCH(QString, nodeSearch);
+    QFETCH(QString, nodeSelection);
+    QFETCH(bool, nodeSearchIsValid);
+
+    view.setNodes(nodeList);
+    view.setSearchText(nodeSearch);
+
+    QCOMPARE(view.nodes(), nodeList);
+    QCOMPARE(view.selectedNodes(), nodeSelection);
+    QCOMPARE(view.isValid(), nodeSearchIsValid);
+}
+
 
 void TestNodeListView::testSlurm()
 {

@@ -29,12 +29,12 @@ CONFIG(debug, debug|release) {
 
 SOURCES  += auto.cpp \
             TestActionManager.cpp \
-    TestPluginManager.cpp \
-    TestNodeListView.cpp
+            TestPluginManager.cpp \
+            TestNodeListView.cpp
 
-HEADERS += TestActionManager.h \
-    TestPluginManager.h \
-    TestNodeListView.h
+HEADERS  += TestActionManager.h \
+            TestPluginManager.h \
+            TestNodeListView.h
 
 
 LIBS    += -L$$quote($${BUILD_PATH}/core/lib/$${DIR_POSTFIX}) -lCore$${LIB_POSTFIX}

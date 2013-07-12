@@ -36,6 +36,9 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testNodeListView_data();
+    void testNodeListView();
+
     void testSlurm();
 
     void testRange();
