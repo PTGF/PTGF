@@ -39,9 +39,7 @@ public:
     static quint64 nodeCount();
     static int cpusPerNode();
 
-signals:
-
-public slots:
+    //TODO: Use sinfo for full node list discovery
 
 };
 

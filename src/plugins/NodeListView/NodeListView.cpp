@@ -62,13 +62,13 @@ NodeListView::NodeListView(QWidget *parent) :
     d->m_TreeView->setSelectionBehavior(QAbstractItemView::SelectRows);
     d->m_TreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     d->m_TreeView->setModel(new QStandardItemModel(d->m_TreeView));
-    connect(d->m_TreeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged()));
+    connect(d->m_TreeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), d.data(), SLOT(selectionChanged()));
 
     d->m_txtSearch->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     d->m_txtSearch->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     d->m_txtSearch->setFixedHeight(32);
     d->m_txtSearch->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
-    connect(d->m_txtSearch, SIGNAL(textChanged()), this, SLOT(selectNodes()));
+    connect(d->m_txtSearch, SIGNAL(textChanged()), d.data(), SLOT(selectNodes()));
 
     QFont font = d->m_lblNodeCount->font();
     font.setPointSizeF(font.pointSizeF()*0.85);
@@ -141,25 +141,26 @@ void NodeListView::setNodes(const QString &nodes)
     Q_ASSERT(model);
     model->clear();
 
-    QList<NodeRange*> nodeList = d->mergedNodeList(nodes);
+    bool okay;
+    QList<NodeRange*> nodeList = d->mergedNodeList(nodes, &okay);
+    if(okay) {
+        // Add all the individual items into the nodelist
+        foreach(NodeRange *range, nodeList) {
+            if(!d->m_lblNodeCount->text().isEmpty()) {
+                d->m_lblNodeCount->setText(d->m_lblNodeCount->text() + ",");
+            }
+            d->m_lblNodeCount->setText(d->m_lblNodeCount->text() + range->toShortString());
 
-    // Add all the individual items into the nodelist
-    foreach(NodeRange *range, nodeList) {
-        if(!d->m_lblNodeCount->text().isEmpty()) {
-            d->m_lblNodeCount->setText(d->m_lblNodeCount->text() + ",");
-        }
-        d->m_lblNodeCount->setText(d->m_lblNodeCount->text() + range->toShortString());
 
+            foreach(QString node, range->expanded()) {
+                QStandardItem *item = new QStandardItem(node);
+                item->setSelectable(true);
+                item->setEditable(false);
 
-        foreach(QString node, range->expanded()) {
-            QStandardItem *item = new QStandardItem(node);
-            item->setSelectable(true);
-            item->setEditable(false);
-
-            model->invisibleRootItem()->appendRow(item);
+                model->invisibleRootItem()->appendRow(item);
+            }
         }
     }
-
     qDeleteAll(nodeList);
 
     model->sort(0, Qt::AscendingOrder);
@@ -167,118 +168,32 @@ void NodeListView::setNodes(const QString &nodes)
 
     d->m_lblNodeCount->setText(d->m_lblNodeCount->text() + QString("; total nodes: %1").arg(model->invisibleRootItem()->rowCount()));
 
-    resizeSearchTextBox();
+    d->resizeSearchTextBox();
 
     d->m_TreeView->selectAll();
 }
 
-void NodeListView::resizeEvent(QResizeEvent *event)
+QString NodeListView::searchText() const
 {
-    QWidget::resizeEvent(event);
-    this->resizeSearchTextBox();
+    return d->m_txtSearch->toPlainText();
 }
 
-
-void NodeListView::selectNodes()
+void NodeListView::setSearchText(const QString &searchText)
 {
-    if(d->m_SelectionChanging) {
-        return;
-    }
-
-    d->m_SelectingNodes = true;
-
-    QStandardItemModel *model = qobject_cast<QStandardItemModel*>(d->m_TreeView->model());
-    Q_ASSERT(model);
-    QStandardItem *rootItem = model->invisibleRootItem();
-
-    d->m_TreeView->clearSelection();
-
-    QItemSelectionModel *selection = d->m_TreeView->selectionModel();
-    QList<NodeRange*> nodeList = d->mergedNodeList(d->m_txtSearch->toPlainText().trimmed());
-    bool error = false;
-    foreach(NodeRange *range, nodeList) {
-        foreach(QString node, range->expanded()) {
-            bool found = false;
-            for(int i = 0; i < rootItem->rowCount(); ++i) {
-                QStandardItem *item = rootItem->child(i, 0);
-                if(item->text().compare(node) == 0) {
-                    selection->select(item->index(), QItemSelectionModel::Select | QItemSelectionModel::Rows);
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found && !error) {
-                error = true;
-            }
-
-        }
-    }
-
-    qDeleteAll(nodeList);
-
-    if(error) {
-        d->m_txtSearch->setStyleSheet("QPlainTextEdit {background-color: #FFAAAA}");
-    } else {
-        d->m_txtSearch->setStyleSheet("QPlainTextEdit {background-color: #FFFFFF}");
-    }
-
-    d->m_SelectingNodes = false;
-
-    resizeSearchTextBox();
-}
-
-void NodeListView::resizeSearchTextBox()
-{
-    /*! \internal
-        \note Unlike the documentation's description of QPlainText::document()->size(), the height of the document is the same
-              as the QTextDocument::lineCount(), not the pixel height of the document.  Even scarrier, there are many projects
-              blindly using this function as if it returns pixel height values, without verifying.  Oh well.  Here's my
-              complete hack of a workaround.
-     */
-
-    // Let the system update the display before we exit too early
-    qApp->processEvents();
-    if(!d->m_txtSearch->isVisible()) {
-        return;
-    }
-    if(d->m_PreviousLineCount == d->m_txtSearch->document()->lineCount()) {
-        return;
-    }
-
-    static const int min = 20;
-    static const int max = 100;
-    static const int interval = qMax(sizeIncrement().height(), 2);
-    int index = qBound(min, d->m_txtSearch->height(), max);
-    bool direction = d->m_PreviousLineCount > d->m_txtSearch->document()->lineCount();
-
-    while( (direction ? !d->m_txtSearch->verticalScrollBar()->isVisible() : d->m_txtSearch->verticalScrollBar()->isVisible()) &&
-           index >= min &&
-           index <= max) {
-
-        d->m_txtSearch->setFixedHeight(direction ? index -= interval : index += interval);
-
-        // Let the system update the display before we exit the loop too early
-        if((direction ? d->m_txtSearch->verticalScrollBar()->isVisible() : !d->m_txtSearch->verticalScrollBar()->isVisible())) {
-            qApp->processEvents();
-        }
-
-    }
-
-    d->m_txtSearch->setFixedHeight(index+1);
-    d->m_PreviousLineCount = d->m_txtSearch->document()->lineCount();
+    d->m_txtSearch->setPlainText(searchText);
 }
 
 
 
-void NodeListView::selectionChanged()
+bool NodeListView::isValid() const
 {
-    if(d->m_SelectingNodes) {
-        return;
-    }
+    return d->m_IsValid;
+}
 
-    d->m_SelectionChanging = true;
 
+
+QString NodeListView::selectedNodes() const
+{
     QList<NodeRange*> ranges;
 
     QItemSelectionModel *selection = d->m_TreeView->selectionModel();
@@ -303,13 +218,20 @@ void NodeListView::selectionChanged()
         rangeStrings.append(range->toString());
     }
 
-    d->m_txtSearch->setPlainText(rangeStrings.join(","));
-
     qDeleteAll(ranges);
 
-    d->m_SelectionChanging = false;
-
+    return rangeStrings.join(",");
 }
+
+
+
+void NodeListView::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    d->resize();
+}
+
+
 
 
 NodeListViewPrivate::NodeListViewPrivate() :
@@ -326,7 +248,7 @@ NodeListViewPrivate::~NodeListViewPrivate()
 {
 }
 
-QStringList NodeListViewPrivate::splitNodeList(const QString &nodes)
+QStringList NodeListViewPrivate::splitNodeList(const QString &nodes, bool *okay)
 {
     // Break the list into NodeRanges
     QString::const_iterator i = nodes.constBegin();
@@ -367,16 +289,29 @@ QStringList NodeListViewPrivate::splitNodeList(const QString &nodes)
         }
     }
 
+    if(okay) {
+        if(! ((*okay) = (counter == 0))) {
+            return QStringList();
+        }
+    }
+
     return nodeStringList;
 }
 
-QList<NodeRange*> NodeListViewPrivate::mergedNodeList(const QString &nodes)
+QList<NodeRange*> NodeListViewPrivate::mergedNodeList(const QString &nodes, bool *okay)
 {
-    QStringList nodeStringList = splitNodeList(nodes);
+    QStringList nodeStringList = splitNodeList(nodes, okay);
+
+    QList<NodeRange*> nodeList;
+
+    if(okay && !(*okay)) {
+        return nodeList;
+    }
 
     // Merge the list further, if necessary
-    QList<NodeRange*> nodeList;
     foreach(QString node, nodeStringList) {
+        node = node.trimmed();
+
         bool merged = false;
 
         NodeRange tmpNode(node);
@@ -393,7 +328,128 @@ QList<NodeRange*> NodeListViewPrivate::mergedNodeList(const QString &nodes)
             nodeList.append(new NodeRange(node));
         }
     }
+
     return nodeList;
+}
+
+void NodeListViewPrivate::resize()
+{
+    resizeSearchTextBox();
+}
+
+void NodeListViewPrivate::selectNodes()
+{
+    if(m_SelectionChanging) {
+        return;
+    }
+
+    m_SelectingNodes = true;
+
+    QStandardItemModel *model = qobject_cast<QStandardItemModel*>(m_TreeView->model());
+    Q_ASSERT(model);
+    QStandardItem *rootItem = model->invisibleRootItem();
+
+    m_TreeView->clearSelection();
+
+    QItemSelectionModel *selection = m_TreeView->selectionModel();
+    bool okay, error = false;
+    QList<NodeRange*> nodeList = mergedNodeList(m_txtSearch->toPlainText().trimmed(), &okay);
+
+    if(!(error = !okay)) {
+        foreach(NodeRange *range, nodeList) {
+            foreach(QString node, range->expanded()) {
+                bool found = false;
+                for(int i = 0; i < rootItem->rowCount(); ++i) {
+                    QStandardItem *item = rootItem->child(i, 0);
+                    if(item->text().compare(node) == 0) {
+                        selection->select(item->index(), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(!found && !error) {
+                    error = true;
+                }
+
+            }
+        }
+
+    }
+
+    qDeleteAll(nodeList);
+
+    if(error) {
+        if(m_IsValid) {
+            m_txtSearch->setStyleSheet("QPlainTextEdit {background-color: #FFAAAA}");
+            m_IsValid = false;
+        }
+    } else {
+        if(!m_IsValid) {
+            m_txtSearch->setStyleSheet("QPlainTextEdit {background-color: #FFFFFF}");
+            m_IsValid = true;
+        }
+    }
+
+    m_SelectingNodes = false;
+
+    resizeSearchTextBox();
+}
+
+void NodeListViewPrivate::resizeSearchTextBox()
+{
+    /*! \internal
+        \note Unlike the documentation's description of QPlainText::document()->size(), the height of the document is the same
+              as the QTextDocument::lineCount(), not the pixel height of the document.  Even scarrier, there are many projects
+              blindly using this function as if it returns pixel height values, without verifying.  Oh well.  Here's my
+              complete hack of a workaround.
+     */
+
+    // Let the system update the display before we exit too early
+    qApp->processEvents();
+    if(!m_txtSearch->isVisible()) {
+        return;
+    }
+    if(m_PreviousLineCount == m_txtSearch->document()->lineCount()) {
+        return;
+    }
+
+    static const int min = 20;
+    static const int max = 100;
+    static const int interval = qMax(q->sizeIncrement().height(), 2);
+    int index = qBound(min, m_txtSearch->height(), max);
+    bool direction = m_PreviousLineCount > m_txtSearch->document()->lineCount();
+
+    while( (direction ? !m_txtSearch->verticalScrollBar()->isVisible() : m_txtSearch->verticalScrollBar()->isVisible()) &&
+           index >= min &&
+           index <= max) {
+
+        m_txtSearch->setFixedHeight(direction ? index -= interval : index += interval);
+
+        // Let the system update the display before we exit the loop too early
+        if((direction ? m_txtSearch->verticalScrollBar()->isVisible() : !m_txtSearch->verticalScrollBar()->isVisible())) {
+            qApp->processEvents();
+        }
+
+    }
+
+    m_txtSearch->setFixedHeight(index+1);
+    m_PreviousLineCount = m_txtSearch->document()->lineCount();
+}
+
+
+
+void NodeListViewPrivate::selectionChanged()
+{
+    if(m_SelectingNodes) {
+        return;
+    }
+
+    m_SelectionChanging = true;
+
+    m_txtSearch->setPlainText(q->selectedNodes());
+
+    m_SelectionChanging = false;
 }
 
 

@@ -48,13 +48,16 @@ public:
     QString nodes() const;
     void setNodes(const QString &nodes);
 
+    QString searchText() const;
+    void setSearchText(const QString &searchText);
+
+    bool isValid() const;
+
+    QString selectedNodes() const;
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
-protected slots:
-    void selectNodes();
-    void resizeSearchTextBox();
-    void selectionChanged();
 
 };
 

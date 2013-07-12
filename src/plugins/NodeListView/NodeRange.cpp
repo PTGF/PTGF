@@ -162,7 +162,9 @@ bool NodeRange::merge(const QString &nodeName)
         if((*i) == '[') {
             if(++i < nodeName.constEnd()) {
                 while((*i) != ']') {
-                    ranges.append((*i));
+                    if((*i) != ' ') {
+                        ranges.append((*i));
+                    }
                     if(++i >= nodeName.constEnd()) {
                         error = true;
                         break;

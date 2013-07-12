@@ -36,8 +36,9 @@ class QStandardItem;
 namespace Plugins {
 namespace NodeListView {
 
-class NODELISTVIEW_EXPORT NodeListViewPrivate
+class NODELISTVIEW_EXPORT NodeListViewPrivate : QObject
 {
+    Q_OBJECT
     DECLARE_PUBLIC(NodeListView)
     Q_DISABLE_COPY(NodeListViewPrivate)
 
@@ -45,10 +46,16 @@ public:
     NodeListViewPrivate();
     ~NodeListViewPrivate();
 
-    QStringList splitNodeList(const QString &nodes);
-    QList<NodeRange*> mergedNodeList(const QString &nodeList);
+    QStringList splitNodeList(const QString &nodes, bool *okay = 0);
+    QList<NodeRange*> mergedNodeList(const QString &nodeList, bool *okay = 0);
 
+protected slots:
+    void resize();
+    void selectNodes();
+    void resizeSearchTextBox();
+    void selectionChanged();
 
+private:
     QTreeView *m_TreeView;
     QPlainTextEdit *m_txtSearch;
     QLabel *m_lblNodeCount;
@@ -57,6 +64,8 @@ public:
 
     bool m_SelectionChanging;
     bool m_SelectingNodes;
+
+    bool m_IsValid;
 };
 
 } // namespace NodeListView
