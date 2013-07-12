@@ -75,8 +75,13 @@ bool ExamplePlugin::initialize(QStringList &args, QString *err)
     Core::ActionManager::MenuPath menuPath("Example", 16);
 
     QAction *action = actionManager.createAction(menuPath);
-    action->setText("Display List of Views");
-    connect(action, SIGNAL(triggered()), this, SLOT(exampleMenuItem_Triggered()));
+    action->setText("Display sample Plot View");
+    connect(action, SIGNAL(triggered()), this, SLOT(examplePlotView_Triggered()));
+
+    action = actionManager.createAction(menuPath);
+    action->setText("Display sample Node List View");
+    connect(action, SIGNAL(triggered()), this, SLOT(exampleNodeListView_Triggered()));
+
 #endif
 
     return true;
@@ -104,7 +109,10 @@ QList<Core::PluginManager::Dependency> ExamplePlugin::dependencies()
 #ifdef QT_DEBUG
 void ExamplePlugin::exampleMenuItem_Triggered()
 {
-#if 0
+}
+
+void ExamplePlugin::examplePlotView_Triggered()
+{
     Core::ViewManager::ViewManager &viewManager = Core::ViewManager::ViewManager::instance();
 
     qDebug() << Q_FUNC_INFO << viewManager.viewNames();
@@ -122,23 +130,47 @@ void ExamplePlugin::exampleMenuItem_Triggered()
         QStandardItem *headerItem = new QStandardItem(tr("Column %1").arg(column));
         model->setHorizontalHeaderItem(column, headerItem);
 
+        int value = qrand() % 1000;
+
         for(int row = 0; row < maxRows; ++row) {
             QStandardItem *item = new QStandardItem();
-            item->setData(qrand(), Qt::DisplayRole);
+
+            if(qrand() % 100 >= 50) {
+                value += qrand() % 100;
+            } else {
+                value -= qrand() % 100;
+            }
+
+            item->setData(value, Qt::DisplayRole);
             model->setItem(row, column, item);
         }
     }
 
     // Check for the PlotView plugin, and ensure it can show our model
-    if(!viewManager.viewNames(model).contains("Table View")) {
+    if(!viewManager.viewNames(model).contains("Plot View")) {
         return;
     }
 
 
-    QAbstractItemView *view = viewManager.viewWidget("Table View", model);
+    QAbstractItemView *view = viewManager.viewWidget("Plot View", model);
     model->setParent(view);
 
-#else
+
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setMargin(0);
+    layout->addWidget(view);
+
+    QDialog *dlg = new QDialog();
+    dlg->setAttribute(Qt::WA_DeleteOnClose, true);
+    dlg->resize(800, 480);
+    dlg->setLayout(layout);
+    dlg->show();
+}
+
+
+void ExamplePlugin::exampleNodeListView_Triggered()
+{
 
     Plugins::NodeListView::NodeListView *view = new Plugins::NodeListView::NodeListView();
 
@@ -151,8 +183,6 @@ void ExamplePlugin::exampleMenuItem_Triggered()
         }
         view->setNodes(nodes.join(","));
     }
-
-#endif
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setMargin(0);

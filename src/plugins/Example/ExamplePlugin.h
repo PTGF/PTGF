@@ -59,6 +59,8 @@ protected:
 protected slots:
 #ifdef QT_DEBUG
     void exampleMenuItem_Triggered();
+    void examplePlotView_Triggered();
+    void exampleNodeListView_Triggered();
 #endif
 
 };
