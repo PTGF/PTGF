@@ -71,7 +71,7 @@ void TestActionManager::testMenuPath()
 
 void TestActionManager::testAction()
 {
-    INSTANCE;
+//    INSTANCE;
 
     //todo; verify menuitem priorities
 
@@ -79,7 +79,7 @@ void TestActionManager::testAction()
 
 void TestActionManager::testShortcut()
 {
-    INSTANCE;
+//    INSTANCE;
 
 }
 
