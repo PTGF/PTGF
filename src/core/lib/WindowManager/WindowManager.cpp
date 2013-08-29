@@ -205,11 +205,16 @@ void WindowManagerPrivate::deregisterMainWindow(IMainWindow *window)
 
 void WindowManagerPrivate::windowActivated()
 {
-    IMainWindow *mainWindow = qobject_cast<IMainWindow *>(sender());
+    IMainWindow *window = qobject_cast<IMainWindow *>(sender());
 
-    if(!mainWindow) {
+    if(!window) {
         return;
     }
+
+
+    CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
+    coreWindow.setCurrentCentralWidget(window->mainWindowWidget());
+
 
     //! \todo Hide all windows' actions
 
