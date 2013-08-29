@@ -193,6 +193,10 @@ bool NodeRange::merge(const QString &nodeName)
         ++i;
     }
 
+    if(!suffix.isEmpty() && suffix.endsWith(".localdomain", Qt::CaseInsensitive)) {
+        suffix = suffix.remove(".localdomain", Qt::CaseInsensitive);
+    }
+
     if(error) { return false; }
 
     if(!d->m_Initialized) {
