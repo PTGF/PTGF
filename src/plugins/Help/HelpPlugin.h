@@ -1,5 +1,5 @@
-#ifndef HELPPLUGIN_H
-#define HELPPLUGIN_H
+#ifndef PLUGINS_HELP_HELPPLUGIN_H
+#define PLUGINS_HELP_HELPPLUGIN_H
 
 #include <QObject>
 class QHelpEngine;
@@ -54,4 +54,4 @@ private:
 } // namespace Help
 } // namespace Plugins
 
-#endif // HELPPLUGIN_H
+#endif // PLUGINS_HELP_HELPPLUGIN_H

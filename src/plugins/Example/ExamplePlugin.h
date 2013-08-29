@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef EXAMPLEPLUGIN_H
-#define EXAMPLEPLUGIN_H
+#ifndef PLUGINS_EXAMPLE_EXAMPLEPLUGIN_H
+#define PLUGINS_EXAMPLE_EXAMPLEPLUGIN_H
 
 #include <QObject>
 #include <PluginManager/IPlugin.h>
@@ -67,4 +67,4 @@ protected slots:
 
 } // namespace Example
 } // namespace Plugins
-#endif // EXAMPLEPLUGIN_H
+#endif // PLUGINS_EXAMPLE_EXAMPLEPLUGIN_H

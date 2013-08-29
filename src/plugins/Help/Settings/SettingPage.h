@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef HELPSETTINGPAGE_H
-#define HELPSETTINGPAGE_H
+#ifndef PLUGINS_HELP_HELPSETTINGPAGE_H
+#define PLUGINS_HELP_HELPSETTINGPAGE_H
 
 #include <SettingManager/ISettingPage.h>
 
@@ -53,4 +53,4 @@ private:
 
 } // namespace Help
 } // namespace Plugins
-#endif // HELPSETTINGPAGE_H
+#endif // PLUGINS_HELP_HELPSETTINGPAGE_H

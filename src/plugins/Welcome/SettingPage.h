@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef WELCOMESETTINGPAGE_H
-#define WELCOMESETTINGPAGE_H
+#ifndef PLUGINS_WELCOME_WELCOMESETTINGPAGE_H
+#define PLUGINS_WELCOME_WELCOMESETTINGPAGE_H
 
 #include <SettingManager/ISettingPage.h>
 
@@ -57,4 +57,4 @@ private:
 
 } // namespace Welcome
 } // namespace Plugins
-#endif // WELCOMESETTINGPAGE_H
+#endif // PLUGINS_WELCOME_WELCOMESETTINGPAGE_H

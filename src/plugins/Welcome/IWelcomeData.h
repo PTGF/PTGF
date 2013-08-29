@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef IWELCOMEDATA_H
-#define IWELCOMEDATA_H
+#ifndef PLUGINS_WELCOME_IWELCOMEDATA_H
+#define PLUGINS_WELCOME_IWELCOMEDATA_H
 
 #include <QObject>
 #include <QList>
@@ -86,4 +86,4 @@ public:
 
 Q_DECLARE_INTERFACE(Plugins::Welcome::IWelcomeData, "org.krellinst.ptgf.IWelcomeData")
 
-#endif // IWELCOMEDATA_H
+#endif // PLUGINS_WELCOME_IWELCOMEDATA_H

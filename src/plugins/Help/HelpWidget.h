@@ -1,5 +1,5 @@
-#ifndef HELPWIDGET_H
-#define HELPWIDGET_H
+#ifndef PLUGINS_HELP_HELPWIDGET_H
+#define PLUGINS_HELP_HELPWIDGET_H
 
 #include <QSplitter>
 #include <QTabWidget>
@@ -48,4 +48,4 @@ private:
 } // namespace Help
 } // namespace Plugins
 
-#endif // HELPWIDGET_H
+#endif // PLUGINS_HELP_HELPWIDGET_H

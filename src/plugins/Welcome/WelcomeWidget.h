@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef WELCOMEWIDGET_H
-#define WELCOMEWIDGET_H
+#ifndef PLUGINS_WELCOME_WELCOMEWIDGET_H
+#define PLUGINS_WELCOME_WELCOMEWIDGET_H
 
 #include <QWidget>
 #include <QSignalMapper>
@@ -85,4 +85,4 @@ private:
 
 } // namespace Welcome
 } // namespace Plugins
-#endif // WELCOMEWIDGET_H
+#endif // PLUGINS_WELCOME_WELCOMEWIDGET_H

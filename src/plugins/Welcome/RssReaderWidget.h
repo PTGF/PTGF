@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef RSSREADERWIDGET_H
-#define RSSREADERWIDGET_H
+#ifndef PLUGINS_WELCOME_RSSREADERWIDGET_H
+#define PLUGINS_WELCOME_RSSREADERWIDGET_H
 
 
 #include <QWidget>
@@ -67,4 +67,4 @@ private:
 } // namespace Welcome
 } // namespace Plugins
 
-#endif // RSSREADERWIDGET_H
+#endif // PLUGINS_WELCOME_RSSREADERWIDGET_H

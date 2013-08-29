@@ -173,6 +173,10 @@ void NodePrivate::fromString(const QString &nodeName)
         ++i;
     }
 
+    if(!suffix.isEmpty() && suffix.endsWith(".localdomain", Qt::CaseInsensitive)) {
+        suffix = suffix.remove(".localdomain", Qt::CaseInsensitive);
+    }
+
     q->setPrefix(prefix);
     q->setNumber(number);
     q->setSuffix(suffix);

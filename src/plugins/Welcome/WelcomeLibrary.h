@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef WELCOMELIBRARY_H
-#define WELCOMELIBRARY_H
+#ifndef PLUGINS_WELCOME_WELCOMELIBRARY_H
+#define PLUGINS_WELCOME_WELCOMELIBRARY_H
 
 #include <Global.h>
 
@@ -32,4 +32,4 @@
 #  define WELCOME_EXPORT Q_DECL_IMPORT
 #endif
 
-#endif // WELCOMELIBRARY_H
+#endif // PLUGINS_WELCOME_WELCOMELIBRARY_H

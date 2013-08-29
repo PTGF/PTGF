@@ -1,5 +1,5 @@
-#ifndef HELPBROWSER_H
-#define HELPBROWSER_H
+#ifndef PLUGINS_HELP_HELPBROWSER_H
+#define PLUGINS_HELP_HELPBROWSER_H
 
 #include <QTextBrowser>
 #include <QUrl>
@@ -24,4 +24,4 @@ private:
 } // namespace Help
 } // namespace Plugins
 
-#endif // HELPBROWSER_H
+#endif // PLUGINS_HELP_HELPBROWSER_H

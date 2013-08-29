@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef WELCOMEPLUGIN_H
-#define WELCOMEPLUGIN_H
+#ifndef PLUGINS_WELCOME_WELCOMEPLUGIN_H
+#define PLUGINS_WELCOME_WELCOMEPLUGIN_H
 
 #include <PluginManager/IPlugin.h>
 #include <SettingManager/ISettingPageFactory.h>
@@ -72,4 +72,4 @@ private:
 } // namespace Welcom
 } // namespace Plugins
 
-#endif // WELCOMEPLUGIN_H
+#endif // PLUGINS_WELCOME_WELCOMEPLUGIN_H

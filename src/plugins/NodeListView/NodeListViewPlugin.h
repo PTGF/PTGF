@@ -21,8 +21,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef NODELISTVIEWPLUGIN_H
-#define NODELISTVIEWPLUGIN_H
+#ifndef PLUGINS_NODELISTVIEW_NODELISTVIEWPLUGIN_H
+#define PLUGINS_NODELISTVIEW_NODELISTVIEWPLUGIN_H
 
 #include <QObject>
 
@@ -64,4 +64,4 @@ protected:
 
 } // namespace NodeListView
 } // namespace Plugins
-#endif // NODELISTVIEWPLUGIN_H
+#endif // PLUGINS_NODELISTVIEW_NODELISTVIEWPLUGIN_H
