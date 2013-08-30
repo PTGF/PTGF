@@ -27,18 +27,19 @@ SOURCES              += NodeListViewPlugin.cpp \
                         NodeListView.cpp \
                         Slurm.cpp \
                         Range.cpp \
-    Node.cpp \
-    NodeRange.cpp
+                        Node.cpp \
+                        NodeRange.cpp
+
 HEADERS              += NodeListViewPlugin.h \
                         NodeListView.h \
                         NodeListViewLibrary.h \
                         Slurm.h \
                         Range.h \
-    NodeListViewPrivate.h \
-    Node.h \
-    NodePrivate.h \
-    NodeRange.h \
-    NodeRangePrivate.h
+                        NodeListViewPrivate.h \
+                        Node.h \
+                        NodePrivate.h \
+                        NodeRange.h \
+                        NodeRangePrivate.h
 
 DEFINES              += NODELISTVIEW_LIBRARY
 
