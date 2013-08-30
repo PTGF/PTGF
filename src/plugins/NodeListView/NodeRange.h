@@ -57,6 +57,8 @@ public:
     quint64 count() const;
 
     QString toShortString() const;
+
+    bool contains(const QString &node);
 };
 
 

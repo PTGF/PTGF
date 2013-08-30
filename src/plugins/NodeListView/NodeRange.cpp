@@ -48,6 +48,83 @@ NodeRange::~NodeRange()
 }
 
 
+
+bool NodeRange::contains(const QString &nodeName)
+{
+    if(!d->m_Initialized) {
+        return false;
+    }
+
+
+    QString prefix = "", suffix = "", number = "";
+    prefix.reserve(nodeName.size());
+
+    QString::const_iterator i = nodeName.constBegin();
+
+    // Parse Prefix
+    while(i < nodeName.constEnd() && !i->isNumber()) {
+        prefix.append((*i));
+        ++i;
+    }
+
+    // Verify we have a valid prefix
+    if(this->prefix() != prefix) {
+        return false;
+    }
+
+
+    // Parse the number
+    if(i < nodeName.constEnd()) {
+        if(i->isNumber()) {
+            do {
+                number.append((*i));
+                ++i;
+            } while(i < nodeName.constEnd() && i->isNumber());
+        } else {
+            qCritical() << "Unknown character found in nodename" << nodeName;
+            return false;
+        }
+    }
+
+    // Verify we have a valid number
+    bool okay;
+    quint64 value = number.toLongLong(&okay);
+    if(!okay) {
+        return false;
+    }
+
+
+    // Parse Suffix
+    while(i < nodeName.constEnd()) {
+        suffix.append((*i));
+        ++i;
+    }
+
+    // Remove .localdomain from the suffix
+    if(!suffix.isEmpty() && suffix.endsWith(".localdomain", Qt::CaseInsensitive)) {
+        suffix = suffix.remove(".localdomain", Qt::CaseInsensitive);
+    }
+
+    // Verify the suffix is valid
+    if(this->suffix() != suffix) {
+        return false;
+    }
+
+
+    // Check number contained in ranges
+    QList<Range*>::iterator r = d->m_Ranges.begin();
+    while(r != d->m_Ranges.end()) {
+        if((*r)->lower() <= value && value <= (*r)->upper()) {
+            return true;
+        }
+        ++r;
+    }
+
+    return false;
+}
+
+
+
 /*!
    \brief Returns a folded-range string representing the Range
    \return

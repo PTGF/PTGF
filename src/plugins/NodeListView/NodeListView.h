@@ -55,6 +55,9 @@ public:
 
     QString selectedNodes() const;
 
+signals:
+    void selectionChanged();
+
 protected:
     void resizeEvent(QResizeEvent *event);
 

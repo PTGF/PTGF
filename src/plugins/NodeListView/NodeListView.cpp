@@ -394,6 +394,8 @@ void NodeListViewPrivate::selectNodes()
     m_SelectingNodes = false;
 
     resizeSearchTextBox();
+
+    emit q->selectionChanged();
 }
 
 void NodeListViewPrivate::resizeSearchTextBox()
@@ -450,6 +452,8 @@ void NodeListViewPrivate::selectionChanged()
     m_txtSearch->setPlainText(q->selectedNodes());
 
     m_SelectionChanging = false;
+
+    emit q->selectionChanged();
 }
 
 
