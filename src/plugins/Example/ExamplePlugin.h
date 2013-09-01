@@ -51,17 +51,19 @@ public:
     QString version();
     QList<Core::PluginManager::Dependency> dependencies();
 
-protected:
-    QString m_Name;
-    QString m_Version;
-    QList<Core::PluginManager::Dependency> m_Dependencies;
 
+#ifdef EXAMPLE_BUILD
 protected slots:
-#ifdef QT_DEBUG
     void exampleMenuItem_Triggered();
     void examplePlotView_Triggered();
     void exampleNodeListView_Triggered();
 #endif
+
+
+private:
+    QString m_Name;
+    QString m_Version;
+    QList<Core::PluginManager::Dependency> m_Dependencies;
 
 };
 

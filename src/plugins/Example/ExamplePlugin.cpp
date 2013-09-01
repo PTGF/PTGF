@@ -21,24 +21,24 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
 #include "ExamplePlugin.h"
 
-#ifdef QT_DEBUG
-#include <QTime>
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QStandardItemModel>
-#include <QAbstractItemView>
-#endif
-
-#include <QDebug>
-
+#ifdef EXAMPLE_BUILD
 #include <ActionManager/ActionManager.h>
 #include <ViewManager/ViewManager.h>
 
 #include <NodeListView/NodeListView.h>
 #include <NodeListView/NodeRange.h>
+
+#include <QTime>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QStandardItemModel>
+#include <QAbstractItemView>
+
+#include <QDebug>
+#endif
+
 
 namespace Plugins {
 namespace Example {
@@ -70,7 +70,7 @@ bool ExamplePlugin::initialize(QStringList &args, QString *err)
     Q_UNUSED(args)
     Q_UNUSED(err)
 
-#ifdef QT_DEBUG
+#ifdef EXAMPLE_BUILD
     Core::ActionManager::ActionManager &actionManager = Core::ActionManager::ActionManager::instance();
     Core::ActionManager::MenuPath menuPath("Example", 16);
 
@@ -106,7 +106,7 @@ QList<Core::PluginManager::Dependency> ExamplePlugin::dependencies()
     return m_Dependencies;
 }
 
-#ifdef QT_DEBUG
+#ifdef EXAMPLE_BUILD
 void ExamplePlugin::exampleMenuItem_Triggered()
 {
 }
