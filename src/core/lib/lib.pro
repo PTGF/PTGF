@@ -75,8 +75,14 @@ HEADERS +=  Global.h \
             PluginManager/PluginManagerPrivate.h \
             PluginManager/PluginSettingPage.h \
             PluginManager/PluginWrapper.h \
+            PrettyWidgets/ButtonBox.h \
+            PrettyWidgets/ButtonBoxPrivate.h \
             PrettyWidgets/ConsoleWidget.h \
             PrettyWidgets/ConsoleWidgetPrivate.h \
+            PrettyWidgets/GroupBox.h \
+            PrettyWidgets/GroupBoxPrivate.h \
+            PrettyWidgets/LineEdit.h \
+            PrettyWidgets/LineEditPrivate.h \
             PrettyWidgets/TabWidget.h \
             PrettyWidgets/TabWidgetPrivate.h \
             SettingManager/ISettingPage.h \
@@ -110,7 +116,10 @@ SOURCES +=  Global.cpp \
             PluginManager/PluginManager.cpp \
             PluginManager/PluginSettingPage.cpp \
             PluginManager/PluginWrapper.cpp \
+            PrettyWidgets/ButtonBox.cpp
             PrettyWidgets/ConsoleWidget.cpp \
+            PrettyWidgets/GroupBox.cpp \
+            PrettyWidgets/LineEdit.cpp \
             PrettyWidgets/TabWidget.cpp \
             SettingManager/ISettingPage.cpp \
             SettingManager/ISettingPageFactory.cpp \
@@ -123,7 +132,7 @@ SOURCES +=  Global.cpp \
             WindowManager/AboutDialog.cpp \
             WindowManager/AboutWidget.cpp \
             WindowManager/IMainWindow.cpp \
-            WindowManager/WindowManager.cpp
+            WindowManager/WindowManager.cpp \
 
 FORMS   +=  CoreWindow/CoreSettingPage.ui \
             CoreWindow/CoreWindow.ui \
