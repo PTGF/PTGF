@@ -51,10 +51,13 @@ public:
 protected:
     void updateTabBar();
     void updateStyleSheet();
+    void updateTabTitles();
 
     QString m_StyleSheet;
     bool m_HideBarOnOne;
     bool m_ClearStyleSheet;
+
+    int m_TabTitleTimer;
 
 };
 

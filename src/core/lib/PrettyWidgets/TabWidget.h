@@ -42,14 +42,29 @@ public:
     QTabBar *tabBar();
 
     void setHideBarOnOne(bool hide = true);
-    bool hideBarOnOne();
+    bool hideBarOnOne() const;
 
     void setClearStyleSheet(bool clear = true);
-    bool clearStyleSheet();
+    bool clearStyleSheet() const;
+
+    void setAutoUpdateTabTitles(bool update = true);
+    bool autoUpdateTabTitles() const;
+
+signals:
+    void tabClosed(int);
+    void tabTitleUpdated(int, QString);
+    void shown();
+    void hidden();
+
+public slots:
+    virtual void closeTab(int index = -1);
 
 protected:
     virtual void tabInserted(int index);
     virtual void tabRemoved(int index);
+    virtual void timerEvent(QTimerEvent *event);
+    virtual void showEvent(QShowEvent *event);
+    virtual void hideEvent(QHideEvent *event);
 
 };
 

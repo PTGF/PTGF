@@ -24,6 +24,8 @@
 #include "TabWidgetPrivate.h"
 
 #include <QTabBar>
+#include <QTimerEvent>
+
 
 /*! \class TabWidget
     \brief TabWidget
@@ -44,6 +46,11 @@ TabWidget::TabWidget(QWidget *parent) :
 
     d->updateTabBar();
     d->updateStyleSheet();
+
+    setTabsClosable(true);
+    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
+
+    setAutoUpdateTabTitles(true);
 }
 
 /*!
@@ -77,7 +84,7 @@ void TabWidget::setHideBarOnOne(bool hide)
    \brief TabWidget::hideBarOnOne
    \return
  */
-bool TabWidget::hideBarOnOne()
+bool TabWidget::hideBarOnOne() const
 {
     return d->m_HideBarOnOne;
 }
@@ -92,12 +99,48 @@ void TabWidget::setClearStyleSheet(bool clear)
     d->updateStyleSheet();
 }
 
-bool TabWidget::clearStyleSheet()
+/*!
+   \brief TabWidget::clearStyleSheet
+   \return
+ */
+bool TabWidget::clearStyleSheet() const
 {
     return d->m_ClearStyleSheet;
 }
 
 /*!
+   \brief TabWidget::setAutoUpdateTabTitles
+   \param update
+ */
+void TabWidget::setAutoUpdateTabTitles(bool update)
+{
+    if(autoUpdateTabTitles() == update) {
+        return;
+    }
+
+    if(update) {
+        d->m_TabTitleTimer = startTimer(1000);
+    } else {
+        killTimer(d->m_TabTitleTimer);
+        d->m_TabTitleTimer = -1;
+    }
+}
+
+/*!
+   \brief TabWidget::autoUpdateTabTitles
+   \return
+ */
+bool TabWidget::autoUpdateTabTitles() const
+{
+    return (d->m_TabTitleTimer >= 0);
+}
+
+
+
+
+
+/*!
+   \internal
    \brief TabWidget::tabInserted
    \param index
  */
@@ -107,9 +150,12 @@ void TabWidget::tabInserted(int index)
 
     d->updateTabBar();
     d->updateStyleSheet();
+
+    QTabWidget::tabInserted(index);
 }
 
 /*!
+   \internal
    \brief TabWidget::tabRemoved
    \param index
  */
@@ -119,13 +165,79 @@ void TabWidget::tabRemoved(int index)
 
     d->updateTabBar();
     d->updateStyleSheet();
+
+    QTabWidget::tabRemoved(index);
+}
+
+/*!
+   \internal
+   \brief TabWidget::timerEvent
+   \param event
+ */
+void TabWidget::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == d->m_TabTitleTimer) {
+        d->updateTabTitles();
+        event->accept();
+        return;
+    }
+
+    QObject::timerEvent(event);
+}
+
+/*!
+   \internal
+   \brief TabWidget::showEvent
+   \param event
+ */
+void TabWidget::showEvent(QShowEvent *event)
+{
+    emit shown();
+    QTabWidget::showEvent(event);
+}
+
+/*!
+   \internal
+   \brief TabWidget::hideEvent
+   \param event
+ */
+void TabWidget::hideEvent(QHideEvent *event)
+{
+    emit hidden();
+    QTabWidget::hideEvent(event);
 }
 
 
 
 
-/***** PRIVATE IMPLEMENTATION *****/
+/*!
+   \brief TabWidget::closeTab
+   \param index
+ */
+void TabWidget::closeTab(int index)
+{
+    Q_ASSERT(index < count());
 
+    if(index < 0) {
+        index = currentIndex();
+    }
+
+    QWidget *widget = this->widget(index);
+    if(widget && widget->close()) {
+        removeTab(index);
+        widget->deleteLater();
+    }
+
+    emit tabClosed(index);
+}
+
+
+
+/***** PRIVATE IMPLEMENTATION *****/
+/*!
+   \internal
+   \brief TabWidgetPrivate::TabWidgetPrivate
+ */
 TabWidgetPrivate::TabWidgetPrivate() :
     QObject(NULL),
     q(NULL)
@@ -168,4 +280,20 @@ void TabWidgetPrivate::updateStyleSheet()
         q->setStyleSheet(QString());
     }
 }
+
+/*!
+   \internal
+   \brief TabWidgetPrivate::updateTabTitles
+ */
+void TabWidgetPrivate::updateTabTitles()
+{
+    for(int i = 0; i < q->count(); ++i) {
+        QString newTitle = q->widget(i)->windowTitle();
+        if(newTitle != q->tabText(i)) {
+            q->setTabText(i, newTitle);
+            emit q->tabTitleUpdated(i, newTitle);
+        }
+    }
+}
+
 
