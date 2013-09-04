@@ -116,7 +116,7 @@ SOURCES +=  Global.cpp \
             PluginManager/PluginManager.cpp \
             PluginManager/PluginSettingPage.cpp \
             PluginManager/PluginWrapper.cpp \
-            PrettyWidgets/ButtonBox.cpp
+            PrettyWidgets/ButtonBox.cpp \
             PrettyWidgets/ConsoleWidget.cpp \
             PrettyWidgets/GroupBox.cpp \
             PrettyWidgets/LineEdit.cpp \
@@ -132,7 +132,7 @@ SOURCES +=  Global.cpp \
             WindowManager/AboutDialog.cpp \
             WindowManager/AboutWidget.cpp \
             WindowManager/IMainWindow.cpp \
-            WindowManager/WindowManager.cpp \
+            WindowManager/WindowManager.cpp
 
 FORMS   +=  CoreWindow/CoreSettingPage.ui \
             CoreWindow/CoreWindow.ui \
@@ -184,7 +184,7 @@ pluginManagerHeaders.files = PluginManager/PluginManagerLibrary.h PluginManager/
 INSTALLS += pluginManagerHeaders
 
 prettyWidgetsHeaders.path = /include/core/lib/PrettyWidgets
-prettyWidgetsHeaders.files = PrettyWidgets/TabWidget.h PrettyWidgets/ConsoleWidget.h
+prettyWidgetsHeaders.files = PrettyWidgets/ButtonBox.h PrettyWidgets/ConsoleWidget.h PrettyWidgets/GroupBox.h PrettyWidgets/LineEdit.h PrettyWidgets/TabWidget.h
 INSTALLS += prettyWidgetsHeaders
 
 settingManagerHeaders.path = /include/core/lib/SettingManager
