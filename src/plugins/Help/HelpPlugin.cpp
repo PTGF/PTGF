@@ -36,7 +36,7 @@ HelpPlugin::HelpPlugin(QObject *parent) :
     QString helpNamespace = "org.krellinst.ptgf";
     if(!m_HelpEngine->registeredDocumentations().contains(helpNamespace) &&
             !m_HelpEngine->registerDocumentation(helpFile)) {
-        qWarning() << tr("Registration of help file, \"%1\", failed: %2").arg(helpFile).arg(m_HelpEngine->error());
+//        qWarning() << Q_FUNC_INFO << tr("Registration of help file, \"%1\", failed: %2").arg(helpFile).arg(m_HelpEngine->error());
     }
 #endif
 }

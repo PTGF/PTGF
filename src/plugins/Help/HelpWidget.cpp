@@ -36,8 +36,10 @@ HelpWidget::HelpWidget(QHelpEngine *helpEngine, QWidget *parent) :
 
     QDesktopServices::setUrlHandler(QLatin1String("qthelp"), this, "linkActivated");
 
+#ifdef QT_DEBUG
     //FIXME: Open home URL (this is a temporary method)
-    QDesktopServices::openUrl(QUrl("qthelp://org.krellinst.ptgf/ptgf/index.html"));
+//    QDesktopServices::openUrl(QUrl("qthelp://org.krellinst.ptgf/ptgf/index.html"));
+#endif
 }
 
 void HelpWidget::initSideBar()
