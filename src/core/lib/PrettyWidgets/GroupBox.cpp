@@ -23,6 +23,11 @@
 
 #include "GroupBoxPrivate.h"
 
+#include <QStyleOptionGroupBox>
+#include <QStylePainter>
+#include <QPaintEvent>
+#include <QPropertyAnimation>
+
 
 /*! \class GroupBox
     \brief GroupBox
@@ -35,7 +40,6 @@
 
  */
 
-
 /*!
    \brief GroupBox::GroupBox
    \param parent
@@ -45,6 +49,10 @@ GroupBox::GroupBox(QWidget *parent) :
     d(new GroupBoxPrivate)
 {
     d->q = this;
+
+    d->m_CollapseIconPressed = false;
+    d->m_Collapsible = false;
+    d->m_Collapsed = false;
 }
 
 /*!
@@ -55,6 +63,175 @@ GroupBox::~GroupBox()
 {
 }
 
+/*! \reimp */
+void GroupBox::paintEvent(QPaintEvent *event)
+{
+    QGroupBox::paintEvent(event);
+
+    if(!isCollapsible()) {
+        return;
+    }
+
+    QRect rectCollapseIcon = d->rectCollapseIcon();
+    if(event->rect().intersects(rectCollapseIcon)) {
+        QStylePainter paint(this);
+
+        QStyleOptionGroupBox option;
+        initStyleOption(&option);
+
+        option.initFrom(this);
+        option.rect = rectCollapseIcon;
+
+        if(!isCollapsed()) {
+            option.state |= QStyle::State_On;
+            option.state &= ~QStyle::State_Off;
+        } else {
+            option.state |= QStyle::State_Off;
+            option.state &= ~QStyle::State_On;
+        }
+
+        QStyle::PrimitiveElement primitive = isCollapsed() ? QStyle::PE_IndicatorArrowDown : QStyle::PE_IndicatorArrowUp;
+
+        paint.drawPrimitive(QStyle::PE_IndicatorButtonDropDown, option);
+
+        option.rect = rectCollapseIcon.adjusted(2,2,0,0);
+        paint.drawPrimitive(primitive, option);
+    }
+}
+
+/*! \reimp */
+QSize GroupBox::minimumSizeHint() const
+{
+    QSize size = QGroupBox::minimumSizeHint();
+
+    if(!isCollapsible()) {
+        return size;
+    }
+
+    size.setWidth(size.width() + d->rectCollapseIcon().width() + 5);
+    return size;
+}
+
+/*! \reimp */
+void GroupBox::mousePressEvent(QMouseEvent *event)
+{
+    QGroupBox::mousePressEvent(event);
+
+    if(!isCollapsible()) {
+        return;
+    }
+
+    if(event->button() == Qt::LeftButton) {
+        if(d->rectCollapseIcon().contains(event->pos())) {
+            d->m_CollapseIconPressed = true;
+            event->accept();
+        }
+    }
+}
+
+/*! \reimp */
+void GroupBox::mouseReleaseEvent(QMouseEvent *event)
+{
+    QGroupBox::mouseReleaseEvent(event);
+
+    if(!isCollapsible()) {
+        return;
+    }
+
+    if(event->button() == Qt::LeftButton) {
+        if(d->m_CollapseIconPressed && d->rectCollapseIcon().contains(event->pos())) {
+            setCollapsed(!isCollapsed());
+            event->accept();
+        }
+    }
+
+    d->m_CollapseIconPressed = false;
+}
+
+
+
+/*!
+    \property GroupBox::collapsed
+    \brief whether the group box has been collapsed
+
+    If this property is true, the group box has been collapsed to just display the title bar.
+
+    This property is false by default.
+*/
+void GroupBox::setCollapsed(const bool &collapse)
+{
+    if(!isCollapsible()) {
+        return;
+    }
+
+
+    if(collapse == d->m_Collapsed) {
+        return;
+    }
+
+
+    QRect geo = geometry();
+
+    if(geo.right() < 0 || geo.bottom() < 0) {
+        geo = QRect();
+    }
+
+    geo.setSize(geo.size().expandedTo(minimumSizeHint()));
+
+    if(collapse) {
+        geo.setHeight(fontMetrics().height() + 1);
+    }
+
+
+#ifndef QT_NO_ANIMATION
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "geometry", this);
+    anim->setEasingCurve(QEasingCurve::InOutQuad);
+    anim->setDuration(collapse? 250: 500);
+    anim->setStartValue(geometry());
+    connect(anim, SIGNAL(finished()), d.data(), SLOT(collapseAnimationFinished()));
+    anim->setEndValue(geo);
+
+    /*! \note this sometimes causes a flicker, but is necessary for expansion, if we can figure out a way to pause
+              event processing for maximum height setting changes, this would fix the flicker problem */
+    setMaximumHeight(QWIDGETSIZE_MAX);
+
+    anim->start(QAbstractAnimation::DeleteWhenStopped);
+
+#else
+    setGeometry(geo);
+
+#endif
+
+    d->m_Collapsed = collapse;
+    emit collapsed(d->m_Collapsed);
+}
+bool GroupBox::isCollapsed() const
+{
+    return d->m_Collapsed;
+}
+
+
+/*!
+    \property GroupBox::collapsible
+    \brief whether the group box can be collapsed
+
+    If this property is true, the group box can be collapsed to just display the title bar.
+
+    This property is false by default.
+*/
+
+bool GroupBox::isCollapsible() const
+{
+    return d->m_Collapsible;
+}
+void GroupBox::setCollapsible(const bool &collapsible)
+{
+    d->m_Collapsible = collapsible;
+
+    if(!d->m_Collapsible) {
+        setCollapsed(false);
+    }
+}
 
 
 
@@ -71,3 +248,20 @@ GroupBoxPrivate::GroupBoxPrivate() :
     q(NULL)
 {
 }
+
+
+QRect GroupBoxPrivate::rectCollapseIcon() const
+{
+    int fontHeight = q->fontMetrics().height();
+    return QRect(QPoint(q->width() - (2 * fontHeight) -2, 0), QSize(fontHeight + 4, fontHeight));
+}
+
+void GroupBoxPrivate::collapseAnimationFinished()
+{
+    if(!m_Collapsed) {
+        return;
+    }
+
+    q->setMaximumHeight(q->geometry().height());
+}
+

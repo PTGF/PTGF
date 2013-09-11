@@ -33,12 +33,9 @@
 // from version to version without notice, or even be removed.
 //
 
-
-#include <QObject>
-
 #include "GroupBox.h"
 
-class GroupBox;
+#include <QObject>
 
 class GroupBoxPrivate : public QObject
 {
@@ -47,6 +44,15 @@ class GroupBoxPrivate : public QObject
 
 public:
     explicit GroupBoxPrivate();
+
+    QRect rectCollapseIcon() const;
+
+    bool m_Collapsible;
+    bool m_Collapsed;
+    bool m_CollapseIconPressed;
+
+public slots:
+    void collapseAnimationFinished();
 
 };
 

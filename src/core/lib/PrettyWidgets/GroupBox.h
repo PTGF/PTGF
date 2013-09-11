@@ -35,9 +35,30 @@ class GroupBox : public QGroupBox
     Q_OBJECT
     DECLARE_PRIVATE(GroupBox)
 
+    Q_PROPERTY(bool collapsible READ isCollapsible WRITE setCollapsible)
+    Q_PROPERTY(bool collapsed READ isCollapsed WRITE setCollapsed DESIGNABLE isCollapsible NOTIFY collapsed USER true)
+
 public:
     explicit GroupBox(QWidget *parent = 0);
     ~GroupBox();
+
+    virtual QSize minimumSizeHint() const;
+
+    bool isCollapsed() const;
+
+    bool isCollapsible() const;
+    void setCollapsible(const bool &collapsible);
+
+signals:
+    void collapsed(bool collapsed);
+
+public slots:
+    void setCollapsed(const bool &collapse);
+
+protected:
+    virtual void paintEvent(QPaintEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
 
 };
 
