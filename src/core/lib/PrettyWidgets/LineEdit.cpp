@@ -23,6 +23,11 @@
 
 #include "LineEditPrivate.h"
 
+#if QT_VERSION < 0x040700
+#include <QPainter>
+#include <QStyle>
+#endif
+
 
 /*! \class LineEdit
     \brief LineEdit
@@ -54,8 +59,80 @@ LineEdit::~LineEdit()
 }
 
 
+#if QT_VERSION < 0x040700
+/*!
+    \property QLineEdit::placeholderText
+    \brief the line edit's placeholder text
 
+    Setting this property makes the line edit display a grayed-out
+    placeholder text as long as the text() is empty and the widget doesn't
+    have focus.
 
+    By default, this property contains an empty string.
+
+    \sa text()
+ */
+QString LineEdit::placeholderText() const
+{
+    return d->placeholderText;
+}
+void LineEdit::setPlaceholderText(const QString& placeholderText)
+{
+    if (d->placeholderText != placeholderText) {
+
+        d->placeholderText = placeholderText;
+
+        if (!hasFocus()) {
+            update();
+        }
+    }
+}
+#endif
+
+void LineEdit::paintEvent(QPaintEvent *event)
+{
+    QLineEdit::paintEvent(event);
+
+#if QT_VERSION < 0x040700
+    // This is a slightly modified version of the source from Qt5.0.2 for this functionality
+
+    if( !(text().isEmpty() && !hasFocus() && !d->placeholderText.isEmpty()) ) {
+        return;
+    }
+
+    QPainter p(this);
+    QRect r = rect();
+    QPalette pal = palette();
+    QFontMetrics fm = fontMetrics();
+
+    Qt::Alignment va = QStyle::visualAlignment(layoutDirection(), QFlag(alignment()));
+    int vscroll = 0;
+    switch(va & Qt::AlignVertical_Mask) {
+     case Qt::AlignBottom:
+         vscroll = r.y() + r.height() - fm.height() - 1;
+         break;
+     case Qt::AlignTop:
+         vscroll = r.y() + 1;
+         break;
+     default:
+         vscroll = r.y() + (r.height() - fm.height() + 1) / 2;
+         break;
+    }
+
+    QRect lineRect(r.x() + 2, vscroll, r.width() - 4, fm.height());
+    int minLB = qMax(0, -fm.minLeftBearing());
+
+    QColor col = pal.text().color();
+    col.setAlpha(128);
+    QPen oldpen = p.pen();
+    p.setPen(col);
+    lineRect.adjust(minLB, 0, 0, 0);
+    QString elidedText = fm.elidedText(d->placeholderText, Qt::ElideRight, lineRect.width());
+    p.drawText(lineRect, va, elidedText);
+    p.setPen(oldpen);
+#endif
+
+}
 
 
 /***** PRIVATE IMPLEMENTATION *****/

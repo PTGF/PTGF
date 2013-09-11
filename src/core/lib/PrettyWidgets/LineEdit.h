@@ -35,9 +35,21 @@ class LineEdit : public QLineEdit
     Q_OBJECT
     DECLARE_PRIVATE(LineEdit)
 
+#if QT_VERSION < 0x040700
+    Q_PROPERTY(QString placeholderText READ placeholderText WRITE setPlaceholderText)
+#endif
+
 public:
     explicit LineEdit(QWidget *parent = 0);
     ~LineEdit();
+
+#if QT_VERSION < 0x040700
+    QString placeholderText() const;
+    void setPlaceholderText(const QString& placeholderText);
+#endif
+
+protected:
+    void paintEvent(QPaintEvent *);
 
 };
 

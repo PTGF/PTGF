@@ -47,6 +47,10 @@ class LineEditPrivate : public QObject
 public:
     explicit LineEditPrivate();
 
+#if QT_VERSION < 0x040700
+    QString placeholderText;
+#endif
+
 };
 
 #endif // LINEEDITPRIVATE_H
