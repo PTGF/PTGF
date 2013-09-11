@@ -23,6 +23,9 @@
 
 #include "ExamplePlugin.h"
 
+#include <PrettyWidgets/GroupBox.h>
+#include <QLineEdit>
+
 #ifdef EXAMPLE_BUILD
 #include <ActionManager/ActionManager.h>
 #include <ViewManager/ViewManager.h>
@@ -82,6 +85,10 @@ bool ExamplePlugin::initialize(QStringList &args, QString *err)
     action->setText("Display sample Node List View");
     connect(action, SIGNAL(triggered()), this, SLOT(exampleNodeListView_Triggered()));
 
+    action = actionManager.createAction(menuPath);
+    action->setText("Display sample PrettyWidgets::GroupBox");
+    connect(action, SIGNAL(triggered()), this, SLOT(exampleGroupBox_Triggered()));
+
 #endif
 
     return true;
@@ -107,8 +114,38 @@ QList<Core::PluginManager::Dependency> ExamplePlugin::dependencies()
 }
 
 #ifdef EXAMPLE_BUILD
-void ExamplePlugin::exampleMenuItem_Triggered()
+void ExamplePlugin::exampleGroupBox_Triggered()
 {
+    GroupBox *gb = new GroupBox();
+    gb->setCheckable(true);
+    gb->setCollapsible(true);
+    gb->setTitle(tr("Test title"));
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setMargin(0);
+
+    layout->addWidget(new QLineEdit(gb));
+    layout->addWidget(new QLineEdit(gb));
+    layout->addWidget(new QLineEdit(gb));
+    layout->addWidget(new QLineEdit(gb));
+    layout->addWidget(new QLineEdit(gb));
+
+    gb->setLayout(layout);
+
+    layout = new QVBoxLayout();
+    layout->setMargin(0);
+
+    QDialog *dlg = new QDialog();
+    dlg->setAttribute(Qt::WA_DeleteOnClose, true);
+    dlg->resize(800, 480);
+
+    layout->setParent(dlg);
+    gb->setParent(dlg);
+    dlg->setLayout(layout);
+    layout->addWidget(gb);
+    layout->addStretch();
+
+    dlg->show();
 }
 
 void ExamplePlugin::examplePlotView_Triggered()
