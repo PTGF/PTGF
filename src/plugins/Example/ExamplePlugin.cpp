@@ -23,8 +23,6 @@
 
 #include "ExamplePlugin.h"
 
-#include <PrettyWidgets/GroupBox.h>
-#include <QLineEdit>
 
 #ifdef EXAMPLE_BUILD
 #include <ActionManager/ActionManager.h>
@@ -38,6 +36,9 @@
 #include <QVBoxLayout>
 #include <QStandardItemModel>
 #include <QAbstractItemView>
+
+#include <PrettyWidgets/GroupBox.h>
+#include <PrettyWidgets/LineEdit.h>
 
 #include <QDebug>
 #endif
@@ -124,11 +125,27 @@ void ExamplePlugin::exampleGroupBox_Triggered()
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setMargin(0);
 
-    layout->addWidget(new QLineEdit(gb));
-    layout->addWidget(new QLineEdit(gb));
-    layout->addWidget(new QLineEdit(gb));
-    layout->addWidget(new QLineEdit(gb));
-    layout->addWidget(new QLineEdit(gb));
+    LineEdit *le = new LineEdit(gb);
+    le->setPlaceholderText(tr("This is a placeholder text"));
+    layout->addWidget(le);
+
+    layout->addWidget(new LineEdit(gb));
+
+    le = new LineEdit(gb);
+    le->setPlaceholderText(tr("Username"));
+    layout->addWidget(le);
+
+    le = new LineEdit(gb);
+    le->setPlaceholderText(tr("Password"));
+    layout->addWidget(le);
+
+    layout->addWidget(new LineEdit(gb));
+
+    le = new LineEdit(gb);
+    le->setPlaceholderText(tr("Path to executable"));
+    layout->addWidget(le);
+
+    layout->addWidget(new LineEdit(gb));
 
     gb->setLayout(layout);
 
