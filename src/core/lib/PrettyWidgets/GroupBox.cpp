@@ -185,8 +185,8 @@ void GroupBox::setCollapsed(const bool &collapse)
 
 #ifndef QT_NO_ANIMATION
     QPropertyAnimation *anim = new QPropertyAnimation(this, "geometry", this);
-    anim->setEasingCurve(QEasingCurve::InOutQuad);
-    anim->setDuration(collapse? 250: 500);
+    anim->setEasingCurve(collapse ? QEasingCurve::InExpo : QEasingCurve::OutBounce);
+    anim->setDuration(collapse? 1000: 2000);
     anim->setStartValue(geometry());
     connect(anim, SIGNAL(finished()), d.data(), SLOT(collapseAnimationFinished()));
     anim->setEndValue(geo);
