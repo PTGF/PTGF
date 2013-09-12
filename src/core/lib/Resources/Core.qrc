@@ -17,9 +17,36 @@
         <file alias="settings.svg">preferences-system-4.svg</file>
     </qresource>
     <qresource prefix="/Icons">
-        <file>Generic/arrow00-down.svg</file>
-        <file>Generic/arrow00-left.svg</file>
-        <file>Generic/arrow00-right.svg</file>
-        <file>Generic/arrow00-up.svg</file>
+        <file>Controls/eject.svg</file>
+        <file>Controls/next.svg</file>
+        <file>Controls/pause.svg</file>
+        <file>Controls/play.svg</file>
+        <file>Controls/previous.svg</file>
+        <file>Controls/repeat.svg</file>
+        <file>Controls/stop.svg</file>
+        <file>Generic/box.svg</file>
+        <file>Generic/bug.svg</file>
+        <file>Generic/cloud.svg</file>
+        <file>Generic/controls.svg</file>
+        <file>Generic/ellipsis.svg</file>
+        <file>Generic/gear1.svg</file>
+        <file>Generic/gear2.svg</file>
+        <file>Generic/gear3.svg</file>
+        <file>Generic/heartbeat.svg</file>
+        <file>Generic/infinity.svg</file>
+        <file>Generic/list.svg</file>
+        <file>Generic/loading.svg</file>
+        <file>Generic/merge.svg</file>
+        <file>Generic/node.svg</file>
+        <file>Generic/note.svg</file>
+        <file>Generic/share.svg</file>
+        <file>Generic/source.svg</file>
+        <file>Generic/split.svg</file>
+        <file>Generic/stream.svg</file>
+        <file>Generic/target.svg</file>
+        <file>Generic/arrow-down.svg</file>
+        <file>Generic/arrow-left.svg</file>
+        <file>Generic/arrow-right.svg</file>
+        <file>Generic/arrow-up.svg</file>
     </qresource>
 </RCC>
