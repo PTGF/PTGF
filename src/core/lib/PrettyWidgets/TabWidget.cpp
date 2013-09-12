@@ -47,10 +47,13 @@ TabWidget::TabWidget(QWidget *parent) :
     d->updateTabBar();
     d->updateStyleSheet();
 
+
     setTabsClosable(true);
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 
     setAutoUpdateTabTitles(true);
+
+    setStyleSheet("QStackedWidget { background-color: rgba(0,0,0, 5%); border-radius: 5px;  margin: 4 3 2 4;}");
 }
 
 /*!
