@@ -77,7 +77,7 @@ bool WindowManager::initialize()
         d->m_AboutPage = actionManager.createAction(NULL, path);
         d->m_AboutPage->setText(tr("About"));
         d->m_AboutPage->setToolTip(tr("Displays the about dialog"));
-        d->m_AboutPage->setIcon(QIcon(":/CoreWindow/app.png"));
+        d->m_AboutPage->setIcon(QIcon(":/CoreWindow/app.svg"));
         d->m_AboutPage->setIconVisibleInMenu(true);
         connect(d->m_AboutPage, SIGNAL(triggered()), d.data(), SLOT(aboutDialog()));
 

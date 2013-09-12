@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../Resources/Core.qrc">
-    <normaloff>:/CoreWindow/app.png</normaloff>:/CoreWindow/app.png</iconset>
+    <normaloff>:/CoreWindow/app.svg</normaloff>:/CoreWindow/app.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="centralLayout">

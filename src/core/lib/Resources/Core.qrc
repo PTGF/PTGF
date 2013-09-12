@@ -12,6 +12,7 @@
         <file alias="warning.svg">dialog-warning-4.svg</file>
         <file alias="question.svg">dialog-question.svg</file>
         <file alias="loading.gif">loading64.gif</file>
+        <file alias="app.svg">ptgf.svg</file>
     </qresource>
     <qresource prefix="/SettingManager">
         <file alias="settings.svg">preferences-system-4.svg</file>

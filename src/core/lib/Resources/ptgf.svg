@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="512" width="512" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<defs>
+<linearGradient id="linearGradient3775" y2="11.191" gradientUnits="userSpaceOnUse" x2="157.38" y1="500.11" x1="354.62">
+<stop stop-color="#404040" offset="0"/>
+<stop stop-color="#bfbfbf" offset="1"/>
+</linearGradient>
+<linearGradient id="linearGradient3783" y2="103.51" gradientUnits="userSpaceOnUse" x2="11.893" y1="407.08" x1="497.31">
+<stop stop-color="#000" offset="0"/>
+<stop stop-color="#3f3f3f" offset="1"/>
+</linearGradient>
+<filter id="filter3879" style="color-interpolation-filters:sRGB;">
+<feFlood result="flood" flood-color="rgb(0,0,0)" flood-opacity="1"/>
+<feComposite operator="in" result="composite1" in2="SourceGraphic" in="flood"/>
+<feGaussianBlur result="blur" stdDeviation="2" in="composite"/>
+<feOffset result="offset" dx="2" dy="2"/>
+<feComposite operator="over" result="composite2" in2="offset" in="SourceGraphic"/>
+</filter>
+<filter id="filter3927" style="color-interpolation-filters:sRGB;">
+<feFlood result="flood" flood-color="rgb(0,0,0)" flood-opacity="1"/>
+<feComposite operator="in" result="composite1" in2="SourceGraphic" in="flood"/>
+<feGaussianBlur result="blur" stdDeviation="5" in="composite"/>
+<feOffset result="offset" dx="5" dy="5"/>
+<feComposite operator="over" result="composite2" in2="offset" in="SourceGraphic"/>
+</filter>
+</defs>
+<metadata>
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<path stroke-linejoin="round" style="marker-start:none;" d="M156.44,10.438v89.124h39.12v-50h120.88v50h0.12v312.88h-0.12v50h-120.88v-50h-39.12v89.12h199.12v-491.12h-199.12z" stroke-opacity="0.85483873" fill-rule="nonzero" filter="url(#filter3879)" stroke="#FFF" stroke-linecap="round" stroke-miterlimit="4" stroke-dasharray="none" stroke-width="10" fill="url(#linearGradient3775)"/>
+<g stroke-linejoin="round" stroke-opacity="0.94642859999999995" transform="translate(-0.002,0.0044861)" stroke-dashoffset="0" filter="url(#filter3927)" stroke="#FFF" stroke-linecap="round" stroke-miterlimit="4" stroke-dasharray="none" stroke-width="5" fill="url(#linearGradient3783)">
+<path d="m43.281,350.82a29.202,29.202,0,0,0,-30.062,29.188,29.202,29.202,0,0,0,54.594,14.406h376.41a29.202,29.202,0,0,0,54.562,-14.406,29.202,29.202,0,0,0,-54.594,-14.406h-376.41a29.202,29.202,0,0,0,-24.5,-14.781z"/>
+<path d="m43.281,226.82a29.202,29.202,0,0,0,-30.062,29.188,29.202,29.202,0,0,0,54.594,14.406h376.41a29.202,29.202,0,0,0,54.562,-14.406,29.202,29.202,0,0,0,-54.594,-14.406h-376.41a29.202,29.202,0,0,0,-24.5,-14.781z"/>
+<path d="M43.281,102.81a29.202,29.202,0,0,0,-30.062,29.19,29.202,29.202,0,0,0,54.593,14.41h376.41a29.202,29.202,0,0,0,54.56,-14.41,29.202,29.202,0,0,0,-54.59,-14.41h-376.41a29.202,29.202,0,0,0,-24.5,-14.78z"/>
+</g>
+</svg>

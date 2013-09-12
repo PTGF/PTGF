@@ -422,7 +422,7 @@ void CoreWindow::updateWindowTitle()
     if(ui->stackedWidget->currentWidget()->windowTitle() == "Welcome" ||
        ui->stackedWidget->currentWidget()->windowTitle() == "Help") {
         setWindowTitle("Parallel Tools GUI Framework");
-        setWindowIcon(QIcon(":/CoreWindow/app.png"));
+        setWindowIcon(QIcon(":/CoreWindow/app.svg"));
     } else {
         setWindowTitle(ui->stackedWidget->currentWidget()->windowTitle());
         setWindowIcon(ui->stackedWidget->currentWidget()->windowIcon());
@@ -457,7 +457,7 @@ void CoreWindow::addNotificationWidget(QWidget *notificationWidget)
  */
 QIcon CoreWindow::settingPageIcon()
 {
-    return QIcon(":/CoreWindow/app.png");
+    return QIcon(":/CoreWindow/app.svg");
 }
 
 /*!
