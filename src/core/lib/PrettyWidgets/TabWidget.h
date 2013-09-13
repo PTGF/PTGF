@@ -50,6 +50,8 @@ public:
     void setAutoUpdateTabTitles(bool update = true);
     bool autoUpdateTabTitles() const;
 
+    QString styleSheet() const;
+
 signals:
     void tabClosed(int);
     void tabTitleUpdated(int, QString);
@@ -58,6 +60,7 @@ signals:
 
 public slots:
     virtual void closeTab(int index = -1);
+    virtual void setStyleSheet(const QString &styleSheet);
 
 protected:
     virtual void tabInserted(int index);

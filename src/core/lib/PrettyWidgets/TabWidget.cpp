@@ -41,19 +41,14 @@ TabWidget::TabWidget(QWidget *parent) :
 {
     d->q = this;
 
-    d->m_HideBarOnOne = true;
-    d->m_ClearStyleSheet = true;
+    setStyleSheet("QStackedWidget { background-color: rgba(0,0,0, 5%); border-radius: 5px;  margin: 4 3 2 4;}");
 
-    d->updateTabBar();
-    d->updateStyleSheet();
-
-
+    setHideBarOnOne(true);
+    setClearStyleSheet(true);
     setTabsClosable(true);
-    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-
     setAutoUpdateTabTitles(true);
 
-    setStyleSheet("QStackedWidget { background-color: rgba(0,0,0, 5%); border-radius: 5px;  margin: 4 3 2 4;}");
+    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
 
 /*!
@@ -98,8 +93,18 @@ bool TabWidget::hideBarOnOne() const
  */
 void TabWidget::setClearStyleSheet(bool clear)
 {
-    d->m_ClearStyleSheet = clear;
-    d->updateStyleSheet();
+    if(d->m_ClearStyleSheet == clear) {
+        return;
+    }
+
+    // Do this in the correct order, or updateStyleSheet will not do anything
+    if(d->m_ClearStyleSheet) {
+        d->updateStyleSheet();
+        d->m_ClearStyleSheet = clear;
+    } else {
+        d->m_ClearStyleSheet = clear;
+        d->updateStyleSheet();
+    }
 }
 
 /*!
@@ -235,6 +240,33 @@ void TabWidget::closeTab(int index)
 }
 
 
+/*!
+   \reimp
+   \brief TabWidget::styleSheet
+   \return
+ */
+QString TabWidget::styleSheet() const
+{
+    if(count() > 0 && d->m_ClearStyleSheet) {
+        return d->m_StyleSheet;
+    } else {
+        return QTabWidget::styleSheet();
+    }
+}
+/*!
+   \reimp
+   \brief TabWidget::setStyleSheet
+   \param styleSheet
+ */
+void TabWidget::setStyleSheet(const QString &styleSheet)
+{
+    if(count() > 0 && d->m_ClearStyleSheet) {
+        d->m_StyleSheet = styleSheet;
+    } else {
+        QTabWidget::setStyleSheet(styleSheet);
+    }
+}
+
 
 /***** PRIVATE IMPLEMENTATION *****/
 /*!
@@ -245,6 +277,7 @@ TabWidgetPrivate::TabWidgetPrivate() :
     QObject(NULL),
     q(NULL)
 {
+    m_TabTitleTimer = -1;
 }
 
 /*!
@@ -270,17 +303,22 @@ void TabWidgetPrivate::updateTabBar()
  */
 void TabWidgetPrivate::updateStyleSheet()
 {
-    if(!m_ClearStyleSheet || q->count() < 0) {
-        if(!m_StyleSheet.isEmpty()) {
-            q->setStyleSheet(m_StyleSheet);
-            m_StyleSheet.clear();
-        }
+    if(!m_ClearStyleSheet) {
         return;
     }
 
-    if(m_StyleSheet.isEmpty()) {
-        m_StyleSheet = q->styleSheet();
-        q->setStyleSheet(QString());
+    if(q->count() >= 1) {
+        if(!q->QTabWidget::styleSheet().isEmpty()) {
+            m_StyleSheet = q->QTabWidget::styleSheet();
+            q->QTabWidget::setStyleSheet(QString());
+        }
+    } else {
+        if(q->QTabWidget::styleSheet().isEmpty() && !m_StyleSheet.isEmpty()) {
+            q->QTabWidget::setStyleSheet(m_StyleSheet);
+        }
+        if(!m_StyleSheet.isEmpty()) {
+            m_StyleSheet.clear();
+        }
     }
 }
 
