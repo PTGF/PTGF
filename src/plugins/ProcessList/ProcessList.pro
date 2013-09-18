@@ -15,29 +15,28 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-TEMPLATE = subdirs
+include(../plugins.pri)
 
-SUBDIRS  = Example \
-           Welcome \
-           Help \
-           SourceView \
-           PlotView \
-           TableView \
-           ProcessList \
-           NodeListView
+CONFIG(debug, debug|release) {
+  TARGET              = ProcessListD
+} else {
+  TARGET              = ProcessList
+}
 
-Help.subdir                  = Help
+HEADERS              += ProcessListPlugin.h \
+                        ProcessListLibrary.h \
+                        ProcessListWidget.h \
+                        ProcessListModel.h \
+                        ProcessListModelPrivate.h
 
-Welcome.subdir               = Welcome
-Welcome.depends              = Help
+SOURCES              += ProcessListPlugin.cpp \
+                        ProcessListWidget.cpp \
+                        ProcessListModel.cpp
 
-Example.subdir               = Example
-Example.depends              = NodeListView
+FORMS                += ProcessListWidget.ui
 
-SourceView.subdir            = SourceView
+DEFINES              += PROCESSLIST_LIBRARY
 
-PlotView.subdir              = PlotView
-
-NodeListView.subdir          = NodeListView
-
-ProcessList.subdir           = ProcessList
+processListPluginHeaders.path = /include/plugins/ProcessList
+processListPluginHeaders.files = ProcessListLibrary.h ProcessListModel.h ProcessListWidget.h
+INSTALLS += processListPluginHeaders

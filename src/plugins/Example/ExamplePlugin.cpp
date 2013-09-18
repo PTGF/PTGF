@@ -40,6 +40,9 @@
 #include <PrettyWidgets/GroupBox.h>
 #include <PrettyWidgets/LineEdit.h>
 
+#include <ProcessList/ProcessListModel.h>
+#include <ProcessList/ProcessListWidget.h>
+
 #include <QDebug>
 #endif
 
@@ -89,6 +92,10 @@ bool ExamplePlugin::initialize(QStringList &args, QString *err)
     action = actionManager.createAction(menuPath);
     action->setText("Display sample PrettyWidgets::GroupBox");
     connect(action, SIGNAL(triggered()), this, SLOT(exampleGroupBox_Triggered()));
+
+    action = actionManager.createAction(menuPath);
+    action->setText("Display sample Plugins::ProcessList");
+    connect(action, SIGNAL(triggered()), this, SLOT(exampleProcessList_Triggered()));
 
 #endif
 
@@ -248,6 +255,30 @@ void ExamplePlugin::exampleNodeListView_Triggered()
     dlg->setLayout(layout);
     dlg->show();
 }
+
+void ExamplePlugin::exampleProcessList_Triggered()
+{
+    using namespace Plugins::ProcessList;
+
+    ProcessListModel *model = new ProcessListModel();
+    model->update();
+
+    ProcessListWidget *view = new ProcessListWidget();
+    view->setFilter("mpirun|srun|orterun");
+    view->setModel(model);
+
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setMargin(0);
+    layout->addWidget(view);
+
+    QDialog *dlg = new QDialog();
+    dlg->setAttribute(Qt::WA_DeleteOnClose, true);
+    dlg->resize(800, 480);
+    dlg->setLayout(layout);
+    dlg->show();
+}
+
 #endif
 
 } // namespace Example

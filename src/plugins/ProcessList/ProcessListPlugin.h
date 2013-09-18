@@ -1,5 +1,5 @@
 /*!
-   \file ExamplePlugin.h
+   \file ProcessListPlugin.h
    \author Dane Gardner <dane.gardner@gmail.com>
 
    \section LICENSE
@@ -21,53 +21,48 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef PLUGINS_EXAMPLE_EXAMPLEPLUGIN_H
-#define PLUGINS_EXAMPLE_EXAMPLEPLUGIN_H
+#ifndef PLUGINS_PROCESSLIST_PROCESSLISTPLUGIN_H
+#define PLUGINS_PROCESSLIST_PROCESSLISTPLUGIN_H
 
 #include <QObject>
+
 #include <PluginManager/IPlugin.h>
+#include <ViewManager/IViewFactory.h>
 
 namespace Plugins {
-namespace Example {
+namespace ProcessList {
 
-class ExamplePlugin : public QObject, public Core::PluginManager::IPlugin
+class ProcessListPlugin :
+        public QObject,
+        public Core::PluginManager::IPlugin
 {
     Q_OBJECT
 
 #if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.ExamplePlugin")
+    Q_PLUGIN_METADATA(IID "org.krellinst.ptgf.ProcessListPlugin")
 #endif
 
     Q_INTERFACES(Core::PluginManager::IPlugin)
 
 public:
-    ExamplePlugin();
+    explicit ProcessListPlugin(QObject *parent = 0);
 
     /* IPlugin Interface */
-    ~ExamplePlugin();
+    ~ProcessListPlugin();
     bool initialize(QStringList &args, QString *err);
     void shutdown();
     QString name();
     QString version();
     QList<Core::PluginManager::Dependency> dependencies();
 
-
-#ifdef EXAMPLE_BUILD
-protected slots:
-    void exampleGroupBox_Triggered();
-    void examplePlotView_Triggered();
-    void exampleNodeListView_Triggered();
-    void exampleProcessList_Triggered();
-#endif
-
-
-private:
+protected:
     QString m_Name;
     QString m_Version;
     QList<Core::PluginManager::Dependency> m_Dependencies;
 
 };
 
-} // namespace Example
+} // namespace ProcessList
 } // namespace Plugins
-#endif // PLUGINS_EXAMPLE_EXAMPLEPLUGIN_H
+
+#endif // PLUGINS_PROCESSLIST_PROCESSLISTPLUGIN_H
