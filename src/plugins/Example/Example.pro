@@ -27,6 +27,7 @@ SOURCES           += ExamplePlugin.cpp
 HEADERS           += ExamplePlugin.h
 
 LIBS    += -L$$quote($${BUILD_PATH}/plugins/NodeListView/$${DIR_POSTFIX}) -lNodeListView$${LIB_POSTFIX}
+LIBS    += -L$$quote($${BUILD_PATH}/plugins/ProcessList/$${DIR_POSTFIX}) -lProcessList$${LIB_POSTFIX}
 
 # Uncomment the following line to build the actual code from the Example Plugin; otherwise builds empty plugin that does nothing
 #DEFINES           += EXAMPLE_BUILD
