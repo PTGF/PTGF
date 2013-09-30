@@ -86,6 +86,41 @@ void ProcessListWidget::setFilter(const QString &filter)
 }
 
 
+QItemSelectionModel *ProcessListWidget::selectionModel() const
+{
+    return ui->trvProcesses->selectionModel();
+}
+
+QStringList ProcessListWidget::selectedPids() const
+{
+    QStringList selectedPids;
+    QItemSelectionModel *selectionModel = ui->trvProcesses->selectionModel();
+    foreach(QModelIndex index, selectionModel->selectedIndexes()) {
+        if(index.column() == 0) {
+            QString value = index.data(Qt::DisplayRole).toString();
+            if(selectedPids.contains(value)) {
+                selectedPids.append(value);
+            }
+        }
+    }
+    return selectedPids;
+}
+
+QStringList ProcessListWidget::selectedCommands() const
+{
+    QStringList selectedCommands;
+    QItemSelectionModel *selectionModel = ui->trvProcesses->selectionModel();
+    foreach(QModelIndex index, selectionModel->selectedIndexes()) {
+        if(index.column() == 1) {
+            QString value = index.data(Qt::DisplayRole).toString();
+            if(selectedCommands.contains(value)) {
+                selectedCommands.append(value);
+            }
+        }
+    }
+    return selectedCommands;
+}
+
 
 } // namespace ProcessList
 } // namespace Plugins

@@ -27,6 +27,7 @@
 #include <QWidget>
 
 class QSortFilterProxyModel;
+class QItemSelectionModel;
 
 namespace Plugins {
 namespace ProcessList {
@@ -48,6 +49,10 @@ public:
 
     QString filter() const;
     void setFilter(const QString &filter);
+
+    QItemSelectionModel *selectionModel() const;
+    QStringList selectedPids() const;
+    QStringList selectedCommands() const;
 
 private:
     Ui::ProcessListWidget *ui;
