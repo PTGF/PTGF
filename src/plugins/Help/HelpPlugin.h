@@ -7,13 +7,16 @@ class QHelpEngine;
 #include <PluginManager/IPlugin.h>
 #include <SettingManager/ISettingPageFactory.h>
 
+#include "HelpManager.h"
+
 namespace Plugins {
 namespace Help {
 
 class HelpPlugin :
         public QObject,
         public Core::PluginManager::IPlugin,
-        public Core::SettingManager::ISettingPageFactory
+        public Core::SettingManager::ISettingPageFactory,
+        public Plugins::Help::HelpManager
 {
     Q_OBJECT
 
@@ -23,6 +26,7 @@ class HelpPlugin :
 
     Q_INTERFACES(Core::PluginManager::IPlugin)
     Q_INTERFACES(Core::SettingManager::ISettingPageFactory)
+    Q_INTERFACES(Plugins::Help::HelpManager)
 
 public:
     explicit HelpPlugin(QObject *parent = 0);
@@ -42,6 +46,15 @@ public:
     int settingPagePriority();
     Core::SettingManager::ISettingPage *createSettingPage();
     /* END ISettingPageFactory */
+
+    /* BEGIN HelpManager */
+    QStringList registeredNamespaces();
+    bool registerHelpFile(const QString &qchFile);
+    QString registrationError();
+    /* END HelpManager */
+
+protected:
+    void registerHelpFile();
 
 private:
     QString m_Name;

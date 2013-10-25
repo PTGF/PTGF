@@ -9,6 +9,8 @@ class QHelpEngine;
 namespace Plugins {
 namespace Help {
 
+class HelpManager;
+
 class HelpWidget : public QSplitter
 {
     Q_OBJECT
@@ -23,6 +25,7 @@ signals:
     void forwardAvailable(bool);
 
 public slots:
+    void openFile(const QString &fileName);
     void backward();
     void forward();
 
@@ -43,6 +46,7 @@ private:
     QHelpEngine *m_HelpEngine;
     QTabWidget m_Documents;
 
+    friend class HelpManager;
 };
 
 } // namespace Help

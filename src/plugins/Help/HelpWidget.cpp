@@ -82,6 +82,12 @@ void HelpWidget::initDocumentTabs()
     setCollapsible(1, false);
 }
 
+void HelpWidget::openFile(const QString &fileName)
+{
+    QUrl url = QUrl(QString("file://%1").arg(fileName));
+    linkActivated(url, QString());
+}
+
 void HelpWidget::linkActivated(QUrl url, QString string)
 {
     Q_UNUSED(string)

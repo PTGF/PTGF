@@ -1,6 +1,7 @@
 #include "HelpPlugin.h"
 
 #include <QHelpEngine>
+#include <QFile>
 #include <QApplication>
 #include <QDebug>
 
@@ -26,26 +27,14 @@ HelpPlugin::HelpPlugin(QObject *parent) :
 # endif
     m_HelpEngine->setupData();
     m_HelpEngine->setAutoSaveFilter(false);
-
-#ifdef QT_DEBUG
-# ifdef Q_OS_WIN
-    QString helpFile = QString("%1/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());
-# else
-    QString helpFile = QString("%1/../share/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());
-# endif
-    QString helpNamespace = "org.krellinst.ptgf";
-    if(!m_HelpEngine->registeredDocumentations().contains(helpNamespace) &&
-            !m_HelpEngine->registerDocumentation(helpFile)) {
-//        qWarning() << Q_FUNC_INFO << tr("Registration of help file, \"%1\", failed: %2").arg(helpFile).arg(m_HelpEngine->error());
-    }
-#endif
 }
 
 HelpPlugin::~HelpPlugin()
 {
     if(m_HelpEngine) {
-        /*! \bug There is a segfault bug(?) in Qt 4.7.2 that crashes at ~QHelpEngine */
+//        /*! \bug There is a segfault bug(?) in Qt 4.7.2 that crashes at ~QHelpEngine */
 //        delete m_HelpEngine;
+        m_HelpEngine->deleteLater();
         m_HelpEngine = 0;
     }
 }
@@ -68,6 +57,8 @@ bool HelpPlugin::initialize(QStringList &args, QString *err)
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
         pluginManager.addObject(this);
         pluginManager.addObject(helpWidget);
+
+        registerHelpFile();
 
     } catch(...) {
         return false;
@@ -95,6 +86,48 @@ QList<Core::PluginManager::Dependency> HelpPlugin::dependencies()
     return m_Dependencies;
 }
 /* END IPlugin */
+
+/* BEGIN HelpManager */
+bool HelpPlugin::registerHelpFile(const QString &qchFile)
+{
+    return m_HelpEngine->registerDocumentation(qchFile);
+}
+
+QStringList HelpPlugin::registeredNamespaces()
+{
+    return m_HelpEngine->registeredDocumentations();
+}
+
+QString HelpPlugin::registrationError()
+{
+    return m_HelpEngine->error();
+}
+
+/* END HelpManager */
+
+
+void HelpPlugin::registerHelpFile()
+{
+    Core::PluginManager::PluginManager &pluginManager = Core::PluginManager::PluginManager::instance();
+    QList<Plugins::Help::HelpManager*> helpManagers = pluginManager.getObjects<Plugins::Help::HelpManager>();
+    if(helpManagers.count() < 1) {
+        return;
+    }
+
+    Plugins::Help::HelpManager *helpManager = helpManagers.first();
+
+# ifdef Q_OS_WIN
+    QString helpFile = QString("%1/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());
+# else
+    QString helpFile = QString("%1/../share/ptgf/PTGF.qch").arg(QApplication::instance()->applicationDirPath());
+# endif
+
+    if(QFile::exists(helpFile) && !helpManager->registeredNamespaces().contains("org.krellinst.ptgf")) {
+        if(!helpManager->registerHelpFile(helpFile)) {
+            qWarning() << Q_FUNC_INFO << tr("Registration of help file, \"%1\", failed: %2").arg(helpFile).arg(helpManager->registrationError());
+        }
+    }
+}
 
 
 /* BEGIN ISettingPageFactory */

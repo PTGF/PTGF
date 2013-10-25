@@ -45,11 +45,13 @@ isEqual(HAS_HELP_MODULE, 1) {
     }
 
     SOURCES          += HelpPlugin.cpp \
+                        HelpManager.cpp \
                         HelpWidget.cpp \
                         HelpBrowser.cpp \
                         Settings/SettingPage.cpp
 
     HEADERS          += HelpPlugin.h \
+                        HelpManager.h \
                         HelpWidget.h \
                         HelpBrowser.h \
                         Settings/SettingPage.h
@@ -59,4 +61,13 @@ isEqual(HAS_HELP_MODULE, 1) {
     RESOURCES        += Resources/HelpResources.qrc
 
     #debug: DEFINES   += HELP_DEBUG
+
+
+    helpPluginHeaders.path = /include/plugins/Help
+    helpPluginHeaders.files = HelpManager.h HelpLibrary.h
+    INSTALLS += helpPluginHeaders
+
 }
+
+HEADERS += \
+    HelpLibrary.h
