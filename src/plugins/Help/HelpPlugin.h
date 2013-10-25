@@ -12,6 +12,8 @@ class QHelpEngine;
 namespace Plugins {
 namespace Help {
 
+class HelpWidget;
+
 class HelpPlugin :
         public QObject,
         public Core::PluginManager::IPlugin,
@@ -51,6 +53,7 @@ public:
     QStringList registeredNamespaces();
     bool registerHelpFile(const QString &qchFile);
     QString registrationError();
+    bool openHtmlFile(const QString &htmlFileName);
     /* END HelpManager */
 
 protected:
@@ -62,6 +65,7 @@ private:
     QList<Core::PluginManager::Dependency> m_Dependencies;
 
     QHelpEngine *m_HelpEngine;
+    HelpWidget *m_HelpWidget;
 };
 
 } // namespace Help

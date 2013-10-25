@@ -38,6 +38,7 @@ public:
     virtual bool registerHelpFile(const QString &qchFile) = 0;
     virtual QString registrationError() = 0;
 
+    virtual bool openHtmlFile(const QString &htmlFileName) = 0;
 };
 
 } // namespace Help

@@ -15,7 +15,8 @@ namespace Plugins {
 namespace Help {
 
 HelpPlugin::HelpPlugin(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_HelpWidget(NULL)
 {
     m_Name = "Help";
     m_Version = QString("%1.%2.%3").arg(VER_MAJ).arg(VER_MIN).arg(VER_PAT);
@@ -49,14 +50,13 @@ bool HelpPlugin::initialize(QStringList &args, QString *err)
     try {
         using namespace Core;
 
-        HelpWidget *helpWidget = new HelpWidget(m_HelpEngine);
-
+        m_HelpWidget = new HelpWidget(m_HelpEngine);
         CoreWindow::CoreWindow &coreWindow = CoreWindow::CoreWindow::instance();
-        coreWindow.addCentralWidget(helpWidget, 256);
+        coreWindow.addCentralWidget(m_HelpWidget, 256);
 
         PluginManager::PluginManager &pluginManager = PluginManager::PluginManager::instance();
         pluginManager.addObject(this);
-        pluginManager.addObject(helpWidget);
+        pluginManager.addObject(m_HelpWidget);
 
         registerHelpFile();
 
@@ -103,6 +103,10 @@ QString HelpPlugin::registrationError()
     return m_HelpEngine->error();
 }
 
+bool HelpPlugin::openHtmlFile(const QString &htmlFileName)
+{
+    m_HelpWidget->openFile(htmlFileName);
+}
 /* END HelpManager */
 
 
