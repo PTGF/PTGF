@@ -21,7 +21,7 @@ TEMPLATE = subdirs
 CONFIG  += ordered
 SUBDIRS  = core plugins tests
 
-OTHER_FILES += Doxyfile fileheader.txt
+OTHER_FILES += fileheader.txt
 
 core.subdir = core
 
@@ -30,3 +30,25 @@ plugins.depends = core
 
 tests.subdir = tests
 tests.depends = plugins
+
+
+# Add target for documentation generation (via Doxygen)
+OTHER_FILES += Doxyfile
+DOXYSCRIPT = $$quote($${SOURCE_PATH}/../bin/doxygen.sh)
+DOXYFILE = $$quote($${SOURCE_PATH}/Doxyfile)
+DOXYINSTALL= $$quote(${INSTALL_ROOT}/share/ptgf)
+
+doxygen.target = doc
+doxygen.commands = @-test -x $${DOXYSCRIPT} && \
+                     $${DOXYSCRIPT} --source=$${SOURCE_PATH} --doxyfile=$${DOXYFILE};
+
+doxygen-install.target = doc-install
+doxygen-install.commands = @-test -x $${DOXYSCRIPT} && \
+                             $${DOXYSCRIPT} --source=$${SOURCE_PATH} --doxyfile=$${DOXYFILE} --install=$${DOXYINSTALL};
+doxygen-install.depends = doxygen
+
+doxygen-uninstall.target = doc-uninstall
+doxygen-uninstall.commands = @-test -x $${DOXYSCRIPT} && \
+                               $${DOXYSCRIPT} --uninstall=$${DOXYINSTALL};
+
+QMAKE_EXTRA_TARGETS += doxygen doxygen-install doxygen-uninstall
