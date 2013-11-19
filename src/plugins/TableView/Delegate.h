@@ -43,8 +43,8 @@ public:
     virtual QString displayText(const QVariant &value, const QLocale &locale) const;
 
 public slots:
-    void selected(const QModelIndex &index);
-    void deselected(const QModelIndex &index);
+    virtual void selected(const QModelIndex &index);
+    virtual void deselected(const QModelIndex &index);
 
 protected:
     QSet<QModelIndex> m_SelectedRows;

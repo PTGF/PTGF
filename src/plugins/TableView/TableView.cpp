@@ -47,6 +47,8 @@ TableView::TableView(QWidget *parent) :
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setSortingEnabled(true);
 
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+
     QAbstractItemDelegate *oldDelegate = itemDelegate();
     setItemDelegate(&m_ItemDelegate);
     oldDelegate->deleteLater();
