@@ -21,7 +21,6 @@ SUBDIRS  = Example \
            Welcome \
            Help \
            SourceView \
-           PlotView \
            TableView \
            ProcessList \
            NodeListView
@@ -33,10 +32,9 @@ Welcome.depends              = Help
 
 Example.subdir               = Example
 Example.depends              = NodeListView
+Example.depends              = ProcessList
 
 SourceView.subdir            = SourceView
-
-PlotView.subdir              = PlotView
 
 NodeListView.subdir          = NodeListView
 

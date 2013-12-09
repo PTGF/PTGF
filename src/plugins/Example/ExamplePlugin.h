@@ -55,7 +55,6 @@ public:
 #ifdef EXAMPLE_BUILD
 protected slots:
     void exampleGroupBox_Triggered();
-    void examplePlotView_Triggered();
     void exampleNodeListView_Triggered();
     void exampleProcessList_Triggered();
 #endif
