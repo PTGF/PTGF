@@ -41,7 +41,7 @@ namespace NodeListView {
  */
 
 /*! \class NodeListViewPlugin
-    \version 0.3.dev
+    \version 0.4.dev
     \brief NodeListViewPlugin
 
     \todo Document this more explicitly

@@ -36,7 +36,7 @@ namespace TableView {
  */
 
 /*! \class TableViewPlugin
-    \version 0.3.dev
+    \version 0.4.dev
     \brief
 
     \par Depends on Plugins:

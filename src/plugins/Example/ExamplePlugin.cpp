@@ -56,7 +56,7 @@ namespace Example {
  */
 
 /*! \class ExamplePlugin
-    \version 0.3.dev
+    \version 0.4.dev
     \brief This is an example of the methods for producing a GUI plugin.
 
     \todo Document this more explicitly as a developer example.
