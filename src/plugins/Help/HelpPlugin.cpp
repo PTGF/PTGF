@@ -106,6 +106,7 @@ QString HelpPlugin::registrationError()
 bool HelpPlugin::openHtmlFile(const QString &htmlFileName)
 {
     m_HelpWidget->openFile(htmlFileName);
+    return true;
 }
 /* END HelpManager */
 
