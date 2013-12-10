@@ -17,25 +17,27 @@
 
 TEMPLATE = subdirs
 
-SUBDIRS  = Example \
+SUBDIRS  = Help \
            Welcome \
-           Help \
            SourceView \
            TableView \
            ProcessList \
-           NodeListView
+           NodeListView \
+           Example
 
 Help.subdir                  = Help
 
 Welcome.subdir               = Welcome
 Welcome.depends              = Help
 
-Example.subdir               = Example
-Example.depends              = NodeListView
-Example.depends              = ProcessList
-
 SourceView.subdir            = SourceView
 
 NodeListView.subdir          = NodeListView
 
 ProcessList.subdir           = ProcessList
+
+TableView.subdir             = TableView
+
+Example.subdir               = Example
+Example.depends              = NodeListView
+Example.depends              = ProcessList
