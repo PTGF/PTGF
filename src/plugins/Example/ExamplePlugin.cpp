@@ -81,7 +81,7 @@ bool ExamplePlugin::initialize(QStringList &args, QString *err)
     Core::ActionManager::ActionManager &actionManager = Core::ActionManager::ActionManager::instance();
     Core::ActionManager::MenuPath menuPath("Example", 16);
 
-    action = actionManager.createAction(menuPath);
+    QAction *action = actionManager.createAction(menuPath);
     action->setText("Display sample Node List View");
     connect(action, SIGNAL(triggered()), this, SLOT(exampleNodeListView_Triggered()));
 
