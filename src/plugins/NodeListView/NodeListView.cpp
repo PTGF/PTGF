@@ -76,6 +76,7 @@ NodeListView::NodeListView(QWidget *parent) :
     d->m_lblNodeCount->setMargin(0);
 
     QVBoxLayout *baseLayout = new QVBoxLayout();
+    baseLayout->setContentsMargins(0,0,0,0);
     baseLayout->addWidget(d->m_txtSearch, 0);
     baseLayout->addSpacing(10);
     baseLayout->addWidget(d->m_lblNodeCount, 0);
