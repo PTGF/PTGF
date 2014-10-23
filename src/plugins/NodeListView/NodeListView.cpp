@@ -193,7 +193,7 @@ bool NodeListView::isValid() const
 
 
 
-QString NodeListView::selectedNodes() const
+QString NodeListView::selectedNodes(const bool &expanded) const
 {
     QList<NodeRange*> ranges;
 
@@ -216,7 +216,11 @@ QString NodeListView::selectedNodes() const
 
     QStringList rangeStrings;
     foreach(NodeRange *range, ranges) {
-        rangeStrings.append(range->toString());
+        if(expanded) {
+            rangeStrings.append(range->expanded());
+        } else {
+            rangeStrings.append(range->toString());
+        }
     }
 
     qDeleteAll(ranges);

@@ -53,7 +53,7 @@ public:
 
     bool isValid() const;
 
-    QString selectedNodes() const;
+    QString selectedNodes(const bool &expanded = false) const;
 
 signals:
     void selectionChanged();
