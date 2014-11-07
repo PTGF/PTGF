@@ -63,6 +63,7 @@ NodeListView::NodeListView(QWidget *parent) :
     d->m_TreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     d->m_TreeView->setModel(new QStandardItemModel(d->m_TreeView));
     connect(d->m_TreeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), d.data(), SLOT(selectionChanged()));
+    connect(d->m_TreeView, SIGNAL(doubleClicked(QModelIndex)), d.data(), SLOT(doubleClicked(QModelIndex)));
 
     d->m_txtSearch->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     d->m_txtSearch->setLineWrapMode(QPlainTextEdit::WidgetWidth);
@@ -236,7 +237,7 @@ void NodeListView::resizeEvent(QResizeEvent *event)
     d->resize();
 }
 
-
+void treeViewDoubleClicked(QModelIndex);
 
 
 NodeListViewPrivate::NodeListViewPrivate() :
@@ -459,6 +460,12 @@ void NodeListViewPrivate::selectionChanged()
     m_SelectionChanging = false;
 
     emit q->selectionChanged();
+}
+
+
+void NodeListViewPrivate::doubleClicked(QModelIndex index)
+{
+    emit q->doubleClicked(index.data(Qt::DisplayRole).toString());
 }
 
 

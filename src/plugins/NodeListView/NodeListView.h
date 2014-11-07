@@ -57,10 +57,10 @@ public:
 
 signals:
     void selectionChanged();
+    void doubleClicked(QString);
 
 protected:
     void resizeEvent(QResizeEvent *event);
-
 
 };
 

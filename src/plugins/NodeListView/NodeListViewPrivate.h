@@ -28,6 +28,7 @@
 
 #include "Node.h"
 
+#include <QModelIndex>
 class QTreeView;
 class QPlainTextEdit;
 class QLabel;
@@ -54,6 +55,7 @@ protected slots:
     void selectNodes();
     void resizeSearchTextBox();
     void selectionChanged();
+    void doubleClicked(QModelIndex);
 
 private:
     QTreeView *m_TreeView;
