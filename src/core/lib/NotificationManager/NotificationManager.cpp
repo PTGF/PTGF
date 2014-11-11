@@ -29,6 +29,8 @@
 #  include <QDesktopServices>
 #endif
 
+#include <QApplication>
+#include <QThread>
 #include <QDockWidget>
 #include <QMenuBar>
 #include <QDateTime>
@@ -271,6 +273,8 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
     Q_UNUSED(context)
 #endif
 
+    bool inGuiThread = (qApp->thread() == QThread::currentThread());
+
     QString msg = QString(message);
     int level = 0;
 
@@ -283,12 +287,16 @@ void NotificationManagerPrivate::qMessageHandler(QtMsgType type, const char *mes
         msg.prepend(q->tr("Debug: "));
         break;
     case QtWarningMsg:
-        q->notify(msg, NotificationWidget::Warning)->setTimeoutInterval(10 * 1000);
+        if(inGuiThread) {
+            q->notify(msg, NotificationWidget::Warning)->setTimeoutInterval(10 * 1000);
+        }
         level = (int)QtWarningMsg;
         msg.prepend(q->tr("Warning: "));
         break;
     case QtCriticalMsg:
-        q->notify(msg, NotificationWidget::Critical);
+        if(inGuiThread) {
+            q->notify(msg, NotificationWidget::Critical);
+        }
         level = (int)QtCriticalMsg;
         msg.prepend(q->tr("Critical: "));
         break;
