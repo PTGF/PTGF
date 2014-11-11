@@ -62,6 +62,7 @@ private:
     QPlainTextEdit *m_txtSearch;
     QLabel *m_lblNodeCount;
 
+    int m_nodeCount;
     int m_PreviousLineCount;
 
     bool m_SelectionChanging;

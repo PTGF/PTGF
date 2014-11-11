@@ -168,7 +168,8 @@ void NodeListView::setNodes(const QString &nodes)
     model->sort(0, Qt::AscendingOrder);
     d->m_TreeView->expandAll();
 
-    d->m_lblNodeCount->setText(d->m_lblNodeCount->text() + QString("; total nodes: %1").arg(model->invisibleRootItem()->rowCount()));
+    d->m_nodeCount = model->invisibleRootItem()->rowCount();
+    d->m_lblNodeCount->setText(d->m_lblNodeCount->text() + QString("; total nodes: %1").arg(d->m_nodeCount));
 
     d->resizeSearchTextBox();
 
@@ -186,6 +187,10 @@ void NodeListView::setSearchText(const QString &searchText)
 }
 
 
+int NodeListView::nodeCount() const
+{
+    return d->m_nodeCount;
+}
 
 bool NodeListView::isValid() const
 {
@@ -244,6 +249,7 @@ NodeListViewPrivate::NodeListViewPrivate() :
     m_TreeView(new QTreeView),
     m_txtSearch(new QPlainTextEdit),
     m_lblNodeCount(new QLabel),
+    m_nodeCount(0),
     m_PreviousLineCount(0),
     m_SelectionChanging(false),
     m_SelectingNodes(false)

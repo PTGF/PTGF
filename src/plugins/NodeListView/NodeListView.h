@@ -51,6 +51,7 @@ public:
     QString searchText() const;
     void setSearchText(const QString &searchText);
 
+    int nodeCount() const;
     bool isValid() const;
 
     QString selectedNodes(const bool &expanded = false) const;
