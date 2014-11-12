@@ -91,13 +91,11 @@ void SettingDialog::readSettings()
 {
     SettingManager &settingManager = SettingManager::instance();
 
-    settingManager.beginGroup("SettingManager");
-    settingManager.beginGroup("SettingDialog");
+    settingManager.setGroup("SettingManager/SettingDialog");
 
     resize( settingManager.value("WindowSize", size()).toSize() );
     move( settingManager.value("WindowPosition", pos()).toPoint() );
 
-    settingManager.endGroup();
     settingManager.endGroup();
 }
 
@@ -105,13 +103,11 @@ void SettingDialog::writeSettings()
 {
     SettingManager &settingManager = SettingManager::instance();
 
-    settingManager.beginGroup("SettingManager");
-    settingManager.beginGroup("SettingDialog");
+    settingManager.setGroup("SettingManager/SettingDialog");
 
     settingManager.setValue("WindowSize", size());
     settingManager.setValue("WindowPosition", pos());
 
-    settingManager.endGroup();
     settingManager.endGroup();
 }
 

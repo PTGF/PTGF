@@ -76,7 +76,7 @@ CoreSettingPage::~CoreSettingPage()
 void CoreSettingPage::apply()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("CoreWindow");
+    settingManager.setGroup("CoreWindow");
 
     m_OriginalStyle = QApplication::style()->objectName();
     settingManager.setValue("style", m_OriginalStyle);
@@ -91,7 +91,7 @@ void CoreSettingPage::reset()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
 
-    settingManager.beginGroup("CoreWindow");
+    settingManager.setGroup("CoreWindow");
 
     QString style = settingManager.value("style", m_OriginalStyle).toString();
     int index = ui->cmbStyle->findText(style, Qt::MatchFixedString);

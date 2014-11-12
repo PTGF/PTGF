@@ -296,7 +296,7 @@ PluginManagerPrivate::~PluginManagerPrivate()
 void PluginManagerPrivate::readSettings()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("PluginManager");
+    settingManager.setGroup("PluginManager");
 
     m_PluginPathsOverride = false;
 
@@ -353,7 +353,7 @@ void PluginManagerPrivate::readSettings()
 void PluginManagerPrivate::writeSettings()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("PluginManager");
+    settingManager.setGroup("PluginManager");
 
     if(!m_PluginPathsOverride) {
         m_PluginPaths.removeDuplicates();

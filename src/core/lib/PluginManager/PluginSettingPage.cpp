@@ -93,7 +93,7 @@ void PluginSettingPage::apply()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
 
-    settingManager.beginGroup("PluginManager");
+    settingManager.setGroup("PluginManager");
 
     // Store user settable settings
     if(!PluginManager::instance().d->m_PluginPathsOverride) {
@@ -107,7 +107,7 @@ void PluginSettingPage::apply()
 void PluginSettingPage::reset()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("PluginManager");
+    settingManager.setGroup("PluginManager");
 
     // Restore user settable settings
     ui->txtPluginPath->setText( PluginManager::instance().d->m_PluginPaths.join(m_PathSep) );
@@ -123,14 +123,12 @@ void PluginSettingPage::reset()
 void PluginSettingPage::readSettings()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("PluginManager");
-    settingManager.beginGroup("SettingPage");
+    settingManager.setGroup("PluginManager/SettingPage");
 
     //! todo Restore tree state
     resize( settingManager.value("WindowSize", size()).toSize() );
     move( settingManager.value("WindowPosition", pos()).toPoint() );
 
-    settingManager.endGroup();
     settingManager.endGroup();
 }
 
@@ -138,14 +136,12 @@ void PluginSettingPage::writeSettings()
 {
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
 
-    settingManager.beginGroup("PluginManager");
-    settingManager.beginGroup("SettingPage");
+    settingManager.setGroup("PluginManager/SettingPage");
 
     //! \todo Store tree state
     settingManager.setValue("WindowSize", size());
     settingManager.setValue("WindowPosition", pos());
 
-    settingManager.endGroup();
     settingManager.endGroup();
 }
 

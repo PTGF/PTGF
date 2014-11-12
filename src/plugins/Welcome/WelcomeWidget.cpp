@@ -52,7 +52,7 @@ WelcomeWidget::WelcomeWidget(QWidget *parent) :
 
     // Get settings from SettingManager and populate form
     Core::SettingManager::SettingManager &settingManager = Core::SettingManager::SettingManager::instance();
-    settingManager.beginGroup("Plugins/Welcome");
+    settingManager.setGroup("Plugins/Welcome");
     setNewsTabVisible(settingManager.value("rssEnabled", true).toBool());
     settingManager.endGroup();
 

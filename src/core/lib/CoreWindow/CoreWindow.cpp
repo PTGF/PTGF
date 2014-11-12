@@ -184,7 +184,7 @@ void CoreWindow::readSettings()
 #endif
 
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
-    settingManager.beginGroup("CoreWindow");
+    settingManager.setGroup("CoreWindow");
 
     QString styleName = settingManager.value("style", QApplication::style()->objectName()).toString();
     QStyle *style = QStyleFactory::create(styleName);
@@ -234,7 +234,7 @@ void CoreWindow::writeSettings()
 
     SettingManager::SettingManager &settingManager = SettingManager::SettingManager::instance();
 
-    settingManager.beginGroup("CoreWindow");
+    settingManager.setGroup("CoreWindow");
 
     settingManager.setValue("StylesheetFilePath", m_StylesheetFilePath);
     settingManager.setValue("Style", QApplication::style()->objectName());

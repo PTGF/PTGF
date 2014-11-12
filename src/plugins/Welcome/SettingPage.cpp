@@ -65,7 +65,7 @@ void SettingPage::apply()
 {
     // Persist changed settings to SettingManager
     Core::SettingManager::SettingManager &settingManager = Core::SettingManager::SettingManager::instance();
-    settingManager.beginGroup("Plugins/Welcome");
+    settingManager.setGroup("Plugins/Welcome");
 
     settingManager.setValue("rssEnabled", ui->grpRss->isChecked());
     m_WelcomeWidget->setNewsTabVisible(ui->grpRss->isChecked());
@@ -77,7 +77,7 @@ void SettingPage::reset()
 {
     // Get settings from SettingManager and populate form
     Core::SettingManager::SettingManager &settingManager = Core::SettingManager::SettingManager::instance();
-    settingManager.beginGroup("Plugins/Welcome");
+    settingManager.setGroup("Plugins/Welcome");
 
     ui->grpRss->setChecked(settingManager.value("rssEnabled", true).toBool());
 
