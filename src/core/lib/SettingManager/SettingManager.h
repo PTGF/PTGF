@@ -72,6 +72,8 @@ public:
 
     void beginGroup(const QString &prefix);
     void endGroup();
+
+    void setGroup(const QString &group);
     QString group() const;
 
 public slots:

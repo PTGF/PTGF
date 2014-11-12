@@ -229,6 +229,22 @@ void SettingManager::endGroup()
 }
 
 /*!
+   \fn SettingManager::setGroup()
+   \brief Clears the current group and sets it.
+   \param prefix
+   \sa endGroup
+   \sa group
+ */
+void SettingManager::setGroup(const QString &group)
+{
+    if(!this->group().isEmpty()) {
+        this->endGroup();
+    }
+    this->beginGroup(group);
+}
+
+
+/*!
    \fn SettingManager::group()
    \brief Returns the current group.
    \returns The current group
