@@ -24,7 +24,16 @@ CONFIG(debug, debug|release) {
 }
 
 win32:target.path = /
-else:target.path  = /lib
+else:{
+  exists( /usr/lib64 ) {
+       message( "Configuring for /lib64 bit library path..." )
+       target.path  = /lib64
+  } else {
+       message( "Configuring for /lib library path..." )
+       target.path  = /lib
+  }
+}
+
 INSTALLS         += target
 
 

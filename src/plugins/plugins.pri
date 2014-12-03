@@ -26,7 +26,15 @@ CONFIG       += depend_includepath
 
 LIBS         += -L$$quote($${BUILD_PATH}/core/lib/$${DIR_POSTFIX}) -lCore$${LIB_POSTFIX}
 
-win32:target.path   = /
-else:target.path   = /lib
+win32:target.path = /
+else:{
+  exists( /usr/lib64 ) {
+       message( "Configuring for /lib64 bit library path..." )
+       target.path  = /lib64
+  } else {
+       message( "Configuring for /lib library path..." )
+       target.path  = /lib
+  }
+}
 
 INSTALLS     += target
