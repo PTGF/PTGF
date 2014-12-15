@@ -29,10 +29,8 @@ LIBS         += -L$$quote($${BUILD_PATH}/core/lib/$${DIR_POSTFIX}) -lCore$${LIB_
 win32:target.path = /
 else:{
   exists( /usr/lib64 ) {
-       message( "Configuring for /lib64 bit library path..." )
        target.path  = /lib64
   } else {
-       message( "Configuring for /lib library path..." )
        target.path  = /lib
   }
 }
