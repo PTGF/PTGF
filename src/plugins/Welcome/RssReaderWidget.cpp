@@ -212,7 +212,7 @@ void RssReaderWidget::readyRead()
 
 #ifdef QT_DEBUG
             if (feedXml.error() && feedXml.error() != QXmlStreamReader::PrematureEndOfDocumentError) {
-                qWarning() << "XML ERROR:" << feedXml.lineNumber() << ": " << feedXml.errorString();
+//TEMP:                qWarning() << "XML ERROR:" << feedXml.lineNumber() << ": " << feedXml.errorString();
             }
 #endif
 
