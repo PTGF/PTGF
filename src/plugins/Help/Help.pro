@@ -50,7 +50,8 @@ isEqual(HAS_HELP_MODULE, 1) {
                         HelpBrowser.cpp \
                         Settings/SettingPage.cpp
 
-    HEADERS          += HelpPlugin.h \
+    HEADERS          += HelpLibrary.h \
+                        HelpPlugin.h \
                         HelpManager.h \
                         HelpWidget.h \
                         HelpBrowser.h \
@@ -66,8 +67,4 @@ isEqual(HAS_HELP_MODULE, 1) {
     helpPluginHeaders.path = /include/plugins/Help
     helpPluginHeaders.files = HelpManager.h HelpLibrary.h
     INSTALLS += helpPluginHeaders
-
 }
-
-HEADERS += \
-    HelpLibrary.h
