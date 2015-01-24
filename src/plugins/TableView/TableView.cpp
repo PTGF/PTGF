@@ -50,7 +50,7 @@ TableView::TableView(QWidget *parent) :
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
     QAbstractItemDelegate *oldDelegate = itemDelegate();
-    setItemDelegate(&m_ItemDelegate);
+    setItemDelegate(new Delegate(this));
     oldDelegate->deleteLater();
 }
 
@@ -84,6 +84,29 @@ void TableView::setModel(QAbstractItemModel *model)
     resizeRowsToContents();
 }
 
+/*! \fn TableView::setItemDelegate()
+    \brief Reimplemented in order to catch delegate size changes (which are not hanlded well by Qt)
+    \reimp QTableView::setItemDelegate()
+    \sa QTableView::setItemDelegate()
+ */
+void TableView::setItemDelegate(QAbstractItemDelegate *delegate)
+{
+    QAbstractItemDelegate *oldDelegate = itemDelegate();
+    if(delegate != oldDelegate) {
+        if(oldDelegate) {
+            disconnect(oldDelegate, SIGNAL(sizeHintChanged(QModelIndex)), this, SLOT(delegateSizeHintChanged(QModelIndex)));
+        }
+
+        if(delegate) {
+            qRegisterMetaType<QModelIndex>("QModelIndex");
+            connect(delegate, SIGNAL(sizeHintChanged(QModelIndex)), this, SLOT(delegateSizeHintChanged(QModelIndex)));
+        }
+    }
+
+    QTableView::setItemDelegate(delegate);
+}
+
+
 /*! \fn TableView::selectionChanged()
     \brief Reimplemented in order to notify the Delegate of any selection changes.
     \reimp QTableView::selectionChanged()
@@ -102,6 +125,21 @@ void TableView::selectionChanged(const QItemSelection &selected, const QItemSele
     }
 
     QTableView::selectionChanged(selected, deselected);
+}
+
+/*! \fn TableView::delegateSizeHintChanged()
+    \brief Catches sizeHintChanged signals from active delegates, and forces a resize of the item to match the new sizeHint
+    \internal
+    \note I don't know why the heck this is even a problem with QTableView, but they are only updating to a new sizeHint if
+          it has an editor.  Since we're likely to not need updating in this, it will never resize on selection changes,
+          so we'll just force the whole row to update.
+ */
+void TableView::delegateSizeHintChanged(const QModelIndex &index)
+{
+    Delegate *delegate = qobject_cast<Delegate *>(itemDelegate(index));
+    if(delegate) {
+        resizeRowToContents(index.row());
+    }
 }
 
 

@@ -45,7 +45,7 @@ Delegate::Delegate(QObject *parent) :
 }
 
 /*! \fn Delegate::paint()
-    \brief Handles special case items (like CallStackEntry and percentage values).
+    \brief Handles special case items (like percentage values).
     \reimp QStyledItemDelegate::paint()
     \sa sizeHint() selected() deselected()
  */

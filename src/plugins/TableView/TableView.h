@@ -46,8 +46,10 @@ public:
     explicit TableView(QWidget *parent = 0);
     ~TableView();
 
-    QAbstractItemModel *model() const;
-    void setModel(QAbstractItemModel *model);
+    virtual QAbstractItemModel *model() const;
+    virtual void setModel(QAbstractItemModel *model);
+
+    virtual void setItemDelegate(QAbstractItemDelegate *delegate);
 
     virtual bool hasLegend();
     virtual bool legendVisible();
@@ -59,10 +61,10 @@ public:
     virtual void setViewFilterColumn(int column = 0);
 
 protected slots:
-    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    virtual void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    virtual void delegateSizeHintChanged(const QModelIndex &index);
 
 protected:
-    Delegate m_ItemDelegate;
     QSortFilterProxyModel m_ProxyModel;
 
 };
