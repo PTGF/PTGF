@@ -27,7 +27,7 @@ Many high performance computing application development tools have numerous comm
 
 RELEASES
 --------
-If you need stable code, stick with the Master branch.  The devel branch is usually quite stable, and has the latest changes, but may be a bit more unstable.
+If you need stable code, stick with the Master branch.  The Devel branch has the latest changes, but may be a bit less stable.
 
 
 INSTALLATION
