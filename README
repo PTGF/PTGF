@@ -2,7 +2,13 @@
             PARALLEL TOOLS GRAPHICAL USER INTERFACE FRAMEWORK
 ******************************************************************************
 
-TODO: LICENSE
+Copyright (C) 2010-2015 Argo Navis Technologies, LLC
+
+This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA 
 
 ******************************************************************************
 
@@ -11,50 +17,32 @@ CONTENTS OF THIS FILE
  * Introduction
  * Releases
  * Installation
- * Scripts
- * Notes
- * TODO
  * Links
  * Contact
 
 
 INTRODUCTION
 ------------
-TODO: Introduction
-
+Many high performance computing application development tools have numerous common graphical user interface elements that are recreated for each tool.  The Parallel Tools GUI Framework (PTGF) provides these common elements, allowing tool developers to focus on adding real value to their projects instead of reinventing the wheel.
 
 RELEASES
 --------
-Currently in primordial ooze phase
+If you need stable code, stick with the Master branch.  The devel branch is usually quite stable, and has the latest changes, but may be a bit more unstable.
 
 
 INSTALLATION
 ------------
-TODO: Installation
+Build and installation instructions can be found in our [GitHub Wiki](https://github.com/PTGF/PTGF/wiki).
 
-
-SCRIPTS
--------
-
-
-NOTES
------
-
-
-TODO
-----
-Our issue tracker is located at <https://github.com/OpenSpeedShop/gui/issues>
 
 LINKS
 -----
- * Main project site       <http://openspeedshop.github.com/gui>
- * Project source control  <https://github.com/OpenSpeedShop/gui>
- * Project issue tracker   <https://github.com/OpenSpeedShop/gui/issues>
- * Google group            <http://groups.google.com/group/openspeedshop-gui>
+ * Main project site       <http://paralleltoolsguiframework.com>
+ * Project source control  <https://github.com/PTGF/PTGF>
+ * Project issue tracker   <https://github.com/PTGF/PTGF/issues>
+
 
 CONTACT
 -------
-TODO: Contacting us
-
-
+Please go to the project's main site for contact information, or you may contact the lead developer, [Dane Gardner](https://github.com/DaneGardner), via GitHub.
 
